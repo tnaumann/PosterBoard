@@ -1,3 +1,4 @@
+/*Skeleton scripts*/
 $(function() {
 	setupAddDialog();
 	setupAddButton();
@@ -37,3 +38,9 @@ function setupViewSwitcherButtons(){
 		$("#similarViewContainer").show("slide");
 	});
 }
+
+/*Calendar view scripts*/
+
+/*Similar events scripts */
+
+/*Add poster scripts*/
