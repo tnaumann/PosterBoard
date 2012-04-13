@@ -27,11 +27,14 @@
 	opacity: 0.85;
 	filter: alpha(opacity=85);
 }
-#similarViewContainer{
+#calendarViewContainer{
 	display: none;
 }
 /*Calendar view styles*/
 
 /*Similar events styles */
+#similarViewContainer img {
+	margin: 10px;
+}
 
 /*Add poster styles*/

@@ -1,13 +1,17 @@
 /*Skeleton scripts*/
+var height
+var width;
+	
 $(function() {
 	setupAddDialog();
 	setupAddButton();
 	setupViewSwitcherButtons();
+	setupSimilarView();
 });
 
 function setupAddDialog(){
-	var height = $(window).height();
-	var width = $(window).width();
+	height = $(window).height();
+	width = $(window).width();
 
 	var addContainerWidth = width * 0.4;
 	var addContainerHeight = height - 100;
@@ -42,5 +46,14 @@ function setupViewSwitcherButtons(){
 /*Calendar view scripts*/
 
 /*Similar events scripts */
+function setupSimilarView(){
+	var maxHeight = height / 4;
+	var maxWidth = width / 10; 
+	
+	$("#similarViewContainer img").css("maxHeight", maxHeight);
+	$("#similarViewContainer img").css("maxWidth", maxWidth);
+	
+	
+}
 
 /*Add poster scripts*/
