@@ -27,8 +27,20 @@
 	opacity: 0.85;
 	filter: alpha(opacity=85);
 }
-#calendarViewContainer{
+#calendarViewContainer {
 	display: none;
+}
+.ui-dialog-titlebar {
+	display: none;
+}
+.thumbnail:hover{
+	padding: 1px;
+	border: 2px solid #AAA;
+	z-index: 5000; 
+}
+.ui-widget-overlay{
+	background-color: #000;
+	opacity: 0.5;
 }
 /*Calendar view styles*/
 
@@ -36,5 +48,18 @@
 #similarViewContainer img {
 	margin: 10px;
 }
-
+#similarViewContainer #clusteredImages {
+	position: relative;
+}
+#similarViewContainer .clusterLabel {
+	position: absolute;
+	background: #000;
+	color: #FFF;
+	opacity: 0.5;
+	padding: 10px;
+	border-radius: 5px;
+}
+#similarViewContainer #originalImages {
+	display: none;
+}
 /*Add poster styles*/

@@ -2,28 +2,32 @@
 	<head>
 		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" type="text/css" media="all" />
 		<link rel="stylesheet" href="posterboard.css" type="text/css" media="all" />
+		<link rel="stylesheet" href="colorbox.css" type="text/css" media="all" />
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
 		<script type="text/javascript" src="posterboard.js"></script>
+		<script type="text/javascript" src="jquery.colorbox-min.js"></script>
 	</head>
 	<body>
 		<div id="board">
 			<div id="boardContent">
 				<div id="calendarViewContainer">
-					Calendar View
-					<!--Manasi-->
+					Calendar View <!--Manasi-->
 				</div>
 				<div id="similarViewContainer">
-					<img data-tag="cultural" src="images/Poster1.jpg"/>
-					<img data-tag="talk" src="images/Poster2.jpg"/>
-					<img data-tag="social" src="images/Poster3.jpg"/>
-					<img data-tag="cultural" src="images/Poster4.jpg"/>
-					<img data-tag="talk" src="images/Poster5.jpg"/>
-					<img data-tag="social" src="images/Poster6.jpg"/>
-					<img data-tag="cultural" src="images/Poster7.jpg"/>
-					<img data-tag="cultural" src="images/Poster8.jpg"/>
-					<img data-tag="cultural" src="images/Poster9.jpg"/>
-					<img data-tag="social" src="images/Poster10.jpg"/>
+					<div id="originalImages">
+						<img class="thumbnail" data-tags="cultural" src="images/Poster1.jpg"/>
+						<img class="thumbnail" data-tags="talk,csail" src="images/Poster2.jpg"/>
+						<img class="thumbnail" data-tags="social" src="images/Poster3.jpg"/>
+						<img class="thumbnail" data-tags="cultural" src="images/Poster4.jpg"/>
+						<img class="thumbnail" data-tags="talk" src="images/Poster5.jpg"/>
+						<img class="thumbnail" data-tags="social" src="images/Poster6.jpg"/>
+						<img class="thumbnail" data-tags="cultural" src="images/Poster7.jpg"/>
+						<img class="thumbnail" data-tags="cultural" src="images/Poster8.jpg"/>
+						<img class="thumbnail" data-tags="cultural" src="images/Poster9.jpg"/>
+						<img class="thumbnail" data-tags="social" src="images/Poster10.jpg"/>
+					</div>
+					<div id="clusteredImages"></div>
 				</div>
 				<div id="addContainer">
 					<!--Tristan-->
@@ -31,8 +35,14 @@
 				<div class="push"></div>
 			</div>
 			<div id="viewSwitcherContainer">
-				<a id="calendarViewButton" href="#">Calendar View</a> | <a id="similarViewButton" href="#">Similar events view</a> | <a id="randomViewButton" href="#">Random View</a>
+				<a id="calendarViewButton" href="#">Calendar View</a> | <a id="similarViewButton" href="#">Similar events view</a> | <a id="randomViewButton" href="#inline_content">Random View</a>
 				<a id="addButton" href="#">Add Poster</a>
+				<!-- This contains the hidden content for inline calls -->
+				<div style='display:none'>
+					<div id="focusedPoster"></div>
+					<div id='inline_content' style='padding:10px; background:#fff;'>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>
