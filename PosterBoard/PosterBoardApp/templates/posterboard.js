@@ -62,8 +62,10 @@ function setupAddDialog() {
 		minWidth : addContainerWidth
 	});
 	
-	$("#addDate").calendricalDate();
-	$("#addTimeStart, #addTimeEnd").calendricalTimeRange();
+	$(".chosen-select").chosen();
+	$("#addDateStart, #addTimeStart, #addDateEnd, #addTimeEnd").calendricalDateTimeRange();
+	//$("#addDate").calendricalDate();
+	//$("#addTimeStart, #addTimeEnd").calendricalTimeRange();
 }
 
 function setupAddButton() {

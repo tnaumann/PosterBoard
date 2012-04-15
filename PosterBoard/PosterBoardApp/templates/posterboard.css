@@ -33,8 +33,8 @@ body {
 	overflow: scroll;
 }
 .ui-dialog {
-	opacity: 0.85;
-	filter: alpha(opacity=85);
+	//opacity: 0.85;
+	//filter: alpha(opacity=85);
 }
 #similarViewContainer {
 	display: none;
@@ -182,7 +182,7 @@ body {
 #preview {
     background-color:#fff;
     display:block;
-    float:right;
+    float:left;
     width:100px;
     height:100px;
 }
