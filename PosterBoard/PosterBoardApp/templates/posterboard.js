@@ -3,34 +3,48 @@ var height;
 var width;
 
 $(function() {
-	$("#randomViewButton").colorbox({inline:true, width:"50%"});
-
 	height = $(window).height();
 	width = $(window).width();
 
 	setupAddDialog();
-	// setupFocusedPosterDialog();
 	setupPosterClick();
 	setupAddButton();
 	setupViewSwitcherButtons();
 	setupSimilarView();
+	setupCalendarView();
 
-});
-function setupFocusedPosterDialog() {
-	var focusedPosterWidth = width * 0.4;
-	var focusedPosterHeight = height - 100;
-	var focusedPosterLPosition = (width - focusedPosterWidth) / 2;
-
-	$("#focusedPoster").dialog({
-		autoOpen : false,
-		modal : false,
-		position : [focusedPosterLPosition, 10],
-		maxWidth : width,
-		maxHeight : height,
-		modal : true
+	$("#viewSwitcherContainer a").mousedown(function() {
+		$(this).addClass('buttonDown');
+	}).mouseup(function() {
+		$(this).removeClass('buttonDown');
 	});
-}
 
+	$("#rightCalendarPanel img, #leftCalendarPanel img").mousedown(function() {
+		$(this).addClass('arrowClick');
+	}).mouseup(function() {
+		$(this).removeClass('arrowClick');
+	});
+
+	$("#posterDatePicker").datepicker();
+
+	$("#rightCalendarPanel img").click(function() {
+		$("#panelTable").hide("slide", {
+			direction : 'left'
+		});
+		$("#panelTable").show("slide", {
+			direction : 'right'
+		});
+	});
+
+	$("#leftCalendarPanel img").click(function() {
+		$("#panelTable").hide("slide", {
+			direction : 'right'
+		});
+		$("#panelTable").show("slide", {
+			direction : 'left'
+		});
+	});
+});
 function setupAddDialog() {
 	var addContainerWidth = width * 0.4;
 	var addContainerHeight = height - 100;
@@ -52,13 +66,23 @@ function setupAddButton() {
 }
 
 function setupViewSwitcherButtons() {
+
 	$("#calendarViewButton").click(function() {
-		$("#similarViewContainer").hide("slide");
-		$("#calendarViewContainer").show("slide");
+		if(!$("#calendarViewButton").hasClass('activeView')) {
+			$("#viewSwitcherContainer a").removeClass('activeView');
+			$("#calendarViewButton").addClass('activeView');
+			$("#similarViewContainer").hide("slide");
+			$("#calendarViewContainer").show("slide");
+		}
 	});
+
 	$("#similarViewButton").click(function() {
-		$("#calendarViewContainer").hide("slide");
-		$("#similarViewContainer").show("slide");
+		if(!$("#similarViewButton").hasClass('activeView')) {
+			$("#viewSwitcherContainer a").removeClass('activeView');
+			$("#similarViewButton").addClass('activeView');
+			$("#calendarViewContainer").hide("slide");
+			$("#similarViewContainer").show("slide");
+		}
 	});
 }
 
@@ -76,30 +100,32 @@ function setupPosterClick() {
 		fullPoster.css('position', '');
 		$("#focusedPoster").empty();
 		fullPoster.appendTo("#focusedPoster");
-		// console.log('fullPoster.width(): ' + fullPoster.width());
-		// colorboxLeft = (width - fullPoster.width()) / 2;
-		// colorboxTop = (height - fullPoster.height()) / 2;
 
 		$.colorbox({
 			inline : true,
-			maxWidth: '50%',
+			maxWidth : '50%',
 			href : '#focusedPoster',
 			onClosed : function() {
 				$("#focusedPoster").empty();
 			}
 		});
 		$.colorbox.resize();
-		// $("#focusedPoster").dialog("open");
-		// // $("#focusedPoster").css('minWidth', fullPoster.width());
-		// // $("#focusedPoster").css('maxWidth', fullPoster.width());
-		// // $("#focusedPoster").css('minHeight', fullPoster.height());
-		// // $("#focusedPoster").css('maxHeight', fullPoster.height());
-		// $("#focusedPoster").dialog("option", {minWidth: fullPoster.width(), maxWidth: fullPoster.width()});
-		// console.log('fullPoster.width(): ' + fullPoster.width());
 	});
 }
 
 /*Calendar view scripts*/
+function setupCalendarView() {
+	//Clustering
+	var containerHeight = height * 0.8;
+	var containerWidth = width * 0.8;
+
+	var maxImageHeight = containerHeight / 4;
+	var maxImageWidth = containerWidth / 10;
+
+	$("#calendarViewContainer img").css("maxHeight", maxImageHeight);
+	$("#calendarViewContainer img").css("maxWidth", maxImageWidth);
+	$("#calendarViewContainer .datePosterCol").css("width", maxImageWidth + 10);
+}
 
 /*Similar events scripts */
 

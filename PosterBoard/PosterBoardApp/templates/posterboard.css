@@ -1,21 +1,26 @@
 /*Skeleton*/
+body {
+	margin: 0;
+	background-color: #EEE;
+}
 #board {
-	border: 1px solid black;
 	width: 100%;
-	height: 100%;
+	height: 99%;
+	margin: 0;
 }
 #boardContent {
-	min-height: 100%;
-	height: auto !important;
-	height: 100%;
-	margin: 0 auto -4em;
+	/*min-height: 80%;*/
+	/*height: auto !important;*/
+	height: 85%;
+	/*margin: 0 auto -4em;*/
 }
 #viewSwitcherContainer a {
 	margin-right: 5px;
 	margin-left: 5px;
 }
 #viewSwitcherContainer, .push {
-	height: 4em;
+	height: 1em;
+	margin: 20px;
 }
 #addButton {
 	float: right;
@@ -27,23 +32,88 @@
 	opacity: 0.85;
 	filter: alpha(opacity=85);
 }
-#calendarViewContainer {
+#similarViewContainer {
 	display: none;
 }
 .ui-dialog-titlebar {
 	display: none;
 }
-.thumbnail:hover{
+.thumbnail:hover {
 	padding: 1px;
 	border: 2px solid #AAA;
-	z-index: 5000; 
+	z-index: 5000;
 }
-.ui-widget-overlay{
+.ui-widget-overlay {
 	background-color: #000;
 	opacity: 0.5;
 }
+#viewSwitcherContainer a {
+	padding: 5px;
+	background-color: #666;
+	border-radius: 5px;
+	text-decoration: none;
+	color: #FFF;
+}
+#viewSwitcherContainer a:hover {
+	background-color: #333;
+}
+#viewSwitcherContainer a.buttonDown {
+	background-color: #999;
+}
+#calendarViewContainer #leftCalendarPanel img.arrowClick, #calendarViewContainer #rightCalendarPanel img.arrowClick {
+	opacity: 0.3;
+}
+#board #viewSwitcherContainer a.activeView{
+	background-color: #95BFFF;
+	color: #333;
+}
 /*Calendar view styles*/
-
+#calendarViewContainer .dateLabel {
+	background-color: #333;
+	border-radius: 5px;
+	padding: 5px;
+	color: #FFF;
+	max-width: 100%;
+}
+.datePosterCol {
+	position: absolute;
+	height: 75%;
+	overflow: auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+#leftCalendarPanel {
+	width: 20%;
+	height: 100%;
+	float: left;
+	margin-right: 10px;
+	margin-top: 20px;
+}
+#leftCalendarPanel img {
+	float: right;
+}
+#leftCalendarPanel img:hover, #rightCalendarPanel img:hover {
+	opacity: 0.8;
+}
+#centerCalendarPanel {
+	float: left;
+	margin-top: 20px;
+	width: 65%;
+	margin-right: auto;
+	margin-left: auto;
+}
+#rightCalendarPanel {
+	width: 10%;
+	height: 100%;
+	float: left;
+	margin-left: 10px;
+	margin-top: 20px;
+}
+#posterDatePicker{
+	margin-top: 30px;
+	margin-left: 10px;
+	font-size: 12px;
+}
 /*Similar events styles */
 #similarViewContainer img {
 	margin: 10px;

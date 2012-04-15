@@ -12,7 +12,161 @@
 		<div id="board">
 			<div id="boardContent">
 				<div id="calendarViewContainer">
-					Calendar View <!--Manasi-->
+					<div id="leftCalendarPanel">
+						<img src="images/arrow-left.png" />
+						<div style="clear: both";></div>
+						<div id="posterDatePicker"></div>
+					</div>
+					<div id="centerCalendarPanel">
+						<table style="width:100%;" id="panelTable">
+							<tr>
+								<td>
+								<div class="dateLabel">
+									<span id="wday1">Sun</span>
+									<span id="day1">20</span>
+									<span id="month1">April</span>
+								</div></td>
+								<td>
+								<div class="dateLabel">
+									<span id="wday2">Mon</span>
+									<span id="day2">21</span>
+									<span id ="month2">April</span>
+								</div></td>
+								<td>
+								<div class="dateLabel">
+									<span id = "wday3">Tues</span>
+									<span id="day3">22</span>
+									<span id="month3">April</span>
+								</div></td>
+								<td>
+								<div class="dateLabel">
+									<span id="wday1">Wed</span>
+									<span id="day1">23</span>
+									<span id="month1">April</span>
+								</div></td>
+								<td>
+								<div class="dateLabel">
+									<span id="wday2">Thurs</span>
+									<span id="day2">24</span>
+									<span id ="month2">April</span>
+								</div></td>
+								<td>
+								<div class="dateLabel">
+									<span id = "wday3">Fri</span>
+									<span id="day3">25</span>
+									<span id="month3">April</span>
+								</div></td>
+								<td>
+								<div class="dateLabel">
+									<span id = "wday3">Sat</span>
+									<span id="day3">26</span>
+									<span id="month3">April</span>
+								</div></td>
+							</tr>
+							<tr>
+								<td>
+								<div class="datePosterCol">
+									<img class="thumbnail" src="images/Poster1.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster2.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster3.jpg" />
+									<br/>
+									<br/>
+								</div></td>
+								<td>
+								<div class="datePosterCol">
+									<img class="thumbnail" src="images/Poster4.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster5.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster6.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster10.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster1.jpg" />
+									<br/>
+									<br/>
+								</div></td>
+								<td>
+								<div class="datePosterCol">
+									<img class="thumbnail" src="images/Poster7.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster8.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster9.jpg" />
+									<br/>
+									<br/>
+								</div></td>
+								<td>
+								<div class="datePosterCol">
+									<img class="thumbnail" src="images/Poster1.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster2.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster3.jpg" />
+									<br/>
+									<br/>
+								</div></td>
+								<td>
+								<div class="datePosterCol">
+									<img class="thumbnail" src="images/Poster4.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster5.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster6.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster10.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster1.jpg" />
+									<br/>
+									<br/>
+								</div></td>
+								<td>
+								<div class="datePosterCol">
+									<img class="thumbnail" src="images/Poster7.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster8.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster9.jpg" />
+									<br/>
+									<br/>
+								</div></td>
+								<td>
+								<div class="datePosterCol">
+									<img class="thumbnail" src="images/Poster7.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster8.jpg" />
+									<br/>
+									<br/>
+									<img class="thumbnail" src="images/Poster9.jpg" />
+									<br/>
+									<br/>
+								</div></td>
+							</tr>
+						</table>
+					</div>
+					<div id="rightCalendarPanel">
+						<img src="images/arrow-right.png" />
+					</div>
+					<div style="clear: both"></div>
 				</div>
 				<div id="similarViewContainer">
 					<div id="originalImages">
@@ -35,13 +189,12 @@
 				<div class="push"></div>
 			</div>
 			<div id="viewSwitcherContainer">
-				<a id="calendarViewButton" href="#">Calendar View</a> | <a id="similarViewButton" href="#">Similar events view</a> | <a id="randomViewButton" href="#inline_content">Random View</a>
+				<a id="calendarViewButton" href="#" class="activeView">Calendar View</a> | <a id="similarViewButton" href="#">Similar events view</a>
 				<a id="addButton" href="#">Add Poster</a>
 				<!-- This contains the hidden content for inline calls -->
 				<div style='display:none'>
 					<div id="focusedPoster"></div>
-					<div id='inline_content' style='padding:10px; background:#fff;'>
-					</div>
+					<div id='inline_content' style='padding:10px; background:#fff;'></div>
 				</div>
 			</div>
 		</div>
