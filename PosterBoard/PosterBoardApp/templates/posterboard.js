@@ -50,7 +50,7 @@ $(function() {
 });
 function setupAddDialog() {
 	var addContainerWidth = width * 0.4;
-	var addContainerHeight = height - 100;
+	var addContainerHeight = height - 120;
 	var addContainerLPosition = (0.6 * width) - 20;
 
 	$("#addContainer").dialog({
@@ -64,7 +64,14 @@ function setupAddDialog() {
 
 function setupAddButton() {
 	$("#addButton").click(function() {
-		$("#addContainer").dialog("open");
+		$(this).toggleClass("active");
+		if ($(this).hasClass("active")) {
+			$(this).text("x");
+			$("#addContainer").dialog("open");
+		} else {
+			$(this).text("+");
+			$("#addContainer").dialog("close");
+		}
 	});
 }
 
