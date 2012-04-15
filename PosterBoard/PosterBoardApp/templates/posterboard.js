@@ -1,6 +1,9 @@
 /*Skeleton scripts*/
 var height;
 var width;
+var drawing;
+var startX;
+var startY;
 
 $(function() {
 	height = $(window).height();
@@ -98,18 +101,49 @@ function setupPosterClick() {
 		fullPoster.css('margin', 0);
 		fullPoster.removeClass('thumbnail');
 		fullPoster.css('position', '');
-		$("#focusedPoster").empty();
-		fullPoster.appendTo("#focusedPoster");
+		$("#focusedPosterImage").empty();
+		fullPoster.appendTo("#focusedPosterImage");
 
 		$.colorbox({
 			inline : true,
 			maxWidth : '50%',
 			href : '#focusedPoster',
 			onClosed : function() {
-				$("#focusedPoster").empty();
+				$("#focusedPosterImage").empty();
+				$('#canvasContainer').empty();
+				drawing = false;
+			},
+			onComplete : function() {
+				var offset = $('#focusedPosterImage img').offset();
+				console.log('Offset x: ' + offset.left + ' Offset y: ' + offset.top);
+				console.log('Width: ' + $('#focusedPosterImage img').width() + ' Height: ' + $('#focusedPosterImage img').height());
+
+				$('#canvasContainer').css('min-width', $('#focusedPosterImage img').width());
+				$('#canvasContainer').css('max-width', $('#focusedPosterImage img').width());
+				$('#canvasContainer').css('min-height', $('#focusedPosterImage img').height());
+				$('#canvasContainer').css('max-height', $('#focusedPosterImage img').height());
+
+				var paper = Raphael('canvasContainer');
+				$('#canvasContainer').mousedown(function(event) {
+					startX = event.offsetX;
+					startY = event.offsetY;
+					drawing = true;
+				});
+				$('#canvasContainer').mousemove(function(event) {
+					if(drawing) {
+						var scribble = paper.path('M' + startX + ',' + startY +'L' + event.offsetX + ',' + event.offsetY);
+						startX = event.offsetX;
+						startY = event.offsetY;
+						scribble.attr("stroke", "#fff");
+					}
+				});
+				$('#canvasContainer').mouseup(function(event) {
+					drawing = false;
+				});
 			}
 		});
-		$.colorbox.resize();
+		// $.colorbox.resize();
+
 	});
 }
 
@@ -195,7 +229,6 @@ function setupSimilarView() {
 
 function getRandOffset(range) {
 	offset = Math.random() * range - range / 2;
-	console.log('Offset: ' + offset);
 	return offset;
 }
 

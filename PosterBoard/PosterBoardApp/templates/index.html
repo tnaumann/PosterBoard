@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
 		<script type="text/javascript" src="posterboard.js"></script>
 		<script type="text/javascript" src="jquery.colorbox-min.js"></script>
+		<script type="text/javascript" src="raphael-min.js"></script>
 	</head>
 	<body>
 		<div id="board">
@@ -191,10 +192,17 @@
 			<div id="viewSwitcherContainer">
 				<a id="calendarViewButton" href="#" class="activeView">Calendar View</a> | <a id="similarViewButton" href="#">Similar events view</a>
 				<a id="addButton" href="#">Add Poster</a>
-				<!-- This contains the hidden content for inline calls -->
 				<div style='display:none'>
-					<div id="focusedPoster"></div>
-					<div id='inline_content' style='padding:10px; background:#fff;'></div>
+					<div id="focusedPoster">
+						<div id="focusedPosterImage"></div>
+						<div id="canvasContainer" style="position: absolute"></div>
+						<div id="focusedPosterInteraction">
+							<img src="images/thumbsup.jpg" />
+							<img src="images/thumbsdown.jpg" />
+							<img src="images/calendar.jpg" />
+						</div>
+						<div style="clear: both;"></div>
+					</div>
 				</div>
 			</div>
 		</div>

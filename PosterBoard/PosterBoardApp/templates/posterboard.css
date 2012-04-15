@@ -63,9 +63,32 @@ body {
 #calendarViewContainer #leftCalendarPanel img.arrowClick, #calendarViewContainer #rightCalendarPanel img.arrowClick {
 	opacity: 0.3;
 }
-#board #viewSwitcherContainer a.activeView{
+#board #viewSwitcherContainer a.activeView {
 	background-color: #95BFFF;
 	color: #333;
+}
+#focusedPosterInteraction {
+	padding: 10px;
+	color: #666;
+	/*border-top: 2px solid #AAA;*/
+	float: left;
+}
+#focusedPosterImage{
+	float: left;
+	border-right: 2px solid #AAA;
+}
+#focusedPosterInteraction img{
+	width: 30px;
+	display: block;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	border-bottom: 2px solid #AAA;
+}
+#focusedPosterInteraction img:hover{
+	opacity: 0.8;
+}
+#focusedPoster{
+	background-color: #FFF;
 }
 /*Calendar view styles*/
 #calendarViewContainer .dateLabel {
@@ -109,7 +132,7 @@ body {
 	margin-left: 10px;
 	margin-top: 20px;
 }
-#posterDatePicker{
+#posterDatePicker {
 	margin-top: 30px;
 	margin-left: 10px;
 	font-size: 12px;
