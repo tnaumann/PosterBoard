@@ -58,8 +58,11 @@ function setupAddDialog() {
 		modal : false,
 		position : [addContainerLPosition, 10],
 		minHeight : addContainerHeight,
+		maxHeight : addContainerHeight,
 		minWidth : addContainerWidth
 	});
+	
+	$("#addDate").datepicker();
 }
 
 function setupAddButton() {

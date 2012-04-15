@@ -30,6 +30,7 @@ body {
 }
 #addContainer {
 	border: 1px solid blue;
+	overflow: scroll;
 }
 .ui-dialog {
 	opacity: 0.85;
@@ -182,7 +183,8 @@ body {
     background-color:#fff;
     display:block;
     float:right;
-    width:200px;
+    width:100px;
+    height:100px;
 }
 #upload_form > div {
     margin-bottom:10px;

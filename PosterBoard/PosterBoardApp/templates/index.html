@@ -189,6 +189,7 @@
 				<div id="addContainer">
 					<!--Tristan-->
 					<div class="upload_form_cont">
+						<img id="preview" />
 		                <form id="upload_form" enctype="multipart/form-data" method="post" action="upload.php">
 		                    <div>
 		                        <div><label for="image_file">Please select image file</label></div>
@@ -220,9 +221,37 @@
 		                        </div>
 		                        <div id="upload_response"></div>
 		                    </div>
+		                    
+		                    <div>
+		                    	Where
+		                    	<select>
+		                    		<option>32-G449</option>
+		                    		<option>32-D463</option>
+		                    	</select>
+		                    </div>
+		                    
+		                    <div>
+		                    	When
+		                    	<input type="text" id="addDate" />
+		                    	<input type="text" id="addTimeStart" />
+		                    	<input type="text" id="addTimeEnd" />
+		                    </div>
+		                    
+		                    <div>
+		                    	Tags
+		                    	<select>
+		                    		<option>csail</option>
+		                    		<option>cultural</option>
+		                    		<option>social</option>
+		                    		<option>talk</option>
+		                    	</select>
+		                    </div>
+		                    
+		                    <div>
+		                    	Email
+		                    	<input type="text" id="addAuth" />
+		                    </div>
 		                </form>
-		
-		                <img id="preview" />
 		            </div>
 					<!--/Tristan-->
 				</div>
