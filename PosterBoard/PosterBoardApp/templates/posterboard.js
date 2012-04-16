@@ -64,9 +64,10 @@ function setupAddDialog() {
 	});
 	
 	$(".chosen-select").chosen();
-	$("#addDateStart, #addTimeStart, #addDateEnd, #addTimeEnd").calendricalDateTimeRange();
-	//$("#addDate").calendricalDate();
-	//$("#addTimeStart, #addTimeEnd").calendricalTimeRange();
+	//$("#addDateStart, #addTimeStart, #addDateEnd, #addTimeEnd").calendricalDateTimeRange();
+	$("#addDateStart").calendricalDate();
+	$("#addTimeStart, #addTimeEnd").calendricalTimeRange();
+	$("")
 }
 
 function setupAddButton() {
