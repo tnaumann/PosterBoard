@@ -48,6 +48,11 @@ $(function() {
 			direction : 'left'
 		});
 	});
+	
+	$("#addPosterButton").click(function(){
+		$("#addButton").click();
+		alert("Poster added successfully");
+	})
 });
 function setupAddDialog() {
 	var addContainerWidth = width * 0.4;

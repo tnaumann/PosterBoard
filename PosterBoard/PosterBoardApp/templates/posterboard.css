@@ -294,3 +294,12 @@ input[type=button] {
 	font-size: 18px;
 	color: gray;	
 }
+#addContainer{
+	padding: 0px;
+}
+.calendricalDatePopup, .calendricalTimePopup{
+	z-index: 5000;
+}
+#addPosterButton:hover{
+	color: #999;
+}
