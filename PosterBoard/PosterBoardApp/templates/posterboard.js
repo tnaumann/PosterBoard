@@ -56,7 +56,7 @@ $(function() {
 });
 function setupAddDialog() {
 	var addContainerWidth = width * 0.4;
-	var addContainerHeight = height - 120;
+	var addContainerHeight = height * 0.83;
 	var addContainerLPosition = (0.6 * width) - 20;
 
 	$("#addContainer").dialog({
