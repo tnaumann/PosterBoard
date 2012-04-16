@@ -4,6 +4,7 @@ var width;
 var drawing;
 var startX;
 var startY;
+var paper;
 
 $(function() {
 	height = $(window).height();
@@ -125,6 +126,7 @@ function setupPosterClick() {
 				$("#focusedPosterImage").empty();
 				$('#canvasContainer').empty();
 				drawing = false;
+				paper.remove();
 			},
 			onComplete : function() {
 				var offset = $('#focusedPosterImage img').offset();
@@ -136,7 +138,7 @@ function setupPosterClick() {
 				$('#canvasContainer').css('min-height', $('#focusedPosterImage img').height());
 				$('#canvasContainer').css('max-height', $('#focusedPosterImage img').height());
 
-				var paper = Raphael('canvasContainer');
+				paper = Raphael('canvasContainer');
 				$('#canvasContainer').mousedown(function(event) {
 					startX = event.offsetX;
 					startY = event.offsetY;

@@ -96,6 +96,7 @@ body {
 }
 #canvasContainer{
 	cursor: crosshair;
+	z-index: 5000;
 }
 /*Calendar view styles*/
 #calendarViewContainer .dateLabel {
