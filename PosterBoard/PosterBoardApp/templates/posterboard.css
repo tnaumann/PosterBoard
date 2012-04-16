@@ -177,11 +177,11 @@ body {
 
     color:#000;
     overflow:hidden;
+    margin:0;
 }
 #upload_form {
-    float:left;
     padding:20px;
-    width:700px;
+    width: 90%;
 }
 #preview {
     background-color:#fff;
@@ -190,17 +190,17 @@ body {
     width:100px;
     height:100px;
 }
-#upload_form > div {
+/*#upload_form > div {
     margin-bottom:10px;
 }
 #speed,#remaining {
     float:left;
     width:100px;
-}
-#b_transfered {
+}*/
+/*#b_transfered {
     float:right;
     text-align:right;
-}
+}*/
 .clear_both {
     clear:both;
 }
@@ -226,7 +226,7 @@ input[type=button] {
     background: linear-gradient(#ffffff, #dfdfdf);
 }
 #image_file {
-    width:400px;
+    width:80%;
 }
 #progress_info {
     font-size:10pt;
@@ -284,4 +284,13 @@ input[type=button] {
     //filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#bbb', endColorstr='#eee');
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#bbb', endColorstr='#eee')";
     background: linear-gradient(#bbb, #eee);
+}
+#addContainer .chzn-container ul{
+	border-radius: 10px;
+	padding: 5px;
+}
+#addContainer .chzn-container ul input{
+	height: 1em;
+	font-size: 18px;
+	color: gray;	
 }

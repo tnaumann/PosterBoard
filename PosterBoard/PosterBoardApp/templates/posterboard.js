@@ -67,7 +67,6 @@ function setupAddDialog() {
 	//$("#addDateStart, #addTimeStart, #addDateEnd, #addTimeEnd").calendricalDateTimeRange();
 	$("#addDateStart").calendricalDate();
 	$("#addTimeStart, #addTimeEnd").calendricalTimeRange();
-	$("")
 }
 
 function setupAddButton() {
