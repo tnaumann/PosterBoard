@@ -90,6 +90,9 @@ body {
 #focusedPoster{
 	background-color: #FFF;
 }
+#canvasContainer{
+	cursor: crosshair;
+}
 /*Calendar view styles*/
 #calendarViewContainer .dateLabel {
 	background-color: #333;
