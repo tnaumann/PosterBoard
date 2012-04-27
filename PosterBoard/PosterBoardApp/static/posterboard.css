@@ -104,8 +104,14 @@ body {
 	border-radius: 5px;
 	padding: 5px;
 	color: #FFF;
+	width: 95%;
 	max-width: 100%;
 }
+
+.calviewcol {
+	width: 13%;	
+}
+
 .datePosterCol {
 	position: absolute;
 	height: 75%;

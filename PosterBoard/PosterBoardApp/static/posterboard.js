@@ -5,6 +5,8 @@ var drawing;
 var startX;
 var startY;
 var paper;
+var days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
 $(function() {
 	height = $(window).height();
@@ -29,24 +31,20 @@ $(function() {
 		$(this).removeClass('arrowClick');
 	});
 
-	$("#posterDatePicker").datepicker();
+	$("#posterDatePicker").datepicker(
+	{
+  		onSelect: function() {
+  			setupCalendar(0, false);
+		}
+	});
+	setupCalendar(0, false);
 
 	$("#rightCalendarPanel img").click(function() {
-		$("#panelTable").hide("slide", {
-			direction : 'left'
-		});
-		$("#panelTable").show("slide", {
-			direction : 'right'
-		});
+		setupCalendar(7, true);
 	});
 
 	$("#leftCalendarPanel img").click(function() {
-		$("#panelTable").hide("slide", {
-			direction : 'right'
-		});
-		$("#panelTable").show("slide", {
-			direction : 'left'
-		});
+		setupCalendar(-7, true);
 	});
 	
 	$("#addPosterButton").click(function(){
@@ -54,6 +52,40 @@ $(function() {
 		alert("Poster added successfully");
 	})
 });
+
+function setupCalendar(diff, set)
+{
+	var today = $("#posterDatePicker").datepicker("getDate");
+	today = new Date(today.getTime() + (24 * 60 * 60 * 1000) * diff);
+	if (set)
+	{
+		$("#posterDatePicker").datepicker("setDate", today);
+	}
+	for (var j = 0; j < 7; j = j+1)
+	{
+		if (today.getDay() == 0)
+		{
+			break;
+		}
+		else
+		{
+			today = new Date(today.getTime() - (24 * 60 * 60 * 1000) );
+		}
+	}
+	
+	var i = 0;
+	for (i = 1; i < 8; i = i+1)
+	{	
+		var curr_date = today.getDate();
+		var curr_day = today.getDay();
+		var curr_month = today.getMonth();
+		$("#day" + i).html("&nbsp;" + curr_date);
+		$("#wday" + i).html(days[curr_day]);
+		$("#month" + i).html(months[curr_month]);
+		today = new Date(today.getTime() + (24 * 60 * 60 * 1000));
+	}
+}
+
 function setupAddDialog() {
 	var addContainerWidth = width * 0.4;
 	var addContainerHeight = height * 0.83;
