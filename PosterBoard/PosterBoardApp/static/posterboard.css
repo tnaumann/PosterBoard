@@ -1,0 +1,305 @@
+/*Skeleton*/
+body {
+	margin: 0;
+	background-color: #EEE;
+}
+#board {
+	width: 100%;
+	height: 99%;
+	margin: 0;
+}
+#boardContent {
+	/*min-height: 80%;*/
+	/*height: auto !important;*/
+	height: 85%;
+	/*margin: 0 auto -4em;*/
+}
+#viewSwitcherContainer a {
+	margin-right: 5px;
+	margin-left: 5px;
+}
+#viewSwitcherContainer, .push {
+	height: 1em;
+	margin: 20px;
+}
+#addButton {
+	float: right;
+	text-decoration: none;
+	font-family: verdana, helvetica, arial, sans-serif;
+	font-weight: 700;
+}
+#addContainer {
+	border: 1px solid blue;
+	overflow: scroll;
+}
+.ui-dialog {
+	//opacity: 0.85;
+	//filter: alpha(opacity=85);
+}
+#similarViewContainer {
+	display: none;
+}
+.ui-dialog-titlebar {
+	display: none;
+}
+.thumbnail:hover {
+	padding: 1px;
+	border: 2px solid #AAA;
+	z-index: 5000;
+}
+.ui-widget-overlay {
+	background-color: #000;
+	opacity: 0.5;
+}
+#viewSwitcherContainer a {
+	padding: 5px;
+	background-color: #666;
+	border-radius: 5px;
+	text-decoration: none;
+	color: #FFF;
+}
+#viewSwitcherContainer a:hover {
+	background-color: #333;
+}
+#viewSwitcherContainer a.buttonDown {
+	background-color: #999;
+}
+#calendarViewContainer #leftCalendarPanel img.arrowClick, #calendarViewContainer #rightCalendarPanel img.arrowClick {
+	opacity: 0.3;
+}
+#board #viewSwitcherContainer a.activeView {
+	background-color: #95BFFF;
+	color: #333;
+}
+#focusedPosterInteraction {
+	padding: 10px;
+	color: #666;
+	/*border-top: 2px solid #AAA;*/
+	float: left;
+}
+#focusedPosterImage{
+	float: left;
+	border-right: 2px solid #AAA;
+}
+#focusedPosterInteraction img{
+	width: 30px;
+	display: block;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	border-bottom: 2px solid #AAA;
+}
+#focusedPosterInteraction img:hover{
+	opacity: 0.8;
+}
+#focusedPoster{
+	background-color: #FFF;
+}
+#canvasContainer{
+	cursor: crosshair;
+	z-index: 5000;
+}
+/*Calendar view styles*/
+#calendarViewContainer .dateLabel {
+	background-color: #333;
+	border-radius: 5px;
+	padding: 5px;
+	color: #FFF;
+	max-width: 100%;
+}
+.datePosterCol {
+	position: absolute;
+	height: 75%;
+	overflow: auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+#leftCalendarPanel {
+	width: 20%;
+	height: 100%;
+	float: left;
+	margin-right: 10px;
+	margin-top: 20px;
+}
+#leftCalendarPanel img {
+	float: right;
+}
+#leftCalendarPanel img:hover, #rightCalendarPanel img:hover {
+	opacity: 0.8;
+}
+#centerCalendarPanel {
+	float: left;
+	margin-top: 20px;
+	width: 65%;
+	margin-right: auto;
+	margin-left: auto;
+}
+#rightCalendarPanel {
+	width: 10%;
+	height: 100%;
+	float: left;
+	margin-left: 10px;
+	margin-top: 20px;
+}
+#posterDatePicker {
+	margin-top: 30px;
+	margin-left: 10px;
+	font-size: 12px;
+}
+/*Similar events styles */
+#similarViewContainer img {
+	margin: 10px;
+}
+#similarViewContainer #clusteredImages {
+	position: relative;
+}
+#similarViewContainer .clusterLabel {
+	position: absolute;
+	background: #000;
+	color: #FFF;
+	opacity: 0.5;
+	padding: 10px;
+	border-radius: 5px;
+}
+#similarViewContainer #originalImages {
+	display: none;
+}
+
+/*Add poster styles*/
+.upload_form_cont {
+    background: -moz-linear-gradient(#ffffff, #f2f2f2);
+    background: -ms-linear-gradient(#ffffff, #f2f2f2);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #f2f2f2));
+    background: -webkit-linear-gradient(#ffffff, #f2f2f2);
+    background: -o-linear-gradient(#ffffff, #f2f2f2);
+    //filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f2f2f2');
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f2f2f2')";
+    background: linear-gradient(#ffffff, #f2f2f2);
+
+    color:#000;
+    overflow:hidden;
+    margin:0;
+}
+#upload_form {
+    padding:20px;
+    width: 90%;
+}
+#preview {
+    background-color:#fff;
+    display:block;
+    float:left;
+    width:100px;
+    height:100px;
+}
+/*#upload_form > div {
+    margin-bottom:10px;
+}
+#speed,#remaining {
+    float:left;
+    width:100px;
+}*/
+/*#b_transfered {
+    float:right;
+    text-align:right;
+}*/
+.clear_both {
+    clear:both;
+}
+input {
+    border-radius:10px;
+    -moz-border-radius:10px;
+    -ms-border-radius:10px;
+    -o-border-radius:10px;
+    -webkit-border-radius:10px;
+
+    border:1px solid #ccc;
+    font-size:14pt;
+    padding:5px 10px;
+}
+input[type=button] {
+    background: -moz-linear-gradient(#ffffff, #dfdfdf);
+    background: -ms-linear-gradient(#ffffff, #dfdfdf);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #dfdfdf));
+    background: -webkit-linear-gradient(#ffffff, #dfdfdf);
+    background: -o-linear-gradient(#ffffff, #dfdfdf);
+    //filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dfdfdf');
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dfdfdf')";
+    background: linear-gradient(#ffffff, #dfdfdf);
+}
+#image_file {
+    width:80%;
+}
+#progress_info {
+    font-size:10pt;
+}
+#fileinfo,#error,#error2,#abort,#warnsize {
+    color:#aaa;
+    display:none;
+    font-size:10pt;
+    font-style:italic;
+    margin-top:10px;
+}
+#progress {
+    border:1px solid #ccc;
+    display:none;
+    float:left;
+    height:14px;
+
+    border-radius:10px;
+    -moz-border-radius:10px;
+    -ms-border-radius:10px;
+    -o-border-radius:10px;
+    -webkit-border-radius:10px;
+
+    background: -moz-linear-gradient(#66cc00, #4b9500);
+    background: -ms-linear-gradient(#66cc00, #4b9500);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #66cc00), color-stop(100%, #4b9500));
+    background: -webkit-linear-gradient(#66cc00, #4b9500);
+    background: -o-linear-gradient(#66cc00, #4b9500);
+    //filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#66cc00', endColorstr='#4b9500');
+    //-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#66cc00', endColorstr='#4b9500')";
+    //background: linear-gradient(#66cc00, #4b9500);
+}
+#progress_percent {
+    float:right;
+}
+#upload_response {
+    margin-top: 10px;
+    padding: 20px;
+    overflow: hidden;
+    display: none;
+    border: 1px solid #ccc;
+
+    border-radius:10px;
+    -moz-border-radius:10px;
+    -ms-border-radius:10px;
+    -o-border-radius:10px;
+    -webkit-border-radius:10px;
+
+    box-shadow: 0 0 5px #ccc;
+    background: -moz-linear-gradient(#bbb, #eee);
+    background: -ms-linear-gradient(#bbb, #eee);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bbb), color-stop(100%, #eee));
+    background: -webkit-linear-gradient(#bbb, #eee);
+    background: -o-linear-gradient(#bbb, #eee);
+    //filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#bbb', endColorstr='#eee');
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#bbb', endColorstr='#eee')";
+    background: linear-gradient(#bbb, #eee);
+}
+#addContainer .chzn-container ul{
+	border-radius: 10px;
+	padding: 5px;
+}
+#addContainer .chzn-container ul input{
+	height: 1em;
+	font-size: 18px;
+	color: gray;	
+}
+#addContainer{
+	padding: 0px;
+}
+.calendricalDatePopup, .calendricalTimePopup{
+	z-index: 5000;
+}
+#addPosterButton:hover{
+	color: #999;
+}
