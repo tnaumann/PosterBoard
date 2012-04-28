@@ -3,6 +3,7 @@ import os.path
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+# WEBSOCKET_ACCEPT_ALL = True
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -123,6 +124,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'PosterBoard.PosterBoardApp',
+    'PosterBoard.django_websocket',
 )
 
 LOGGING = {

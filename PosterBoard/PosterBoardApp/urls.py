@@ -6,4 +6,6 @@ from django.conf.urls.defaults import patterns, include, url
 
 urlpatterns = patterns('',
     url(r'^$', 'PosterBoard.PosterBoardApp.views.home', name='home'),
+    url(r'^rfidtest', 'PosterBoard.PosterBoardApp.views.rfidtest'),
+    url(r'^echo_once', 'PosterBoard.PosterBoardApp.views.echo_once'),
 )
