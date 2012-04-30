@@ -1,0 +1,29 @@
+{% if posters %}
+    <ul>
+    {% for poster in posters %}
+        <li><a href="{{ poster.posterFile1.url }}">{{ poster.posterFile1.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No posters.</p>
+{% endif %}
+
+<!-- Upload form. Note enctype attribute! -->
+<form action="/posterupload/" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ form.posterFile1.help_text }}
+    {{ form.posterFile1.label_tag }}
+        
+    
+    
+           
+    {{ form.posterFile1 }}{{ form.posterFile1.errors }}<br />
+    Date: {{ form.event_date }} {{ form.event_date.errors }}<br />
+    Email: {{ form.email }} {{ form.email.errors }}<br />
+    Start time: {{ form.start_time }} {{ form.start_time.errors }}<br />
+    End time: {{ form.end_time}}  {{ form.end_time.errors }} <br />
+    Tag: {{ form.tag1 }} {{ form.tag1.errors }} <br />
+    Title: {{ form.title }} {{ form.title.errors }} <br />
+    <input type="submit" value="Upload" />
+</form>
