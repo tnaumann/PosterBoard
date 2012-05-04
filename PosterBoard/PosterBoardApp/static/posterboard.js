@@ -340,11 +340,11 @@ function bytesToSize(bytes) {
 function fileSelected() {
 
     // hide different warnings
-    document.getElementById('upload_response').style.display = 'none';
-    document.getElementById('error').style.display = 'none';
-    document.getElementById('error2').style.display = 'none';
-    document.getElementById('abort').style.display = 'none';
-    document.getElementById('warnsize').style.display = 'none';
+    // document.getElementById('upload_response').style.display = 'none';
+    // document.getElementById('error').style.display = 'none';
+    // document.getElementById('error2').style.display = 'none';
+    // document.getElementById('abort').style.display = 'none';
+    // document.getElementById('warnsize').style.display = 'none';
 
     // get selected file element
     var oFile = document.getElementById('image_file').files[0];

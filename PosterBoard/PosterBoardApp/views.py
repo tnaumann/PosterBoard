@@ -8,9 +8,6 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.context_processors import csrf
 
-from PosterBoard.PosterBoardApp.models import Document, Poster
-from PosterBoard.PosterBoardApp.forms import DocumentForm, PosterForm
-
 logger = logging.getLogger(__name__)
 
 def home(request):
