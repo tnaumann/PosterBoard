@@ -14,15 +14,13 @@ from PosterBoard.PosterBoardApp.forms import PosterForm
 logger = logging.getLogger(__name__)
 
 def home(request):
-    t = loader.get_template('index.html')
-        
-    logger.debug('Jackpot!')
-    
-    c = RequestContext(request, {
-        
-        })
-    return HttpResponse(t.render(c))
-	
+    posters = Poster.objects.all()
+    return render_to_response(
+        'index.html',
+        {'posters': posters},
+        context_instance = RequestContext(request)
+   )
+
 def rfidtest(request):
     t = loader.get_template('rfidtest.html')
         
