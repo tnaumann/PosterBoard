@@ -7,8 +7,9 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.context_processors import csrf
+import simplejson as json
 
-from PosterBoard.PosterBoardApp.models import Poster
+from PosterBoard.PosterBoardApp.models import Poster, AnnotationPath, Annotation
 from PosterBoard.PosterBoardApp.forms import PosterForm
 
 logger = logging.getLogger(__name__)
@@ -67,4 +68,22 @@ def posterUpload(request):
         {'posters': posters, 'form': form},
         context_instance = RequestContext(request)
    )
+    
+def saveAnno(request):
+    path = json.loads(request.POST['path'])
+    anno = Annotation(posterName=request.POST['poster'])
+    logger.debug('annotation created')
+    logger.debug('annotation saved')
+    for pathItem in path:
+        logger.debug(pathItem)
+        annoPath = AnnotationPath()
+        annoPath.startX = pathItem['startX']
+        annoPath.endX = pathItem['endX']
+        annoPath.startY = pathItem['startY']
+        annoPath.endY = pathItem['endY']
+        annoPath.color = pathItem['color']
+        annoPath.annotation = anno
+        annoPath.index = 0
+        annoPath.save()
+    return HttpResponse('success')
 

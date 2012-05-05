@@ -7,6 +7,7 @@ var startY;
 var paper;
 var days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+var scribbleStrokes = [];
 
 $(function() {
 	height = $(window).height();
@@ -18,6 +19,7 @@ $(function() {
 	setupViewSwitcherButtons();
 	setupSimilarView();
 	setupCalendarView();
+	setupSaveAnnoButton();
 
 	$("#viewSwitcherContainer a").mousedown(function() {
 		$(this).addClass('buttonDown');
@@ -31,10 +33,9 @@ $(function() {
 		$(this).removeClass('arrowClick');
 	});
 
-	$("#posterDatePicker").datepicker(
-	{
-  		onSelect: function() {
-  			setupCalendar(0, false);
+	$("#posterDatePicker").datepicker({
+		onSelect : function() {
+			setupCalendar(0, false);
 		}
 	});
 	setupCalendar(0, false);
@@ -46,36 +47,37 @@ $(function() {
 	$("#leftCalendarPanel img").click(function() {
 		setupCalendar(-7, true);
 	});
-	
 	// $("#addPosterButton").click(function(){
-		// $("#addButton").click();
-		// alert("Poster added successfully");
+	// $("#addButton").click();
+	// alert("Poster added successfully");
 	// })
 });
+function setupSaveAnnoButton() {
+	$('#saveAnnoButton').click(function() {
+		$.post('/PosterBoardApp/saveAnno', 
+		{
+			path: JSON.stringify(scribbleStrokes),
+			poster: 'poster1'
+		});
+	});
+}
 
-function setupCalendar(diff, set)
-{
+function setupCalendar(diff, set) {
 	var today = $("#posterDatePicker").datepicker("getDate");
 	today = new Date(today.getTime() + (24 * 60 * 60 * 1000) * diff);
-	if (set)
-	{
+	if(set) {
 		$("#posterDatePicker").datepicker("setDate", today);
 	}
-	for (var j = 0; j < 7; j = j+1)
-	{
-		if (today.getDay() == 0)
-		{
+	for(var j = 0; j < 7; j = j + 1) {
+		if(today.getDay() == 0) {
 			break;
-		}
-		else
-		{
-			today = new Date(today.getTime() - (24 * 60 * 60 * 1000) );
+		} else {
+			today = new Date(today.getTime() - (24 * 60 * 60 * 1000));
 		}
 	}
-	
+
 	var i = 0;
-	for (i = 1; i < 8; i = i+1)
-	{	
+	for( i = 1; i < 8; i = i + 1) {
 		var curr_date = today.getDate();
 		var curr_day = today.getDay();
 		var curr_month = today.getMonth();
@@ -99,7 +101,7 @@ function setupAddDialog() {
 		maxHeight : addContainerHeight,
 		minWidth : addContainerWidth
 	});
-	
+
 	$(".chosen-select").chosen();
 	//$("#addDateStart, #addTimeStart, #addDateEnd, #addTimeEnd").calendricalDateTimeRange();
 	$("#addDateStart").calendricalDate();
@@ -109,7 +111,7 @@ function setupAddDialog() {
 function setupAddButton() {
 	$("#addButton").click(function() {
 		$(this).toggleClass("active");
-		if ($(this).hasClass("active")) {
+		if($(this).hasClass("active")) {
 			$(this).text("x");
 			$("#addContainer").dialog("open");
 		} else {
@@ -161,7 +163,9 @@ function setupPosterClick() {
 			href : '#focusedPoster',
 			onClosed : function() {
 				$("#focusedPosterImage").empty();
+				$('#saveAnnoButton').hide();
 				$('#canvasContainer').empty();
+				scribbleStrokes = [];
 				drawing = false;
 				paper.remove();
 			},
@@ -174,16 +178,22 @@ function setupPosterClick() {
 				$('#canvasContainer').css('max-width', $('#focusedPosterImage img').width());
 				$('#canvasContainer').css('min-height', $('#focusedPosterImage img').height());
 				$('#canvasContainer').css('max-height', $('#focusedPosterImage img').height());
-
 				paper = Raphael('canvasContainer');
 				$('#canvasContainer').mousedown(function(event) {
 					startX = event.offsetX;
 					startY = event.offsetY;
 					drawing = true;
+					$('#saveAnnoButton').show();
 				});
 				$('#canvasContainer').mousemove(function(event) {
 					if(drawing) {
-						var scribble = paper.path('M' + startX + ',' + startY +'L' + event.offsetX + ',' + event.offsetY);
+						var scribble = paper.path('M' + startX + ',' + startY + 'L' + event.offsetX + ',' + event.offsetY);
+
+						// Save scribble stroke
+						var canvasWidth = $("#canvasContainer").width();
+						var canvasHeight = $("#canvasContainer").height();
+						var scribbleStroke = new ScribbleStroke(startX / canvasWidth, startY / canvasHeight, event.offsetX / canvasWidth, event.offsetY / canvasHeight, '#fff');
+						scribbleStrokes.push(scribbleStroke);
 						startX = event.offsetX;
 						startY = event.offsetY;
 						scribble.attr("stroke", "#fff");
@@ -199,6 +209,53 @@ function setupPosterClick() {
 	});
 }
 
+function ScribbleStroke(startX, startY, endX, endY, color) {
+	this.startX = startX;
+	this.startY = startY;
+	this.endX = endX;
+	this.endY = endY;
+	this.color = color;
+}
+
+//csrf protection
+jQuery(document).ajaxSend(function(event, xhr, settings) {
+	function getCookie(name) {
+		var cookieValue = null;
+		if(document.cookie && document.cookie != '') {
+			var cookies = document.cookie.split(';');
+			for(var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+				// Does this cookie string begin with the name we want?
+				if(cookie.substring(0, name.length + 1) == (name + '=')) {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	}
+
+	function sameOrigin(url) {
+		// url could be relative or scheme relative or absolute
+		var host = document.location.host;
+		// host + port
+		var protocol = document.location.protocol;
+		var sr_origin = '//' + host;
+		var origin = protocol + sr_origin;
+		// Allow absolute or scheme relative URLs to same origin
+		return (url == origin || url.slice(0, origin.length + 1) == origin + '/') || (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+		// or any other URL that isn't scheme relative or absolute i.e relative.
+		!(/^(\/\/|http:|https:).*/.test(url));
+	}
+
+	function safeMethod(method) {
+		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+
+	if(!safeMethod(settings.type) && sameOrigin(settings.url)) {
+		xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+	}
+});
 /*Calendar view scripts*/
 function setupCalendarView() {
 	//Clustering
@@ -314,174 +371,182 @@ function getUniqueTags() {
 var iBytesUploaded = 0;
 var iBytesTotal = 0;
 var iPreviousBytesLoaded = 0;
-var iMaxFilesize = 1048576; // 1MB
+var iMaxFilesize = 1048576;
+// 1MB
 var oTimer = 0;
 var sResultFileSize = '';
 
-function secondsToTime(secs) { // we will use this function to convert seconds in normal time format
-    var hr = Math.floor(secs / 3600);
-    var min = Math.floor((secs - (hr * 3600))/60);
-    var sec = Math.floor(secs - (hr * 3600) -  (min * 60));
+function secondsToTime(secs) {// we will use this function to convert seconds in normal time format
+	var hr = Math.floor(secs / 3600);
+	var min = Math.floor((secs - (hr * 3600)) / 60);
+	var sec = Math.floor(secs - (hr * 3600) - (min * 60));
 
-    if (hr < 10) {hr = "0" + hr; }
-    if (min < 10) {min = "0" + min;}
-    if (sec < 10) {sec = "0" + sec;}
-    if (hr) {hr = "00";}
-    return hr + ':' + min + ':' + sec;
+	if(hr < 10) {
+		hr = "0" + hr;
+	}
+	if(min < 10) {
+		min = "0" + min;
+	}
+	if(sec < 10) {
+		sec = "0" + sec;
+	}
+	if(hr) {
+		hr = "00";
+	}
+	return hr + ':' + min + ':' + sec;
 };
 
 function bytesToSize(bytes) {
-    var sizes = ['Bytes', 'KB', 'MB'];
-    if (bytes == 0) return 'n/a';
-    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-    return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
+	var sizes = ['Bytes', 'KB', 'MB'];
+	if(bytes == 0)
+		return 'n/a';
+	var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+	return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
 };
 
 function fileSelected() {
 
-    // hide different warnings
-    // document.getElementById('upload_response').style.display = 'none';
-    // document.getElementById('error').style.display = 'none';
-    // document.getElementById('error2').style.display = 'none';
-    // document.getElementById('abort').style.display = 'none';
-    // document.getElementById('warnsize').style.display = 'none';
+	// hide different warnings
+	// document.getElementById('upload_response').style.display = 'none';
+	// document.getElementById('error').style.display = 'none';
+	// document.getElementById('error2').style.display = 'none';
+	// document.getElementById('abort').style.display = 'none';
+	// document.getElementById('warnsize').style.display = 'none';
 
-    // get selected file element
-    var oFile = document.getElementById('image_file').files[0];
+	// get selected file element
+	var oFile = document.getElementById('image_file').files[0];
 
-    // filter for image files
-    var rFilter = /^(image\/bmp|image\/gif|image\/jpeg|image\/png|image\/tiff)$/i;
-    if (! rFilter.test(oFile.type)) {
-        document.getElementById('error').style.display = 'block';
-        return;
-    }
+	// filter for image files
+	var rFilter = /^(image\/bmp|image\/gif|image\/jpeg|image\/png|image\/tiff)$/i;
+	if(!rFilter.test(oFile.type)) {
+		document.getElementById('error').style.display = 'block';
+		return;
+	}
 
-    // little test for filesize
-    if (oFile.size > iMaxFilesize) {
-        document.getElementById('warnsize').style.display = 'block';
-        return;
-    }
+	// little test for filesize
+	if(oFile.size > iMaxFilesize) {
+		document.getElementById('warnsize').style.display = 'block';
+		return;
+	}
 
-    // get preview element
-    var oImage = document.getElementById('preview');
+	// get preview element
+	var oImage = document.getElementById('preview');
 
-    // prepare HTML5 FileReader
-    var oReader = new FileReader();
-        oReader.onload = function(e){
+	// prepare HTML5 FileReader
+	var oReader = new FileReader();
+	oReader.onload = function(e) {
 
-        // e.target.result contains the DataURL which we will use as a source of the image
-        oImage.src = e.target.result;
+		// e.target.result contains the DataURL which we will use as a source of the image
+		oImage.src = e.target.result;
 
-        oImage.onload = function () { // binding onload event
+		oImage.onload = function() {// binding onload event
 
-            // we are going to display some custom image information here
-            sResultFileSize = bytesToSize(oFile.size);
-            document.getElementById('fileinfo').style.display = 'block';
-            document.getElementById('filename').innerHTML = 'Name: ' + oFile.name;
-            document.getElementById('filesize').innerHTML = 'Size: ' + sResultFileSize;
-            document.getElementById('filetype').innerHTML = 'Type: ' + oFile.type;
-            document.getElementById('filedim').innerHTML = 'Dimension: ' + oImage.naturalWidth + ' x ' + oImage.naturalHeight;
-        };
-    };
-
-    // read selected file as DataURL
-    oReader.readAsDataURL(oFile);
+			// we are going to display some custom image information here
+			sResultFileSize = bytesToSize(oFile.size);
+			document.getElementById('fileinfo').style.display = 'block';
+			document.getElementById('filename').innerHTML = 'Name: ' + oFile.name;
+			document.getElementById('filesize').innerHTML = 'Size: ' + sResultFileSize;
+			document.getElementById('filetype').innerHTML = 'Type: ' + oFile.type;
+			document.getElementById('filedim').innerHTML = 'Dimension: ' + oImage.naturalWidth + ' x ' + oImage.naturalHeight;
+		};
+	};
+	// read selected file as DataURL
+	oReader.readAsDataURL(oFile);
 }
 
 function startUploading() {
-    // cleanup all temp states
-    iPreviousBytesLoaded = 0;
-    document.getElementById('upload_response').style.display = 'none';
-    document.getElementById('error').style.display = 'none';
-    document.getElementById('error2').style.display = 'none';
-    document.getElementById('abort').style.display = 'none';
-    document.getElementById('warnsize').style.display = 'none';
-    document.getElementById('progress_percent').innerHTML = '';
-    var oProgress = document.getElementById('progress');
-    oProgress.style.display = 'block';
-    oProgress.style.width = '0px';
+	// cleanup all temp states
+	iPreviousBytesLoaded = 0;
+	document.getElementById('upload_response').style.display = 'none';
+	document.getElementById('error').style.display = 'none';
+	document.getElementById('error2').style.display = 'none';
+	document.getElementById('abort').style.display = 'none';
+	document.getElementById('warnsize').style.display = 'none';
+	document.getElementById('progress_percent').innerHTML = '';
+	var oProgress = document.getElementById('progress');
+	oProgress.style.display = 'block';
+	oProgress.style.width = '0px';
 
-    // get form data for POSTing
-    //var vFD = document.getElementById('upload_form').getFormData(); // for FF3
-    var vFD = new FormData(document.getElementById('upload_form')); 
+	// get form data for POSTing
+	//var vFD = document.getElementById('upload_form').getFormData(); // for FF3
+	var vFD = new FormData(document.getElementById('upload_form'));
 
-    // create XMLHttpRequest object, adding few event listeners, and POSTing our data
-    var oXHR = new XMLHttpRequest();
-    oXHR.upload.addEventListener('progress', uploadProgress, false);
-    oXHR.addEventListener('load', uploadFinish, false);
-    oXHR.addEventListener('error', uploadError, false);
-    oXHR.addEventListener('abort', uploadAbort, false);
-    oXHR.open('POST', 'upload.php');
-    oXHR.send(vFD);
+	// create XMLHttpRequest object, adding few event listeners, and POSTing our data
+	var oXHR = new XMLHttpRequest();
+	oXHR.upload.addEventListener('progress', uploadProgress, false);
+	oXHR.addEventListener('load', uploadFinish, false);
+	oXHR.addEventListener('error', uploadError, false);
+	oXHR.addEventListener('abort', uploadAbort, false);
+	oXHR.open('POST', 'upload.php');
+	oXHR.send(vFD);
 
-    // set inner timer
-    oTimer = setInterval(doInnerUpdates, 300);
+	// set inner timer
+	oTimer = setInterval(doInnerUpdates, 300);
 }
 
-function doInnerUpdates() { // we will use this function to display upload speed
-    var iCB = iBytesUploaded;
-    var iDiff = iCB - iPreviousBytesLoaded;
+function doInnerUpdates() {// we will use this function to display upload speed
+	var iCB = iBytesUploaded;
+	var iDiff = iCB - iPreviousBytesLoaded;
 
-    // if nothing new loaded - exit
-    if (iDiff == 0)
-        return;
+	// if nothing new loaded - exit
+	if(iDiff == 0)
+		return;
+	iPreviousBytesLoaded = iCB;
+	iDiff = iDiff * 2;
+	var iBytesRem = iBytesTotal - iPreviousBytesLoaded;
+	var secondsRemaining = iBytesRem / iDiff;
 
-    iPreviousBytesLoaded = iCB;
-    iDiff = iDiff * 2;
-    var iBytesRem = iBytesTotal - iPreviousBytesLoaded;
-    var secondsRemaining = iBytesRem / iDiff;
+	// update speed info
+	var iSpeed = iDiff.toString() + 'B/s';
+	if(iDiff > 1024 * 1024) {
+		iSpeed = (Math.round(iDiff * 100 / (1024 * 1024)) / 100).toString() + 'MB/s';
+	} else if(iDiff > 1024) {
+		iSpeed = (Math.round(iDiff * 100 / 1024) / 100).toString() + 'KB/s';
+	}
 
-    // update speed info
-    var iSpeed = iDiff.toString() + 'B/s';
-    if (iDiff > 1024 * 1024) {
-        iSpeed = (Math.round(iDiff * 100/(1024*1024))/100).toString() + 'MB/s';
-    } else if (iDiff > 1024) {
-        iSpeed =  (Math.round(iDiff * 100/1024)/100).toString() + 'KB/s';
-    }
-
-    document.getElementById('speed').innerHTML = iSpeed;
-    document.getElementById('remaining').innerHTML = '| ' + secondsToTime(secondsRemaining);
+	document.getElementById('speed').innerHTML = iSpeed;
+	document.getElementById('remaining').innerHTML = '| ' + secondsToTime(secondsRemaining);
 }
 
-function uploadProgress(e) { // upload process in progress
-    if (e.lengthComputable) {
-        iBytesUploaded = e.loaded;
-        iBytesTotal = e.total;
-        var iPercentComplete = Math.round(e.loaded * 100 / e.total);
-        var iBytesTransfered = bytesToSize(iBytesUploaded);
+function uploadProgress(e) {// upload process in progress
+	if(e.lengthComputable) {
+		iBytesUploaded = e.loaded;
+		iBytesTotal = e.total;
+		var iPercentComplete = Math.round(e.loaded * 100 / e.total);
+		var iBytesTransfered = bytesToSize(iBytesUploaded);
 
-        document.getElementById('progress_percent').innerHTML = iPercentComplete.toString() + '%';
-        document.getElementById('progress').style.width = (iPercentComplete * 4).toString() + 'px';
-        document.getElementById('b_transfered').innerHTML = iBytesTransfered;
-        if (iPercentComplete == 100) {
-            var oUploadResponse = document.getElementById('upload_response');
-            oUploadResponse.innerHTML = '<h1>Please wait...processing</h1>';
-            oUploadResponse.style.display = 'block';
-        }
-    } else {
-        document.getElementById('progress').innerHTML = 'unable to compute';
-    }
+		document.getElementById('progress_percent').innerHTML = iPercentComplete.toString() + '%';
+		document.getElementById('progress').style.width = (iPercentComplete * 4).toString() + 'px';
+		document.getElementById('b_transfered').innerHTML = iBytesTransfered;
+		if(iPercentComplete == 100) {
+			var oUploadResponse = document.getElementById('upload_response');
+			oUploadResponse.innerHTML = '<h1>Please wait...processing</h1>';
+			oUploadResponse.style.display = 'block';
+		}
+	} else {
+		document.getElementById('progress').innerHTML = 'unable to compute';
+	}
 }
 
-function uploadFinish(e) { // upload successfully finished
-    var oUploadResponse = document.getElementById('upload_response');
-    oUploadResponse.innerHTML = e.target.responseText;
-    oUploadResponse.style.display = 'block';
+function uploadFinish(e) {// upload successfully finished
+	var oUploadResponse = document.getElementById('upload_response');
+	oUploadResponse.innerHTML = e.target.responseText;
+	oUploadResponse.style.display = 'block';
 
-    document.getElementById('progress_percent').innerHTML = '100%';
-    document.getElementById('progress').style.width = '400px';
-    document.getElementById('filesize').innerHTML = sResultFileSize;
-    document.getElementById('remaining').innerHTML = '| 00:00:00';
+	document.getElementById('progress_percent').innerHTML = '100%';
+	document.getElementById('progress').style.width = '400px';
+	document.getElementById('filesize').innerHTML = sResultFileSize;
+	document.getElementById('remaining').innerHTML = '| 00:00:00';
 
-    clearInterval(oTimer);
+	clearInterval(oTimer);
 }
 
-function uploadError(e) { // upload error
-    document.getElementById('error2').style.display = 'block';
-    clearInterval(oTimer);
-}  
+function uploadError(e) {// upload error
+	document.getElementById('error2').style.display = 'block';
+	clearInterval(oTimer);
+}
 
-function uploadAbort(e) { // upload abort
-    document.getElementById('abort').style.display = 'block';
-    clearInterval(oTimer);
+function uploadAbort(e) {// upload abort
+	document.getElementById('abort').style.display = 'block';
+	clearInterval(oTimer);
 }
