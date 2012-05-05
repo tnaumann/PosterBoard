@@ -47,10 +47,10 @@ $(function() {
 		setupCalendar(-7, true);
 	});
 	
-	$("#addPosterButton").click(function(){
-		$("#addButton").click();
-		alert("Poster added successfully");
-	})
+	// $("#addPosterButton").click(function(){
+		// $("#addButton").click();
+		// alert("Poster added successfully");
+	// })
 });
 
 function setupCalendar(diff, set)

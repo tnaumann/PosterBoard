@@ -10,4 +10,5 @@ urlpatterns = patterns('',
     url(r'^echo_once', 'PosterBoard.PosterBoardApp.views.echo_once'),
     url(r'^list/$', 'list'),
     url(r'^posterupload/$', 'posterUpload'),
+    url(r'^upload/$', 'PosterBoard.PosterBoardApp.views.upload'),
 )
