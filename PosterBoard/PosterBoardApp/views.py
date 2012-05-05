@@ -8,6 +8,9 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.context_processors import csrf
 
+from PosterBoard.PosterBoardApp.models import Poster
+from PosterBoard.PosterBoardApp.forms import PosterForm
+
 logger = logging.getLogger(__name__)
 
 def home(request):
@@ -51,7 +54,7 @@ def posterUpload(request):
             newPoster.save()
             print "Poster objects:", Poster.objects.count()
             # Redirect to the document list after POST
-            return HttpResponseRedirect(reverse('PosterBoardApp.views.posterUpload'))
+            return HttpResponseRedirect(reverse('PosterBoard.PosterBoardApp.views.posterUpload'))
     else:
         form = PosterForm() # A empty, unbound form
 
