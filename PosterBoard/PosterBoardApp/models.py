@@ -15,3 +15,10 @@ class Poster(models.Model):
     tag5 = models.CharField(max_length=200, null=True)
     email = models.EmailField(max_length=200)
     title = models.CharField(max_length=200, null=True)
+    likes = models.IntegerField()
+    dislikes = models.IntegerField()
+
+
+class Comment(models.Model):
+    poster = models.ForeignKey(Poster)
+    text = models.CharField(max_length=200)
