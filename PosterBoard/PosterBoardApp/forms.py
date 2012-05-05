@@ -1,11 +1,5 @@
 from django import forms
 
-class DocumentForm(forms.Form):
-    docfile = forms.FileField(
-        label='Select a file',
-        help_text='max. 42 megabytes'
-    )
-
 class PosterForm(forms.Form):
     posterFile1 = forms.FileField(
         label='Select poster file',

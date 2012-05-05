@@ -8,7 +8,5 @@ urlpatterns = patterns('',
     url(r'^$', 'PosterBoard.PosterBoardApp.views.home', name='home'),
     url(r'^rfidtest', 'PosterBoard.PosterBoardApp.views.rfidtest'),
     url(r'^echo_once', 'PosterBoard.PosterBoardApp.views.echo_once'),
-    url(r'^list/$', 'list'),
-    url(r'^posterupload/$', 'posterUpload'),
-    url(r'^upload/$', 'PosterBoard.PosterBoardApp.views.upload'),
+    url(r'^posterupload/$', 'PosterBoard.PosterBoardApp.views.posterUpload'),
 )

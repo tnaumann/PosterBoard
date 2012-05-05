@@ -9,15 +9,11 @@
 {% endif %}
 
 <!-- Upload form. Note enctype attribute! -->
-<form action="/posterupload/" method="post" enctype="multipart/form-data">
+<form action="/PosterBoardApp/posterupload/" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.non_field_errors }}
     {{ form.posterFile1.help_text }}
     {{ form.posterFile1.label_tag }}
-        
-    
-    
-           
     {{ form.posterFile1 }}{{ form.posterFile1.errors }}<br />
     Date: {{ form.event_date }} {{ form.event_date.errors }}<br />
     Email: {{ form.email }} {{ form.email.errors }}<br />
