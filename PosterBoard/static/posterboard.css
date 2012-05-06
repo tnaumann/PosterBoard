@@ -75,7 +75,10 @@ body {
 	padding: 10px;
 	color: #666;
 	/*border-top: 2px solid #AAA;*/
-	float: left;
+	float: right;
+}
+#tS3 .jTscrollerContainer{
+	z-index: 999999;
 }
 #focusedPosterImage{
 	float: left;
@@ -93,6 +96,7 @@ body {
 }
 #focusedPoster{
 	background-color: #FFF;
+	height: 100%;
 }
 #canvasContainer{
 	cursor: crosshair;
@@ -104,8 +108,14 @@ body {
 	border-radius: 5px;
 	padding: 5px;
 	color: #FFF;
+	width: 95%;
 	max-width: 100%;
 }
+
+.calviewcol {
+	width: 13%;	
+}
+
 .datePosterCol {
 	position: absolute;
 	height: 75%;
