@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 import logging, string, os
-from django_websocket import accept_websocket, require_websocket
+#from django_websocket import accept_websocket, require_websocket
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
@@ -105,7 +105,7 @@ def rfidtest(request):
         })
     return HttpResponse(t.render(c))
 
-@require_websocket
+#@require_websocket
 def echo_once(request):
     logger.debug('echo_once received: ' + str(request.is_websocket()))
     message = request.websocket.wait()
