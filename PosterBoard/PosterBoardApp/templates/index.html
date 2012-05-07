@@ -14,6 +14,8 @@
 		<script type="text/javascript" src="{{STATIC_URL}}jquery.calendrical.js"></script>
 		<script type="text/javascript" src="{{STATIC_URL}}raphael-min.js"></script>
 		<script type="text/javascript" src="{{STATIC_URL}}chosen/chosen.jquery.js"></script>
+		<script src="{{STATIC_URL}}jquery.thumbnailScroller.js"></script>
+		<link href="{{STATIC_URL}}jquery.thumbnailScroller.css" rel="stylesheet" />
 	</head>
 	<body>
 		<div id="board">
@@ -261,51 +263,61 @@
 								Email
 								<input type="text" id="addAuth" />
 							</div>
-							<!-- <div id="progress_info">
-							<div id="progress"></div>
-							<div id="progress_percent">
-							&nbsp;
+							<div id="progress_info">
+								<div id="progress"></div>
+								<div id="progress_percent">
+									&nbsp;
+								</div>
+								<div class="clear_both"></div>
+								<div>
+									<div id="speed">
+										&nbsp;
+									</div>
+									<div id="remaining">
+										&nbsp;
+									</div>
+									<div id="b_transfered">
+										&nbsp;
+									</div>
+									<div class="clear_both"></div>
+								</div>
+								<divf id="upload_response">
 							</div>
-							<div class="clear_both"></div>
-							<div>
-							<div id="speed">
-							&nbsp;
-							</div>
-							<div id="remaining">
-							&nbsp;
-							</div>
-							<div id="b_transfered">
-							&nbsp;
-							</div>
-							<div class="clear_both"></div>
-							</div>
-							<divf id="upload_response"></div>
-							</div> -->
-							<div>
-								<input type="button" value="Add Poster" id="addPosterButton"/>
-							</div>
-						</form>
 					</div>
-					<!--/Tristan-->
+					<div>
+						<input type="button" value="Add Poster" id="addPosterButton" onclick="startUploading()"/>
+					</div>
+					</form>
 				</div>
-				<div class="push"></div>
+				<!--/Tristan-->
 			</div>
-			<div id="viewSwitcherContainer">
-				<a id="calendarViewButton" href="#" class="activeView">Calendar View</a> | <a id="similarViewButton" href="#">Similar events view</a>
-				<a id="addButton" href="#">+</a>
-				<div style='display:none'>
-					<div id="focusedPoster">
-						<div id="focusedPosterImage"></div>
-						<div id="canvasContainer" style="position: absolute"></div>
-						<div id="focusedPosterInteraction">
-							<img src="{{STATIC_URL}}images/thumbsup.jpg" />
-							<img src="{{STATIC_URL}}images/thumbsdown.jpg" />
-							<img src="{{STATIC_URL}}images/calendar.jpg" />
+			<div class="push"></div>
+		</div>
+		<div id="viewSwitcherContainer">
+			<a id="calendarViewButton" href="#" class="activeView">Calendar View</a> | <a id="similarViewButton" href="#">Similar events view</a>
+			<a id="addButton" href="#">+</a>
+			<div style='display:none'>
+				<div id="focusedPoster">
+					<div id="focusedPosterImage"></div>
+					<div id="canvasContainer" style="position: absolute"></div>
+					<div id="focusedPosterInteraction">
+						<img src="{{STATIC_URL}}images/thumbsup.jpg" />
+						<img src="{{STATIC_URL}}images/thumbsdown.jpg" />
+						<img src="{{STATIC_URL}}images/calendar.jpg" />
+						<img id="saveAnnoButton" style="display: none" src="{{STATIC_URL}}images/saveAnno.jpg" />
+					</div>
+					<div id="tS3" class="jThumbnailScroller" style="position: relative; top: 0; left: 0; height: 80%">
+						<div class="jTscrollerContainer">
+							<div class="jTscroller">
+							</div>
 						</div>
-						<div style="clear: both;"></div>
+						<a href="#" class="jTscrollerPrevButton" style="background:#000 url({{STATIC_URL}}prevArrow.png) center center;"></a>
+						<a href="#" class="jTscrollerNextButton" style="background:#000 url({{STATIC_URL}}nextArrow.png) center center;"></a>
 					</div>
+					<div style="clear: both;"></div>
 				</div>
 			</div>
+		</div>
 		</div>
 	</body>
 </html>
