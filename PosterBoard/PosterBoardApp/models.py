@@ -17,16 +17,17 @@ class Poster(models.Model):
     tag4 = models.CharField(max_length=200, null=True, blank=True)
     tag5 = models.CharField(max_length=200, null=True, blank=True)
     email = models.EmailField(max_length=200)
-    title = models.CharField(max_length=200, null=True)
-    likes = models.IntegerField(null=True)
-    dislikes = models.IntegerField(null=True)
+    title = models.CharField(max_length=200, null=True, blank=True)
+    likes = models.IntegerField(null=True, blank=True)
+    dislikes = models.IntegerField(null=True, blank=True)
 
 
 class Comment(models.Model):
     poster = models.ForeignKey(Poster)
     text = models.CharField(max_length=200)
+    
 class Annotation(models.Model):
-    posterName = models.TextField(max_length=200)
+    poster = models.ForeignKey(Poster, related_name='annotations')
     
 class AnnotationPath(models.Model):
     startX = models.FloatField()

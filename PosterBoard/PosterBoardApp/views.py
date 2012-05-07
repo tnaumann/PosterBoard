@@ -142,9 +142,19 @@ def posterUpload(request):
     
 def saveAnno(request):
     path = json.loads(request.POST['path'])
-    anno = Annotation(posterName=request.POST['poster'])
-    logger.debug('annotation created')
-    logger.debug('annotation saved')
+    
+    annoId = request.POST['annoId']
+    if annoId:
+        anno = Annotation.objects.get(pk=int(request.POST['annoId']))
+        logger.debug('annotation found')
+    else:
+        poster = Poster.objects.get(pk=int(request.POST['poster']))
+        anno = Annotation(poster=poster)        
+        logger.debug('annotation created')
+        anno.save()
+        annoId = anno.id
+        logger.debug('annotation saved')
+        
     for pathItem in path:
         logger.debug(pathItem)
         annoPath = AnnotationPath()
@@ -156,5 +166,25 @@ def saveAnno(request):
         annoPath.annotation = anno
         annoPath.index = 0
         annoPath.save()
-    return HttpResponse('success')
+        
+    drawingId = request.POST['drawingId']
+    returnVal = json.dumps({'drawingId':drawingId,'annoId':annoId})
+    return HttpResponse(returnVal)
 
+def getAnno(request):
+    poster = Poster.objects.get(pk=int(request.GET['poster']))
+    annos = Annotation.objects.filter(poster=poster).all()
+    annoArr = []
+    
+    for anno in annos:
+        paths = anno.path.all()
+        pathArr = []
+        
+        for path in paths:
+            pathArr.append(str(path.startX) + ',' + str(path.startY) + ',' + str(path.endX) + ',' + str(path.endY) + ',' + path.color)
+        
+        annoArr.append({'path':pathArr})
+        
+    return HttpResponse(json.dumps(annoArr))
+    
+    

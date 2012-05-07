@@ -8,6 +8,12 @@ var paper;
 var days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 var scribbleStrokes = [];
+var annoId;
+var drawingId;
+var focusedImageUid;
+var focusedImageWidth;
+var focusedImageHeight;
+var focusedImageSrc;
 
 $(function() {
 	height = $(window).height();
@@ -51,9 +57,9 @@ $(function() {
 	// $("#addButton").click();
 	// alert("Poster added successfully");
 	// })
-	
+
 });
-function displayAnnoScroller(){
+function displayAnnoScroller() {
 	$("#tS3").thumbnailScroller({
 		scrollerType : "clickButtons",
 		scrollerOrientation : "vertical",
@@ -69,12 +75,21 @@ function displayAnnoScroller(){
 		autoScrollingDelay : 500
 	});
 }
+
 function setupSaveAnnoButton() {
 	$('#saveAnnoButton').click(function() {
 		$.post('/PosterBoardApp/saveAnno', {
 			path : JSON.stringify(scribbleStrokes),
-			poster : 'poster1'
+			annoId : annoId,
+			drawingId : drawingId,
+			poster : focusedImageUid,
+		}, function(data, textStatus, jqXHR) {
+			var response = $.parseJSON(data);
+			if(drawingId == response.drawingId) {
+				annoId = response.annoId;
+			}
 		});
+		scribbleStrokes = [];
 	});
 }
 
@@ -163,6 +178,8 @@ function setupPosterClick() {
 	$(".thumbnail").click(function() {
 		console.log("Thumbnail clicked: " + $(this).attr('src'));
 		fullPoster = $(this).clone();
+		focusedImageUid = fullPoster.attr('data-uid');
+
 		fullPoster.css('maxWidth', width * 0.8);
 		fullPoster.css('maxHeight', height * 0.8);
 		fullPoster.css('top', 0);
@@ -174,25 +191,66 @@ function setupPosterClick() {
 		$("#focusedPosterImage").empty();
 		fullPoster.appendTo("#focusedPosterImage");
 		
-		for (i = 0; i < 4; i++){
-			var cloneAnchor = $("<a href='#'></a>");
-			cloneAnchor.appendTo(".jTscroller");
-			cloneAnchor.attr('id', i);
-						
-			fullPosterClone = $(this).clone();
-			fullPosterClone.css('position', '');
-			fullPosterClone.css('maxWidth', '');
-			fullPosterClone.css('maxHeight', '');
-			// fullPosterClone.attr('id', i);
-			fullPosterClone.removeClass('thumbnail');
-			
-			// fullPosterClone.appendTo(cloneAnchor);
-			
-		    var thumbnailCanvas = Raphael(i, 100, 100);
-		    thumbnailCanvas.image(fullPosterClone.attr('src'), 0, 0, 100, 100);
-		    thumbnailCanvas.path('M0,0L100,100');
-		}
-		displayAnnoScroller();
+		focusedImageWidth = $(this).width();
+		focusedImageHeight = $(this).height();
+		focusedImageSrc = $(this).attr('src');
+
+		$.getJSON('/PosterBoardApp/getAnno', {
+			poster : focusedImageUid,
+		}, function(data) {
+			console.log("Number of path objects: " + data.length);
+
+			for( i = 0; i < data.length; i++) {
+				var cloneAnchor = $("<a href='#'></a>");
+				cloneAnchor.appendTo(".jTscroller");
+				cloneAnchor.attr('id', i);
+
+				var thumbnailScale = getThumbnailScale(focusedImageWidth, focusedImageHeight, 100, 200);
+				var thumbnailWidth = focusedImageWidth * thumbnailScale;
+				var thumbnailHeight = focusedImageHeight * thumbnailScale;
+				console.log('Thumbnail dimensions: ' + thumbnailWidth + ' x ' + thumbnailHeight);
+				var thumbnailCanvas = Raphael(i, thumbnailWidth, thumbnailHeight);
+				thumbnailCanvas.image(focusedImageSrc, 0, 0, thumbnailWidth, thumbnailHeight);
+				
+				var path = data[i].path;
+				for (j = 0; j < path.length; j++){
+					var pathElement = path[j].split(',');
+					var startX = parseFloat(pathElement[0]) * thumbnailWidth;
+					var startY = parseFloat(pathElement[1]) * thumbnailHeight;
+					var endX = parseFloat(pathElement[2]) * thumbnailWidth;
+					var endY = parseFloat(pathElement[3]) * thumbnailHeight;
+					
+					thumbnailCanvas.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+					console.log('Path: ' + 'M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+				}
+			}
+			displayAnnoScroller();
+
+		});
+		// for (i = 0; i < 3; i++){
+		// var cloneAnchor = $("<a href='#'></a>");
+		// cloneAnchor.appendTo(".jTscroller");
+		// cloneAnchor.attr('id', i);
+		//
+		// fullPosterClone = $(this).clone();
+		// fullPosterClone.css('position', '');
+		// fullPosterClone.css('maxWidth', '');
+		// fullPosterClone.css('maxHeight', '');
+		// // fullPosterClone.attr('id', i);
+		// fullPosterClone.removeClass('thumbnail');
+		//
+		// // fullPosterClone.appendTo(cloneAnchor);
+		//
+		// var thumbnailScale = getThumbnailScale($(this).width(), $(this).height(), 100, 200);
+		// var thumbnailWidth = $(this).width() * thumbnailScale;
+		// var thumbnailHeight = $(this).height() * thumbnailScale;
+		// console.log('Thumbnail dimensions: ' + thumbnailWidth + ' x ' + thumbnailHeight);
+		// var thumbnailCanvas = Raphael(i, thumbnailWidth, thumbnailHeight);
+		// thumbnailCanvas.image(fullPosterClone.attr('src'), 0, 0, thumbnailWidth, thumbnailHeight);
+		// thumbnailCanvas.path('M0,0L100,100');
+		// }
+		drawingId = Math.random();
+		// displayAnnoScroller();
 
 		// var fullPosterClone = fullPoster.clone();
 		// fullPosterClone.css('top', '0px');
@@ -210,17 +268,18 @@ function setupPosterClick() {
 				$("#focusedPosterImage").empty();
 				$('#saveAnnoButton').hide();
 				$('#canvasContainer').empty();
-				
-				$(".jTscroller").css('top', '0px');		
+
+				$(".jTscroller").css('top', '0px');
 				$(".jTscroller").empty();
-				
 				scribbleStrokes = [];
 				drawing = false;
+				drawingId = '';
+				$("#saveAnnoButton").click();
 				paper.remove();
 			},
 			onComplete : function() {
 				displayAnnoScroller();
-				
+
 				var offset = $('#focusedPosterImage img').offset();
 				console.log('Offset x: ' + offset.left + ' Offset y: ' + offset.top);
 				console.log('Width: ' + $('#focusedPosterImage img').width() + ' Height: ' + $('#focusedPosterImage img').height());
@@ -264,6 +323,13 @@ function setupPosterClick() {
 		// $.colorbox.resize();
 
 	});
+}
+
+function getThumbnailScale(width, height, maxWidth, maxHeight) {
+	xScale = maxWidth / width;
+	yScale = maxHeight / height;
+
+	return Math.min(xScale, yScale);
 }
 
 function ScribbleStroke(startX, startY, endX, endY, color) {
