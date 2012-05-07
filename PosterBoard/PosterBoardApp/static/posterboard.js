@@ -8,7 +8,7 @@ var paper;
 var days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 var scribbleStrokes = [];
-var annoId;
+var annoId = '';
 var drawingId;
 var focusedImageUid;
 var focusedImageWidth;
@@ -275,6 +275,7 @@ function setupPosterClick() {
 				drawing = false;
 				drawingId = '';
 				$("#saveAnnoButton").click();
+				annoId = '';
 				paper.remove();
 			},
 			onComplete : function() {

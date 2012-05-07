@@ -143,7 +143,10 @@ def posterUpload(request):
 def saveAnno(request):
     path = json.loads(request.POST['path'])
     
+    logger.debug('about to load annoId')
     annoId = request.POST['annoId']
+    logger.debug('annoId: ' + annoId)
+    
     if annoId:
         anno = Annotation.objects.get(pk=int(request.POST['annoId']))
         logger.debug('annotation found')
@@ -156,7 +159,6 @@ def saveAnno(request):
         logger.debug('annotation saved')
         
     for pathItem in path:
-        logger.debug(pathItem)
         annoPath = AnnotationPath()
         annoPath.startX = pathItem['startX']
         annoPath.endX = pathItem['endX']
