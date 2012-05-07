@@ -179,6 +179,15 @@
 				</div>
 				<div id="similarViewContainer">
 					<div id="originalImages">
+
+{% if posters %}
+    {% for poster in posters %}
+        <img class ="thumbnail" data-tags="abc" data-uid="{{poster.id}}" src="{{MEDIA_URL}}{{poster.posterFile1.name}}" />
+    {% endfor %}
+{% else %}
+    <p>No posters.</p>
+{% endif %}
+
 						<img class="thumbnail" data-tags="cultural" src="{{STATIC_URL}}images/Poster1.jpg"/>
 						<img class="thumbnail" data-tags="talk,csail" src="{{STATIC_URL}}images/Poster2.jpg"/>
 						<img class="thumbnail" data-tags="social" src="{{STATIC_URL}}images/Poster3.jpg"/>
