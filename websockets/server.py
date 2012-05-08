@@ -21,8 +21,8 @@ from Phidgets.Devices.RFID import RFID
 #RFID card mapping
 id = {
     # 'CARD ID': 'USER',
-    '2E00E4427C': 'tjn',
-    '2E00E40EF8': 'mghassem',
+    '2E00E4427C': 'cezeozue',
+    '2E00E40EF8': 'mvartak',
 }
 
 #Websocket protocol
@@ -145,13 +145,13 @@ def rfidTagGained(e):
     source = e.device
     rfid.setLEDOn(1)
     print("RFID %i: Tag Read: %s" % (source.getSerialNum(), e.tag))
-    t.send(encode("RFID %i: Tag Read: %s" % (source.getSerialNum(), id[e.tag])))
+    t.send(encode(id[e.tag]))
     
 def rfidTagLost(e):
     source = e.device
     rfid.setLEDOn(0)
     print("RFID %i: Tag Lost: %s" % (source.getSerialNum(), e.tag))
-    t.send(encode("RFID %i: Tag Lost: %s" % (source.getSerialNum(), id[e.tag])))
+    #t.send(encode("RFID %i: Tag Lost: %s" % (source.getSerialNum(), id[e.tag])))
     
 try:
     rfid.setOnTagHandler(rfidTagGained)
