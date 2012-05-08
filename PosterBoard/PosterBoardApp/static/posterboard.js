@@ -11,8 +11,6 @@ var scribbleStrokes = [];
 var annoId = '';
 var drawingId;
 var focusedImageUid;
-var focusedImageWidth;
-var focusedImageHeight;
 var focusedImageSrc;
 
 $(function() {
@@ -26,6 +24,7 @@ $(function() {
 	setupSimilarView();
 	setupCalendarView();
 	setupSaveAnnoButton();
+	setupResetAnnoButton();
 
 	$("#viewSwitcherContainer a").mousedown(function() {
 		$(this).addClass('buttonDown');
@@ -53,6 +52,12 @@ $(function() {
 	$("#leftCalendarPanel img").click(function() {
 		setupCalendar(-7, true);
 	});
+
+	$("#focusedPosterInteraction img").mousedown(function() {
+		$(this).css('opacity', 0.3);
+	}).mouseup(function() {
+		$(this).css('opacity', 1);
+	});
 	// $("#addPosterButton").click(function(){
 	// $("#addButton").click();
 	// alert("Poster added successfully");
@@ -74,10 +79,43 @@ function displayAnnoScroller() {
 		autoScrollingEasing : "easeInOutQuad",
 		autoScrollingDelay : 500
 	});
+
+	$('#ts3 a.oldSketch').click(function() {
+		console.log('Old sketch clicked');
+		$('#saveAnnoButton').click();
+		$('#resetAnnoButton').click();
+		
+		$('#saveAnnoButton').show();
+		$('#resetAnnoButton').show();		
+
+		var path = $(this).data('path');
+		console.log('path: ' + path);
+		
+		var focusedPosterWidth = $('#focusedPosterImage img').width();
+		var focusedPosterHeight = $('#focusedPosterImage img').height();
+		
+		for( j = 0; j < path.length; j++) {
+			var pathElement = path[j].split(',');
+			var startX = parseFloat(pathElement[0]) * focusedPosterWidth;
+			var startY = parseFloat(pathElement[1]) * focusedPosterHeight;
+			var endX = parseFloat(pathElement[2]) * focusedPosterWidth;
+			var endY = parseFloat(pathElement[3]) * focusedPosterHeight;
+
+			paper.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+			console.log('Path: ' + 'M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+
+			var scribbleStroke = new ScribbleStroke(startX / focusedPosterWidth, startY / focusedPosterHeight, endX / focusedPosterWidth, endY / focusedPosterHeight, '#fff');
+			scribbleStrokes.push(scribbleStroke);
+		}
+	});
 }
 
 function setupSaveAnnoButton() {
 	$('#saveAnnoButton').click(function() {
+		if(scribbleStrokes.length == 0) {
+			return;
+		}
+
 		$.post('/PosterBoardApp/saveAnno', {
 			path : JSON.stringify(scribbleStrokes),
 			annoId : annoId,
@@ -88,8 +126,19 @@ function setupSaveAnnoButton() {
 			if(drawingId == response.drawingId) {
 				annoId = response.annoId;
 			}
+			$('#saveAnnoButton').attr('src', '/static/images/saveAnno-saved.jpg');
 		});
 		scribbleStrokes = [];
+	});
+}
+
+function setupResetAnnoButton() {
+	$('#resetAnnoButton').click(function() {
+		paper.remove();
+		paper = Raphael('canvasContainer');
+		scribbleStrokes = [];
+		annoId = '';
+		drawingId = Math.random();
 	});
 }
 
@@ -190,9 +239,8 @@ function setupPosterClick() {
 		fullPoster.css('position', '');
 		$("#focusedPosterImage").empty();
 		fullPoster.appendTo("#focusedPosterImage");
-		
-		focusedImageWidth = $(this).width();
-		focusedImageHeight = $(this).height();
+		var clickedImageWidth = $(this).width();
+		var clickedImageHeight = $(this).height();
 		focusedImageSrc = $(this).attr('src');
 
 		$.getJSON('/PosterBoardApp/getAnno', {
@@ -201,25 +249,26 @@ function setupPosterClick() {
 			console.log("Number of path objects: " + data.length);
 
 			for( i = 0; i < data.length; i++) {
-				var cloneAnchor = $("<a href='#'></a>");
+				var cloneAnchor = $("<a href='#' class='oldSketch'></a>");
 				cloneAnchor.appendTo(".jTscroller");
-				cloneAnchor.attr('id', i);
+				cloneAnchor.attr('id', 'oldSketch' + i);
 
-				var thumbnailScale = getThumbnailScale(focusedImageWidth, focusedImageHeight, 100, 200);
-				var thumbnailWidth = focusedImageWidth * thumbnailScale;
-				var thumbnailHeight = focusedImageHeight * thumbnailScale;
+				var thumbnailScale = getThumbnailScale(clickedImageWidth, clickedImageHeight, 100, 200);
+				var thumbnailWidth = clickedImageWidth * thumbnailScale;
+				var thumbnailHeight = clickedImageHeight * thumbnailScale;
 				console.log('Thumbnail dimensions: ' + thumbnailWidth + ' x ' + thumbnailHeight);
-				var thumbnailCanvas = Raphael(i, thumbnailWidth, thumbnailHeight);
+				var thumbnailCanvas = Raphael('oldSketch' + i, thumbnailWidth, thumbnailHeight);
 				thumbnailCanvas.image(focusedImageSrc, 0, 0, thumbnailWidth, thumbnailHeight);
-				
+
 				var path = data[i].path;
-				for (j = 0; j < path.length; j++){
+				cloneAnchor.data('path', path);
+				for( j = 0; j < path.length; j++) {
 					var pathElement = path[j].split(',');
 					var startX = parseFloat(pathElement[0]) * thumbnailWidth;
 					var startY = parseFloat(pathElement[1]) * thumbnailHeight;
 					var endX = parseFloat(pathElement[2]) * thumbnailWidth;
 					var endY = parseFloat(pathElement[3]) * thumbnailHeight;
-					
+
 					thumbnailCanvas.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
 					console.log('Path: ' + 'M' + startX + ',' + startY + 'L' + endX + ',' + endY);
 				}
@@ -227,38 +276,7 @@ function setupPosterClick() {
 			displayAnnoScroller();
 
 		});
-		// for (i = 0; i < 3; i++){
-		// var cloneAnchor = $("<a href='#'></a>");
-		// cloneAnchor.appendTo(".jTscroller");
-		// cloneAnchor.attr('id', i);
-		//
-		// fullPosterClone = $(this).clone();
-		// fullPosterClone.css('position', '');
-		// fullPosterClone.css('maxWidth', '');
-		// fullPosterClone.css('maxHeight', '');
-		// // fullPosterClone.attr('id', i);
-		// fullPosterClone.removeClass('thumbnail');
-		//
-		// // fullPosterClone.appendTo(cloneAnchor);
-		//
-		// var thumbnailScale = getThumbnailScale($(this).width(), $(this).height(), 100, 200);
-		// var thumbnailWidth = $(this).width() * thumbnailScale;
-		// var thumbnailHeight = $(this).height() * thumbnailScale;
-		// console.log('Thumbnail dimensions: ' + thumbnailWidth + ' x ' + thumbnailHeight);
-		// var thumbnailCanvas = Raphael(i, thumbnailWidth, thumbnailHeight);
-		// thumbnailCanvas.image(fullPosterClone.attr('src'), 0, 0, thumbnailWidth, thumbnailHeight);
-		// thumbnailCanvas.path('M0,0L100,100');
-		// }
 		drawingId = Math.random();
-		// displayAnnoScroller();
-
-		// var fullPosterClone = fullPoster.clone();
-		// fullPosterClone.css('top', '0px');
-		// fullPosterClone.css('left', '0px');
-		// fullPosterClone.css('position', 'absolute');
-		// fullPosterClone.css('border', '1px solid #00f');
-		// fullPosterClone.css('z-index', 1);
-		// fullPosterClone.appendTo("#focusedPosterImage");
 
 		$.colorbox({
 			inline : true,
@@ -267,6 +285,7 @@ function setupPosterClick() {
 			onClosed : function() {
 				$("#focusedPosterImage").empty();
 				$('#saveAnnoButton').hide();
+				$('#resetAnnoButton').hide();
 				$('#canvasContainer').empty();
 
 				$(".jTscroller").css('top', '0px');
@@ -274,7 +293,6 @@ function setupPosterClick() {
 				scribbleStrokes = [];
 				drawing = false;
 				drawingId = '';
-				$("#saveAnnoButton").click();
 				annoId = '';
 				paper.remove();
 			},
@@ -301,6 +319,8 @@ function setupPosterClick() {
 					startY = event.offsetY;
 					drawing = true;
 					$('#saveAnnoButton').show();
+					$('#resetAnnoButton').show();
+					$('#saveAnnoButton').attr('src', '/static/images/saveAnno-unsaved.jpg');
 				});
 				$('#canvasContainer').mousemove(function(event) {
 					if(drawing) {
