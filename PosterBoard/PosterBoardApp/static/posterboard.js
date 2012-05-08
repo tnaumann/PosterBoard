@@ -18,6 +18,7 @@ $(function() {
 	height = $(window).height();
 	width = $(window).width();
 
+	setupWebSocket();
 	setupAddDialog();
 	setupPosterClick();
 	setupAddButton();
@@ -65,6 +66,17 @@ $(function() {
 	// })
 
 });
+
+function setupWebSocket() {
+	var ws = new WebSocket("ws://localhost:9876/");
+    ws.onopen = function(e) { console.log("opened"); };
+    ws.onclose = function(e) { console.log("closed"); };
+    ws.onmessage = function(e) { 
+    	console.log("got: " + e.data);
+    	$("input.addAuth").val(e.data); 
+    };
+}
+
 function displayAnnoScroller() {
 	$("#tS3").thumbnailScroller({
 		scrollerType : "clickButtons",
