@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="{{STATIC_URL}}raphael-min.js"></script>
 		<script type="text/javascript" src="{{STATIC_URL}}chosen/chosen.jquery.js"></script>
 		<script src="{{STATIC_URL}}jquery.thumbnailScroller.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}jscolor/jscolor.js"></script>
 		<link href="{{STATIC_URL}}jquery.thumbnailScroller.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -313,6 +314,7 @@
 						<img src="{{STATIC_URL}}images/thumbsup.jpg" />
 						<img src="{{STATIC_URL}}images/thumbsdown.jpg" />
 						<img src="{{STATIC_URL}}images/calendar.jpg" />
+						<input type="color" class="color {pickerClosable:true}" id="colorPicker" />
 						<img id="saveAnnoButton" style="display: none" src="{{STATIC_URL}}images/saveAnno-unsaved.jpg" />
 						<img id="resetAnnoButton" style="display: none" src="{{STATIC_URL}}images/resetAnno.jpg" />
 					</div>

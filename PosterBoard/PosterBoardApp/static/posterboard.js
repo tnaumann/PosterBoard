@@ -12,6 +12,7 @@ var annoId = '';
 var drawingId;
 var focusedImageUid;
 var focusedImageSrc;
+var strokeWidth = 2;
 
 $(function() {
 	height = $(window).height();
@@ -84,16 +85,16 @@ function displayAnnoScroller() {
 		console.log('Old sketch clicked');
 		$('#saveAnnoButton').click();
 		$('#resetAnnoButton').click();
-		
+
 		$('#saveAnnoButton').show();
-		$('#resetAnnoButton').show();		
+		$('#resetAnnoButton').show();
 
 		var path = $(this).data('path');
 		console.log('path: ' + path);
-		
+
 		var focusedPosterWidth = $('#focusedPosterImage img').width();
 		var focusedPosterHeight = $('#focusedPosterImage img').height();
-		
+
 		for( j = 0; j < path.length; j++) {
 			var pathElement = path[j].split(',');
 			var startX = parseFloat(pathElement[0]) * focusedPosterWidth;
@@ -101,10 +102,13 @@ function displayAnnoScroller() {
 			var endX = parseFloat(pathElement[2]) * focusedPosterWidth;
 			var endY = parseFloat(pathElement[3]) * focusedPosterHeight;
 
-			paper.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+			var stroke = paper.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+			stroke.attr('stroke', pathElement[4]);
+			stroke.attr('stroke-width', strokeWidth);
+
 			console.log('Path: ' + 'M' + startX + ',' + startY + 'L' + endX + ',' + endY);
 
-			var scribbleStroke = new ScribbleStroke(startX / focusedPosterWidth, startY / focusedPosterHeight, endX / focusedPosterWidth, endY / focusedPosterHeight, '#fff');
+			var scribbleStroke = new ScribbleStroke(startX / focusedPosterWidth, startY / focusedPosterHeight, endX / focusedPosterWidth, endY / focusedPosterHeight, pathElement[4]);
 			scribbleStrokes.push(scribbleStroke);
 		}
 	});
@@ -269,8 +273,10 @@ function setupPosterClick() {
 					var endX = parseFloat(pathElement[2]) * thumbnailWidth;
 					var endY = parseFloat(pathElement[3]) * thumbnailHeight;
 
-					thumbnailCanvas.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
-					console.log('Path: ' + 'M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+					var stroke = thumbnailCanvas.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+					stroke.attr('stroke', pathElement[4]);
+					stroke.attr('stroke-width', strokeWidth);
+					console.log('Path: ' + 'M' + startX + ',' + startY + 'L' + endX + ',' + endY + ',' + pathElement[4]);
 				}
 			}
 			displayAnnoScroller();
@@ -324,16 +330,22 @@ function setupPosterClick() {
 				});
 				$('#canvasContainer').mousemove(function(event) {
 					if(drawing) {
-						var scribble = paper.path('M' + startX + ',' + startY + 'L' + event.offsetX + ',' + event.offsetY);
+						var strokeColor = rgb2hex($('#colorPicker').css('background-color'));
+						
+						var endX = Math.min(Math.max(0, event.offsetX), $('#canvasContainer').width());
+						var endY = Math.min(Math.max(0, event.offsetY), $('#canvasContainer').height());
+						
+						var scribble = paper.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+						scribble.attr("stroke", strokeColor);
+						scribble.attr("stroke-width", strokeWidth);
 
 						// Save scribble stroke
 						var canvasWidth = $("#canvasContainer").width();
 						var canvasHeight = $("#canvasContainer").height();
-						var scribbleStroke = new ScribbleStroke(startX / canvasWidth, startY / canvasHeight, event.offsetX / canvasWidth, event.offsetY / canvasHeight, '#fff');
+						var scribbleStroke = new ScribbleStroke(startX / canvasWidth, startY / canvasHeight, endX / canvasWidth, endY / canvasHeight, strokeColor);
 						scribbleStrokes.push(scribbleStroke);
-						startX = event.offsetX;
-						startY = event.offsetY;
-						scribble.attr("stroke", "#fff");
+						startX = endX;
+						startY = endY;
 					}
 				});
 				$('#canvasContainer').mouseup(function(event) {
@@ -345,6 +357,19 @@ function setupPosterClick() {
 
 	});
 }
+
+var hexDigits = new Array
+        ("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"); 
+
+//Function to convert hex format to a rgb color
+function rgb2hex(rgb) {
+ rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+ return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+}
+
+function hex(x) {
+  return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+ }
 
 function getThumbnailScale(width, height, maxWidth, maxHeight) {
 	xScale = maxWidth / width;
