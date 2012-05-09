@@ -382,6 +382,7 @@ function setupPosterClick() {
 
 				$(".jTscroller").css('top', '0px');
 				$(".jTscroller").empty();
+				
 				scribbleStrokes = [];
 				drawing = false;
 				drawingId = '';

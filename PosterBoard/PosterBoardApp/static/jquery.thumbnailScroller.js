@@ -36,6 +36,7 @@ Homepage: manos.malihu.gr/jquery-thumbnail-scroller
 		}
 		var totalHeight=$scroller.outerHeight(true); //scroller height
 		//do the scrolling
+		console.log('Scroller height comparison: ' + totalHeight + ', ' + $this.height());
 		if(totalWidth>$this.width() || totalHeight>$this.height()){ //needs scrolling		
 			var pos;
 			var mouseCoords;
@@ -130,7 +131,7 @@ Homepage: manos.malihu.gr/jquery-thumbnail-scroller
 				var diffX=totalWidth+(posX-$this.width());
 				var posY=$scroller.position().top;
 				var diffY=totalHeight+(posY-$this.height());
-				$scrollerPrevButton.stop().show("fast");
+				$scrollerPrevButton.show("fast");
 				if(options.scrollerOrientation=="horizontal"){
 					if(diffX>=$this.width()){
 						$scroller.stop().animate({left:"-="+$this.width()},options.scrollSpeed,options.scrollEasing,function(){
@@ -143,17 +144,20 @@ Homepage: manos.malihu.gr/jquery-thumbnail-scroller
 						$scroller.stop().animate({left:$this.width()-totalWidth},options.scrollSpeed,options.scrollEasing);
 					}
 				}else{
+					console.log('Width: ' + $scrollerPrevButton.css('width') + ', ' + $scrollerPrevButton.width());
 					if(diffY>=$this.height()){
-						$scroller.stop().animate({top:"-="+$this.height()},options.scrollSpeed,options.scrollEasing,function(){
+						$scroller.animate({top:"-="+$this.height()},options.scrollSpeed,options.scrollEasing,function(){
 							if(diffY==$this.height()){
-								$scrollerNextButton.stop().hide("fast");
+								$scrollerNextButton.hide("fast");
 							}
 						});
 					} else {
-						$scrollerNextButton.stop().hide("fast");
-						$scroller.stop().animate({top:$this.height()-totalHeight},options.scrollSpeed,options.scrollEasing);
+						$scrollerNextButton.hide("fast");
+						$scroller.animate({top:$this.height()-totalHeight},options.scrollSpeed,options.scrollEasing);
 					}
 				}
+				
+				console.log('Finished processing next click');
 			});
 			$scrollerPrevButton.click(function(e){ //previous button
 				e.preventDefault();
@@ -161,7 +165,7 @@ Homepage: manos.malihu.gr/jquery-thumbnail-scroller
 				var diffX=totalWidth+(posX-$this.width());
 				var posY=$scroller.position().top;
 				var diffY=totalHeight+(posY-$this.height());
-				$scrollerNextButton.stop().show("fast");
+				$scrollerNextButton.show("fast");
 				if(options.scrollerOrientation=="horizontal"){
 					if(posX+$this.width()<=0){
 						$scroller.stop().animate({left:"+="+$this.width()},options.scrollSpeed,options.scrollEasing,function(){
@@ -175,14 +179,14 @@ Homepage: manos.malihu.gr/jquery-thumbnail-scroller
 					}
 				}else{
 					if(posY+$this.height()<=0){
-						$scroller.stop().animate({top:"+="+$this.height()},options.scrollSpeed,options.scrollEasing,function(){
+						$scroller.animate({top:"+="+$this.height()},options.scrollSpeed,options.scrollEasing,function(){
 							if(posY+$this.height()==0){
-								$scrollerPrevButton.stop().hide("fast");
+								$scrollerPrevButton.hide("fast");
 							}
 						});
 					} else {
-						$scrollerPrevButton.stop().hide("fast");
-						$scroller.stop().animate({top:0},options.scrollSpeed,options.scrollEasing);
+						$scrollerPrevButton.hide("fast");
+						$scroller.animate({top:0},options.scrollSpeed,options.scrollEasing);
 					}
 				}
 			});
