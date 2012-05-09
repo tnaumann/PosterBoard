@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.context_processors import csrf
 import simplejson as json
-import settings
+import settings, math
 
 from PosterBoard.PosterBoardApp.models import Poster, AnnotationPath, Annotation
 from PosterBoard.PosterBoardApp.forms import PosterForm
@@ -189,4 +189,20 @@ def getAnno(request):
         
     return HttpResponse(json.dumps(annoArr))
     
+def getLikes(request):
+    poster = Poster.objects.get(pk=int(request.GET['poster']))
+    returnVal = {'likes': poster.likes, 'dislikes': poster.dislikes}
+    return HttpResponse(json.dumps(returnVal))
+
+def updateLikes(request):
+    poster = Poster.objects.get(pk=int(request.GET['poster']))
     
+    likes = int(request.GET['likes'])
+    dislikes = int(request.GET['dislikes'])
+    
+    if (math.fabs(poster.likes - likes) <= 1 and math.fabs(poster.dislikes - dislikes) <= 1):
+        poster.likes = likes
+        poster.dislikes = dislikes   
+        poster.save()    
+    
+    return HttpResponse('success')

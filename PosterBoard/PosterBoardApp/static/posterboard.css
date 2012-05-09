@@ -94,8 +94,26 @@ body {
 	padding-top: 5px;
 	border-bottom: 2px solid #AAA;
 }
-#focusedPosterInteraction img:hover{
+#focusedPosterInteraction div{
+	width: 30px;
+	height: 30px;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	border-bottom: 2px solid #AAA;
+	background-repeat: no-repeat;
+	background-size:contain; 
+	background-position:center center;
+}
+#focusedPosterInteraction div span{
+	width: 30px;
+	text-align: center;
+	display: block;
+	color: white;
+}
+
+#focusedPosterInteraction div:hover, #focusedPosterInteraction img:hover{
 	opacity: 0.8;
+	cursor: hand;
 }
 #colorPicker{
 	width: 28px;

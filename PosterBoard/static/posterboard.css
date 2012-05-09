@@ -75,10 +75,13 @@ body {
 	padding: 10px;
 	color: #666;
 	/*border-top: 2px solid #AAA;*/
-	float: right;
+	float: left;
 }
-#tS3 .jTscrollerContainer{
-	z-index: 999999;
+#tS3 {
+	float: left;
+}
+.jTscroller img{
+	max-width: 100px;
 }
 #focusedPosterImage{
 	float: left;
@@ -91,8 +94,33 @@ body {
 	padding-top: 5px;
 	border-bottom: 2px solid #AAA;
 }
+#focusedPosterInteraction div{
+	width: 30px;
+	height: 30px;
+	display: block;
+	padding-bottom: 5px;
+	padding-top: 5px;
+	border-bottom: 2px solid #AAA;
+	line-height: 30px;
+	background-repeat: no-repeat;
+	background-size:contain; 
+	background-position:center center;
+	text-align: center;
+	color: #CCC;
+}
 #focusedPosterInteraction img:hover{
 	opacity: 0.8;
+}
+#focusedPosterInteraction div:hover{
+	opacity: 0.8;
+}
+#colorPicker{
+	width: 28px;
+	height: 28px;
+	border-radius: 5px;
+	margin-top: 5px;
+	border-bottom: 2px solid #AAA;
+	font-size: 0px;
 }
 #focusedPoster{
 	background-color: #FFF;
@@ -214,7 +242,7 @@ body {
 .clear_both {
     clear:both;
 }
-input {
+#addContainer input {
     border-radius:10px;
     -moz-border-radius:10px;
     -ms-border-radius:10px;
@@ -225,7 +253,7 @@ input {
     font-size:14pt;
     padding:5px 10px;
 }
-input[type=button] {
+#addContainer input[type=button] {
     background: -moz-linear-gradient(#ffffff, #dfdfdf);
     background: -ms-linear-gradient(#ffffff, #dfdfdf);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #dfdfdf));

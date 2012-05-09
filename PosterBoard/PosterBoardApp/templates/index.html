@@ -311,12 +311,13 @@
 					<div id="focusedPosterImage"></div>
 					<div id="canvasContainer" style="position: absolute"></div>
 					<div id="focusedPosterInteraction">
-						<img src="{{STATIC_URL}}images/thumbsup.jpg" />
-						<img src="{{STATIC_URL}}images/thumbsdown.jpg" />
+						<div style="background-image: url({{STATIC_URL}}images/thumbsup.jpg);"><span id="likes" style="margin-top: 12px;">0</span></div>
+						<div style="background-image: url({{STATIC_URL}}images/thumbsdown.jpg);"><span id="dislikes" style="margin-top: 1px;">0</span></div>
 						<img src="{{STATIC_URL}}images/calendar.jpg" />
 						<input type="color" class="color {pickerClosable:true}" id="colorPicker" />
 						<img id="saveAnnoButton" style="display: none" src="{{STATIC_URL}}images/saveAnno-unsaved.jpg" />
 						<img id="resetAnnoButton" style="display: none" src="{{STATIC_URL}}images/resetAnno.jpg" />
+						
 					</div>
 					<div id="tS3" class="jThumbnailScroller" style="position: relative; top: 0; left: 0; height: 80%">
 						<div class="jTscrollerContainer">

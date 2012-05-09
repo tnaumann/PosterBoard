@@ -13,6 +13,8 @@ var drawingId;
 var focusedImageUid;
 var focusedImageSrc;
 var strokeWidth = 2;
+var liked = false;
+var disliked = false;
 
 $(function() {
 	height = $(window).height();
@@ -27,6 +29,7 @@ $(function() {
 	setupCalendarView();
 	setupSaveAnnoButton();
 	setupResetAnnoButton();
+	setupLikesButton();
 
 	$("#viewSwitcherContainer a").mousedown(function() {
 		$(this).addClass('buttonDown');
@@ -66,15 +69,73 @@ $(function() {
 	// })
 
 });
-
 function setupWebSocket() {
 	var ws = new WebSocket("ws://localhost:9876/");
-    ws.onopen = function(e) { console.log("opened"); };
-    ws.onclose = function(e) { console.log("closed"); };
-    ws.onmessage = function(e) { 
-    	console.log("got: " + e.data);
-    	$("input.addAuth").val(e.data); 
-    };
+	ws.onopen = function(e) {
+		console.log("opened");
+	};
+	ws.onclose = function(e) {
+		console.log("closed");
+	};
+	ws.onmessage = function(e) {
+		console.log("got: " + e.data);
+		$("input.addAuth").val(e.data);
+	};
+}
+
+function setupLikesButton() {
+	$('#likes, #dislikes').click(function() {
+		var clicked = $(this);
+		var other = clicked.attr('id') == 'likes' ? $('#dislikes') : $('#likes');
+		var clickedBool = clicked.attr('id') == 'likes' ? 'liked' : 'disliked';
+		var otherBool = clicked.attr('id') == 'likes' ? 'disliked' : 'liked';
+
+		if(!eval(clickedBool)) {
+			if(eval(otherBool)) {
+				var otherCount = parseInt(other.html());
+				other.html(otherCount - 1);
+				eval(otherBool + '=false');
+			}
+
+			var clickedCount = parseInt(clicked.html());
+			clicked.html(clickedCount + 1);
+		} else {
+			var clickedCount = parseInt(clicked.html());
+			console.log('clickedCount: ' + clickedCount);
+			clicked.html(clickedCount - 1);
+		}
+		eval(clickedBool + '=!' + clickedBool);
+
+		updateLikesView();
+		updateLikesModel();
+	});
+}
+
+function updateLikesView() {
+	if(liked) {
+		console.log('About to set likes image to clicked: ' + $('#likes').parent().css('background-image'));
+		$('#likes').parent().css('background-image', 'url(/static/images/thumbsup-clicked.jpg)');
+		console.log('Set likes image to clicked');
+	} else {
+		$('#likes').parent().css('background-image', 'url(/static/images/thumbsup.jpg)');
+	}
+
+	if(disliked) {
+		$('#dislikes').parent().css('background-image', 'url(/static/images/thumbsdown-clicked.jpg)');
+	} else {
+		$('#dislikes').parent().css('background-image', 'url(/static/images/thumbsdown.jpg)');
+	}
+}
+
+function updateLikesModel() {
+	var likes = $('#likes').html();
+	var dislikes = $('#dislikes').html();
+	
+	$.get('updateLikes', {
+		likes: likes,
+		dislikes: dislikes,
+		poster: focusedImageUid,
+	});
 }
 
 function displayAnnoScroller() {
@@ -118,8 +179,6 @@ function displayAnnoScroller() {
 			stroke.attr('stroke', pathElement[4]);
 			stroke.attr('stroke-width', strokeWidth);
 
-			console.log('Path: ' + 'M' + startX + ',' + startY + 'L' + endX + ',' + endY);
-
 			var scribbleStroke = new ScribbleStroke(startX / focusedPosterWidth, startY / focusedPosterHeight, endX / focusedPosterWidth, endY / focusedPosterHeight, pathElement[4]);
 			scribbleStrokes.push(scribbleStroke);
 		}
@@ -142,8 +201,8 @@ function setupSaveAnnoButton() {
 			if(drawingId == response.drawingId) {
 				annoId = response.annoId;
 			}
-			$('#saveAnnoButton').attr('src', '/static/images/saveAnno-saved.jpg');
 		});
+		$('#saveAnnoButton').attr('src', '/static/images/saveAnno-saved.jpg');
 		scribbleStrokes = [];
 	});
 }
@@ -238,12 +297,28 @@ function setupViewSwitcherButtons() {
 	});
 }
 
+function getLikes() {
+	$.getJSON('/PosterBoardApp/getLikes', {
+		poster : focusedImageUid,
+	}, function(data) {
+		console.log('Likes: ' + data.likes + ', ' + data.dislikes);
+		$('#likes').html(data.likes);
+		$('#dislikes').html(data.dislikes);
+
+	});
+	liked = false;
+	disliked = false; 
+	updateLikesView();
+}
+
 function setupPosterClick() {
 	//Setting up click events
 	$(".thumbnail").click(function() {
 		console.log("Thumbnail clicked: " + $(this).attr('src'));
 		fullPoster = $(this).clone();
 		focusedImageUid = fullPoster.attr('data-uid');
+
+		getLikes();
 
 		fullPoster.css('maxWidth', width * 0.8);
 		fullPoster.css('maxHeight', height * 0.8);
@@ -288,7 +363,6 @@ function setupPosterClick() {
 					var stroke = thumbnailCanvas.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
 					stroke.attr('stroke', pathElement[4]);
 					stroke.attr('stroke-width', strokeWidth);
-					console.log('Path: ' + 'M' + startX + ',' + startY + 'L' + endX + ',' + endY + ',' + pathElement[4]);
 				}
 			}
 			displayAnnoScroller();
@@ -343,10 +417,10 @@ function setupPosterClick() {
 				$('#canvasContainer').mousemove(function(event) {
 					if(drawing) {
 						var strokeColor = rgb2hex($('#colorPicker').css('background-color'));
-						
+
 						var endX = Math.min(Math.max(0, event.offsetX), $('#canvasContainer').width());
 						var endY = Math.min(Math.max(0, event.offsetY), $('#canvasContainer').height());
-						
+
 						var scribble = paper.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
 						scribble.attr("stroke", strokeColor);
 						scribble.attr("stroke-width", strokeWidth);
@@ -370,18 +444,17 @@ function setupPosterClick() {
 	});
 }
 
-var hexDigits = new Array
-        ("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"); 
+var hexDigits = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
 
 //Function to convert hex format to a rgb color
 function rgb2hex(rgb) {
- rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
- return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+	rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+	return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
 }
 
 function hex(x) {
-  return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
- }
+	return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+}
 
 function getThumbnailScale(width, height, maxWidth, maxHeight) {
 	xScale = maxWidth / width;

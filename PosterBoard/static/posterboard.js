@@ -8,11 +8,17 @@ var paper;
 var days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
 var scribbleStrokes = [];
+var annoId = '';
+var drawingId;
+var focusedImageUid;
+var focusedImageSrc;
+var strokeWidth = 2;
 
 $(function() {
 	height = $(window).height();
 	width = $(window).width();
 
+	setupWebSocket();
 	setupAddDialog();
 	setupPosterClick();
 	setupAddButton();
@@ -20,6 +26,7 @@ $(function() {
 	setupSimilarView();
 	setupCalendarView();
 	setupSaveAnnoButton();
+	setupResetAnnoButton();
 
 	$("#viewSwitcherContainer a").mousedown(function() {
 		$(this).addClass('buttonDown');
@@ -47,10 +54,30 @@ $(function() {
 	$("#leftCalendarPanel img").click(function() {
 		setupCalendar(-7, true);
 	});
+
+	$("#focusedPosterInteraction img").mousedown(function() {
+		$(this).css('opacity', 0.3);
+	}).mouseup(function() {
+		$(this).css('opacity', 1);
+	});
 	// $("#addPosterButton").click(function(){
 	// $("#addButton").click();
 	// alert("Poster added successfully");
 	// })
+
+});
+
+function setupWebSocket() {
+	var ws = new WebSocket("ws://localhost:9876/");
+    ws.onopen = function(e) { console.log("opened"); };
+    ws.onclose = function(e) { console.log("closed"); };
+    ws.onmessage = function(e) { 
+    	console.log("got: " + e.data);
+    	$("input.addAuth").val(e.data); 
+    };
+}
+
+function displayAnnoScroller() {
 	$("#tS3").thumbnailScroller({
 		scrollerType : "clickButtons",
 		scrollerOrientation : "vertical",
@@ -65,13 +92,69 @@ $(function() {
 		autoScrollingEasing : "easeInOutQuad",
 		autoScrollingDelay : 500
 	});
-});
+
+	$('#ts3 a.oldSketch').click(function() {
+		console.log('Old sketch clicked');
+		$('#saveAnnoButton').click();
+		$('#resetAnnoButton').click();
+
+		$('#saveAnnoButton').show();
+		$('#resetAnnoButton').show();
+
+		var path = $(this).data('path');
+		console.log('path: ' + path);
+
+		var focusedPosterWidth = $('#focusedPosterImage img').width();
+		var focusedPosterHeight = $('#focusedPosterImage img').height();
+
+		for( j = 0; j < path.length; j++) {
+			var pathElement = path[j].split(',');
+			var startX = parseFloat(pathElement[0]) * focusedPosterWidth;
+			var startY = parseFloat(pathElement[1]) * focusedPosterHeight;
+			var endX = parseFloat(pathElement[2]) * focusedPosterWidth;
+			var endY = parseFloat(pathElement[3]) * focusedPosterHeight;
+
+			var stroke = paper.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+			stroke.attr('stroke', pathElement[4]);
+			stroke.attr('stroke-width', strokeWidth);
+
+			console.log('Path: ' + 'M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+
+			var scribbleStroke = new ScribbleStroke(startX / focusedPosterWidth, startY / focusedPosterHeight, endX / focusedPosterWidth, endY / focusedPosterHeight, pathElement[4]);
+			scribbleStrokes.push(scribbleStroke);
+		}
+	});
+}
+
 function setupSaveAnnoButton() {
 	$('#saveAnnoButton').click(function() {
+		if(scribbleStrokes.length == 0) {
+			return;
+		}
+
 		$.post('/PosterBoardApp/saveAnno', {
 			path : JSON.stringify(scribbleStrokes),
-			poster : 'poster1'
+			annoId : annoId,
+			drawingId : drawingId,
+			poster : focusedImageUid,
+		}, function(data, textStatus, jqXHR) {
+			var response = $.parseJSON(data);
+			if(drawingId == response.drawingId) {
+				annoId = response.annoId;
+			}
+			$('#saveAnnoButton').attr('src', '/static/images/saveAnno-saved.jpg');
 		});
+		scribbleStrokes = [];
+	});
+}
+
+function setupResetAnnoButton() {
+	$('#resetAnnoButton').click(function() {
+		paper.remove();
+		paper = Raphael('canvasContainer');
+		scribbleStrokes = [];
+		annoId = '';
+		drawingId = Math.random();
 	});
 }
 
@@ -160,6 +243,8 @@ function setupPosterClick() {
 	$(".thumbnail").click(function() {
 		console.log("Thumbnail clicked: " + $(this).attr('src'));
 		fullPoster = $(this).clone();
+		focusedImageUid = fullPoster.attr('data-uid');
+
 		fullPoster.css('maxWidth', width * 0.8);
 		fullPoster.css('maxHeight', height * 0.8);
 		fullPoster.css('top', 0);
@@ -167,32 +252,71 @@ function setupPosterClick() {
 		fullPoster.css('margin', 0);
 		fullPoster.css('z-index', 100);
 		fullPoster.removeClass('thumbnail');
-		fullPoster.css('border', '1px solid #00f');
 		fullPoster.css('position', '');
 		$("#focusedPosterImage").empty();
 		fullPoster.appendTo("#focusedPosterImage");
+		var clickedImageWidth = $(this).width();
+		var clickedImageHeight = $(this).height();
+		focusedImageSrc = $(this).attr('src');
 
-		// var fullPosterClone = fullPoster.clone();
-		// fullPosterClone.css('top', '0px');
-		// fullPosterClone.css('left', '0px');
-		// fullPosterClone.css('position', 'absolute');
-		// fullPosterClone.css('border', '1px solid #00f');
-		// fullPosterClone.css('z-index', 1);
-		// fullPosterClone.appendTo("#focusedPosterImage");
+		$.getJSON('/PosterBoardApp/getAnno', {
+			poster : focusedImageUid,
+		}, function(data) {
+			console.log("Number of path objects: " + data.length);
+
+			for( i = 0; i < data.length; i++) {
+				var cloneAnchor = $("<a href='#' class='oldSketch'></a>");
+				cloneAnchor.appendTo(".jTscroller");
+				cloneAnchor.attr('id', 'oldSketch' + i);
+
+				var thumbnailScale = getThumbnailScale(clickedImageWidth, clickedImageHeight, 100, 200);
+				var thumbnailWidth = clickedImageWidth * thumbnailScale;
+				var thumbnailHeight = clickedImageHeight * thumbnailScale;
+				console.log('Thumbnail dimensions: ' + thumbnailWidth + ' x ' + thumbnailHeight);
+				var thumbnailCanvas = Raphael('oldSketch' + i, thumbnailWidth, thumbnailHeight);
+				thumbnailCanvas.image(focusedImageSrc, 0, 0, thumbnailWidth, thumbnailHeight);
+
+				var path = data[i].path;
+				cloneAnchor.data('path', path);
+				for( j = 0; j < path.length; j++) {
+					var pathElement = path[j].split(',');
+					var startX = parseFloat(pathElement[0]) * thumbnailWidth;
+					var startY = parseFloat(pathElement[1]) * thumbnailHeight;
+					var endX = parseFloat(pathElement[2]) * thumbnailWidth;
+					var endY = parseFloat(pathElement[3]) * thumbnailHeight;
+
+					var stroke = thumbnailCanvas.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+					stroke.attr('stroke', pathElement[4]);
+					stroke.attr('stroke-width', strokeWidth);
+					console.log('Path: ' + 'M' + startX + ',' + startY + 'L' + endX + ',' + endY + ',' + pathElement[4]);
+				}
+			}
+			displayAnnoScroller();
+
+		});
+		drawingId = Math.random();
 
 		$.colorbox({
 			inline : true,
-			maxWidth : '50%',
+			maxWidth : '100%',
 			href : '#focusedPoster',
 			onClosed : function() {
 				$("#focusedPosterImage").empty();
 				$('#saveAnnoButton').hide();
+				$('#resetAnnoButton').hide();
 				$('#canvasContainer').empty();
+
+				$(".jTscroller").css('top', '0px');
+				$(".jTscroller").empty();
 				scribbleStrokes = [];
 				drawing = false;
+				drawingId = '';
+				annoId = '';
 				paper.remove();
 			},
 			onComplete : function() {
+				displayAnnoScroller();
+
 				var offset = $('#focusedPosterImage img').offset();
 				console.log('Offset x: ' + offset.left + ' Offset y: ' + offset.top);
 				console.log('Width: ' + $('#focusedPosterImage img').width() + ' Height: ' + $('#focusedPosterImage img').height());
@@ -213,19 +337,27 @@ function setupPosterClick() {
 					startY = event.offsetY;
 					drawing = true;
 					$('#saveAnnoButton').show();
+					$('#resetAnnoButton').show();
+					$('#saveAnnoButton').attr('src', '/static/images/saveAnno-unsaved.jpg');
 				});
 				$('#canvasContainer').mousemove(function(event) {
 					if(drawing) {
-						var scribble = paper.path('M' + startX + ',' + startY + 'L' + event.offsetX + ',' + event.offsetY);
+						var strokeColor = rgb2hex($('#colorPicker').css('background-color'));
+						
+						var endX = Math.min(Math.max(0, event.offsetX), $('#canvasContainer').width());
+						var endY = Math.min(Math.max(0, event.offsetY), $('#canvasContainer').height());
+						
+						var scribble = paper.path('M' + startX + ',' + startY + 'L' + endX + ',' + endY);
+						scribble.attr("stroke", strokeColor);
+						scribble.attr("stroke-width", strokeWidth);
 
 						// Save scribble stroke
 						var canvasWidth = $("#canvasContainer").width();
 						var canvasHeight = $("#canvasContainer").height();
-						var scribbleStroke = new ScribbleStroke(startX / canvasWidth, startY / canvasHeight, event.offsetX / canvasWidth, event.offsetY / canvasHeight, '#fff');
+						var scribbleStroke = new ScribbleStroke(startX / canvasWidth, startY / canvasHeight, endX / canvasWidth, endY / canvasHeight, strokeColor);
 						scribbleStrokes.push(scribbleStroke);
-						startX = event.offsetX;
-						startY = event.offsetY;
-						scribble.attr("stroke", "#fff");
+						startX = endX;
+						startY = endY;
 					}
 				});
 				$('#canvasContainer').mouseup(function(event) {
@@ -236,6 +368,26 @@ function setupPosterClick() {
 		// $.colorbox.resize();
 
 	});
+}
+
+var hexDigits = new Array
+        ("0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"); 
+
+//Function to convert hex format to a rgb color
+function rgb2hex(rgb) {
+ rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+ return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+}
+
+function hex(x) {
+  return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+ }
+
+function getThumbnailScale(width, height, maxWidth, maxHeight) {
+	xScale = maxWidth / width;
+	yScale = maxHeight / height;
+
+	return Math.min(xScale, yScale);
 }
 
 function ScribbleStroke(startX, startY, endX, endY, color) {

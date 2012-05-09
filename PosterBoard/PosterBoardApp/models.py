@@ -18,8 +18,8 @@ class Poster(models.Model):
     tag5 = models.CharField(max_length=200, null=True, blank=True)
     email = models.EmailField(max_length=200)
     title = models.CharField(max_length=200, null=True, blank=True)
-    likes = models.IntegerField(null=True, blank=True)
-    dislikes = models.IntegerField(null=True, blank=True)
+    likes = models.IntegerField(null=True, blank=True, default=0)
+    dislikes = models.IntegerField(null=True, blank=True, default=0)
 
 
 class Comment(models.Model):
