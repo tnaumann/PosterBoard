@@ -159,7 +159,7 @@ function setupResetAnnoButton() {
 }
 
 function setupCalendar(diff, set) {
-	var today = $("#posterDatePicker").datepicker("getDate");
+    var today = $("#posterDatePicker").datepicker("getDate");
 	today = new Date(today.getTime() + (24 * 60 * 60 * 1000) * diff);
 	if(set) {
 		$("#posterDatePicker").datepicker("setDate", today);
@@ -171,16 +171,16 @@ function setupCalendar(diff, set) {
 			today = new Date(today.getTime() - (24 * 60 * 60 * 1000));
 		}
 	}
-
+    
 	var i = 0;
 	for( i = 1; i < 8; i = i + 1) {
 		var curr_date = today.getDate();
 		var curr_day = today.getDay();
 		var curr_month = today.getMonth();
-		$("#day" + i).html("&nbsp;" + curr_date);
+		$("#day" + i).html("&nbsp;*****" + curr_date);
 		$("#wday" + i).html(days[curr_day]);
 		$("#month" + i).html(months[curr_month]);
-		today = new Date(today.getTime() + (24 * 60 * 60 * 1000));
+        today = new Date(today.getTime() + (24 * 60 * 60 * 1000));
 	}
 }
 

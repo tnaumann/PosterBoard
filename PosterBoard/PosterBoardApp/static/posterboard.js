@@ -218,6 +218,7 @@ function setupResetAnnoButton() {
 }
 
 function setupCalendar(diff, set) {
+	$(".poster-div").css('display', 'block');
 	var today = $("#posterDatePicker").datepicker("getDate");
 	today = new Date(today.getTime() + (24 * 60 * 60 * 1000) * diff);
 	if(set) {
@@ -239,8 +240,20 @@ function setupCalendar(diff, set) {
 		$("#day" + i).html("&nbsp;" + curr_date);
 		$("#wday" + i).html(days[curr_day]);
 		$("#month" + i).html(months[curr_month]);
+                var today_date = new Date(today.getFullYear(), curr_month, curr_date);
+		for (var j = 0;  j < postersv2.length; j = j+1)
+            	{
+                    var temp = postersv2[j]["fields"]["event_date"].split(" ")[0].split("-");
+                    var d = new Date(temp[0], temp[1]-1, temp[2]);
+                    if (today_date.getTime() != d.getTime())
+		    {
+			$("#poster" + i +"-" + postersv2[j]["pk"]).css('display', 'none');
+		        //$("#posterCol" + i).append("<img class='thumbnail' src='/media/" + postersv2[j]["fields"]["posterFile1"] + "'/> <br /> <br />");
+		    }
+		}
 		today = new Date(today.getTime() + (24 * 60 * 60 * 1000));
 	}
+	//$("#board").page();
 }
 
 function setupAddDialog() {

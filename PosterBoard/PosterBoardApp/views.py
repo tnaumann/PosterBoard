@@ -1,3 +1,4 @@
+from django.core import serializers
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 import logging, string, os
@@ -89,9 +90,12 @@ logger = logging.getLogger(__name__)
 
 def home(request):
     posters = Poster.objects.all()
+    json_serializer = serializers.get_serializer("json")()
+    serial = json_serializer.serialize(posters, ensure_ascii=False)
     return render_to_response(
         'index.html',
-        {'posters': posters},
+        {'posters': posters,
+        'postersserial' : serial}, 
         context_instance = RequestContext(request)
    )
 

@@ -7,6 +7,9 @@
 		<link rel="stylesheet" href="{{STATIC_URL}}colorbox.css" type="text/css" media="all" />
 		<link rel="stylesheet" href="{{STATIC_URL}}calendrical.css" type="text/css" media="all" />
 		<link rel="stylesheet" href="{{STATIC_URL}}chosen/chosen.css" type="text/css" media="all" />
+        <script type="text/javascript">
+            postersv2 = JSON.parse("{{postersserial|escapejs}}");
+        </script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
 		<script type="text/javascript" src="{{STATIC_URL}}posterboard.js"></script>
@@ -17,9 +20,10 @@
 		<script src="{{STATIC_URL}}jquery.thumbnailScroller.js"></script>
 		<script type="text/javascript" src="{{STATIC_URL}}jscolor/jscolor.js"></script>
 		<link href="{{STATIC_URL}}jquery.thumbnailScroller.css" rel="stylesheet" />
+        
 	</head>
 	<body>
-		<div id="board">
+			<div id="board" data-role="page">
 			<div id="boardContent">
 				<div id="calendarViewContainer">
 					<div id="leftCalendarPanel">
@@ -75,100 +79,87 @@
 							</tr>
 							<tr>
 								<td>
-								<div class="datePosterCol">
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster1.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster2.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster3.jpg" />
-									<br/>
-									<br/>
+								<div id = "posterCol1" class="datePosterCol">
+                                    {% if posters %}
+                                    {% for poster in posters %}
+                                    <div id = "poster1-{{poster.id}}" class="poster-div">
+                                    <img class ="thumbnail" data-tags="abc" data-uid="{{poster.id}}" src="{{MEDIA_URL}}{{poster.posterFile1.name}}" />
+                                    <br />
+                                    <br />
+                                        </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div></td>
+								<td>
+								<div id = "posterCol2" class="datePosterCol">
+                                    {% if posters %}
+                                    {% for poster in posters %}
+                                    <div id = "poster2-{{poster.id}}" class="poster-div">
+                                    <img class ="thumbnail" data-tags="abc" data-uid="{{poster.id}}" src="{{MEDIA_URL}}{{poster.posterFile1.name}}" />
+                                    <br />
+                                    <br />
+                                        </div>
+                                    {% endfor %}
+                                    {% endif %}	
 								</div></td>
 								<td>
-								<div class="datePosterCol">
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster4.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster5.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster6.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster10.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster1.jpg" />
-									<br/>
-									<br/>
+								<div id = "posterCol3" class="datePosterCol">
+                                    {% if posters %}
+                                    {% for poster in posters %}
+                                    <div id = "poster3-{{poster.id}}" class="poster-div">
+                                    <img class ="thumbnail" data-tags="abc" data-uid="{{poster.id}}" src="{{MEDIA_URL}}{{poster.posterFile1.name}}" />
+                                    <br />
+                                    <br />
+                                        </div>
+                                    {% endfor %}
+                                    {% endif %}
 								</div></td>
 								<td>
-								<div class="datePosterCol">
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster7.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster8.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster9.jpg" />
-									<br/>
-									<br/>
+								<div id = "posterCol4" class="datePosterCol">
+									{% if posters %}
+                                    {% for poster in posters %}
+                                    <div id = "poster4-{{poster.id}}" class="poster-div">
+                                    <img class ="thumbnail" data-tags="abc" data-uid="{{poster.id}}"  src="{{MEDIA_URL}}{{poster.posterFile1.name}}" />
+                                    <br />
+                                    <br />
+                                        </div>
+                                    {% endfor %}
+                                    {% endif %}								</div></td>
+								<td>
+								<div id = "posterCol5" class="datePosterCol">
+									{% if posters %}
+                                    {% for poster in posters %}
+                                    <div id = "poster5-{{poster.id}}" class="poster-div">
+                                    <img class ="thumbnail" data-tags="abc" data-uid="{{poster.id}}"  src="{{MEDIA_URL}}{{poster.posterFile1.name}}" />
+                                    <br />
+                                    <br />
+                                        </div>
+                                    {% endfor %}
+                                    {% endif %}
 								</div></td>
 								<td>
-								<div class="datePosterCol">
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster1.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster2.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster3.jpg" />
-									<br/>
-									<br/>
-								</div></td>
+								<div id = "posterCol6" class="datePosterCol">
+                                    {% if posters %}
+                                    {% for poster in posters %}
+                                    <div id = "poster6-{{poster.id}}" class="poster-div">
+                                    <img class ="thumbnail" data-tags="abc" data-uid="{{poster.id}}"  src="{{MEDIA_URL}}{{poster.posterFile1.name}}" />
+                                    <br />
+                                    <br />
+                                        </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div></td>
 								<td>
-								<div class="datePosterCol">
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster4.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster5.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster6.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster10.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster1.jpg" />
-									<br/>
-									<br/>
-								</div></td>
-								<td>
-								<div class="datePosterCol">
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster7.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster8.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster9.jpg" />
-									<br/>
-									<br/>
-								</div></td>
-								<td>
-								<div class="datePosterCol">
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster7.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster8.jpg" />
-									<br/>
-									<br/>
-									<img class="thumbnail" src="{{STATIC_URL}}images/Poster9.jpg" />
-									<br/>
-									<br/>
+								<div id = "posterCol7" class="datePosterCol">
+									{% if posters %}
+                                    {% for poster in posters %}
+                                    <div id = "poster7-{{poster.id}}" class="poster-div">
+                                    <img class ="thumbnail" data-tags="abc" data-uid="{{poster.id}}"  src="{{MEDIA_URL}}{{poster.posterFile1.name}}" />
+                                    <br />
+                                    <br />
+                                        </div>
+                                    {% endfor %}
+                                    {% endif %}
 								</div></td>
 							</tr>
 						</table>
