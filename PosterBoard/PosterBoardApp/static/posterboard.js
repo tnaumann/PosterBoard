@@ -333,12 +333,10 @@ function setupPosterClick() {
 
 		getLikes();
 
+		console.log('fullPoster max dimensions: ' + width + ', ' + height);
 		fullPoster.css('maxWidth', width * 0.8);
 		fullPoster.css('maxHeight', height * 0.8);
-		fullPoster.css('top', 0);
-		fullPoster.css('left', 0);
 		fullPoster.css('margin', 0);
-		fullPoster.css('z-index', 100);
 		fullPoster.removeClass('thumbnail');
 		fullPoster.css('position', '');
 		$("#focusedPosterImage").empty();
