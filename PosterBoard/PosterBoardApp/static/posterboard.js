@@ -63,6 +63,13 @@ $(function() {
 	}).mouseup(function() {
 		$(this).css('opacity', 1);
 	});
+	
+	$('#colorPickerContainer').click(function(){
+		console.log('Triggering change event on colorpicker');
+		$('#colorPicker').focus();
+		console.log('After triggering change event on colorpicker');
+	});
+	
 	// $("#addPosterButton").click(function(){
 	// $("#addButton").click();
 	// alert("Poster added successfully");
