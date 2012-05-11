@@ -1,0 +1,25 @@
+PosterBoard
+
+Wiki: https://wikis.mit.edu/confluence/display/6DOT813sp12/PosterBoard
+
+Hardware:
+- Windows x64 system
+- SMART PN342C touch overlay
+- SMART USB Adapter (P/N: 93-00583-21-AD)
+
+Installation:
+Installers
+- Chrome (v18.0.1025.168): https://www.google.com/chrome
+- Phidgets Library (Phidget 21 Installer v2.1.8.20120503): http://www.phidgets.com/drivers.php
+- SMART Product Drivers 11 (v11.0.220.0): http://smarttech.com/us/Support/Browse+Support/Download+Software/Software/SMART+Product+Drivers/SMART+Product+Drivers/Product+Drivers+11+Software+for+Windows
+    - During installation select: SMART Ink + SMART Product Drivers
+
+Python Modules
+- Phidgets Python Module (v2.1.8.20120503): http://www.phidgets.com/programming_resources.php
+- Django (v1.4): https://www.djangoproject.com/download/
+
+Drivers
+- PhidgetRFID: Downloads from WU after installation of above
+- USB-serial controller: Downloads from WU after installation of above
+- SMART Board cable: Downloads from WU after installation of above
+
