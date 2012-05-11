@@ -243,7 +243,7 @@ function setupCalendar(diff, set) {
                 var today_date = new Date(today.getFullYear(), curr_month, curr_date);
 		for (var j = 0;  j < postersv2.length; j = j+1)
             	{
-                    var temp = postersv2[j]["fields"]["event_date"].split(" ")[0].split("-");
+                    var temp = postersv2[j]["fields"]["event_date"].split(/T| /)[0].split("-");
                     var d = new Date(temp[0], temp[1]-1, temp[2]);
                     if (today_date.getTime() != d.getTime())
 		    {
