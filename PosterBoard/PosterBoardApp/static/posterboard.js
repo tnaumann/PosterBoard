@@ -15,6 +15,7 @@ var focusedImageSrc;
 var strokeWidth = 2;
 var liked = false;
 var disliked = false;
+var dismissMessageTimeout = 3000;
 
 $(function() {
 	height = $(window).height();
@@ -30,6 +31,8 @@ $(function() {
 	setupSaveAnnoButton();
 	setupResetAnnoButton();
 	setupLikesButton();
+	setupEmailToCalendar();
+	setupSimulateRfid();
 
 	$("#viewSwitcherContainer a").mousedown(function() {
 		$(this).addClass('buttonDown');
@@ -76,6 +79,51 @@ $(function() {
 	// })
 
 });
+function setupSimulateRfid(){
+	$('body').keypress(function(event){
+		console.log('keypressed: ' + event.which);
+		if (event.which == 114){
+			$('#rfidinput').val('cezeozue@mit.edu').change();
+		}
+	})
+}
+function setupEmailToCalendar(){
+	$('#swipeCardMessage').dialog({
+			modal: true,
+			autoOpen : false,
+			zIndex: 99999,
+			resizable: false,
+			buttons: {
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+		});
+	$('#emailSentMessage').dialog({
+			modal: true,
+			autoOpen : false,
+			zIndex: 99999,
+			resizable: false,
+			hide: 'fade',
+			buttons: {
+				Close: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+		});
+	$('#saveToMyCalendar').click(function(){
+		$('#rfidinput').val('');
+		$('#swipeCardMessage').dialog('open');
+		
+		$('#rfidinput').bind('change.sendEmail', function(){
+			$('#rfidinput').unbind('change.sendEmail');
+			console.log('received rfid input');
+			$('#swipeCardMessage').dialog('close');
+			$('#emailSentMessage').dialog('open');
+			setInterval("$('#emailSentMessage').dialog('close');", dismissMessageTimeout);
+		});
+	});
+}
 function setupWebSocket() {
 	var ws = new WebSocket("ws://localhost:9876/");
 	ws.onopen = function(e) {
