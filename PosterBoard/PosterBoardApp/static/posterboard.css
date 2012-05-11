@@ -44,7 +44,7 @@ body {
 }
 .thumbnail{
 	padding: 1px;
-	border: 4px solid #EEE;
+	border: 4px solid transparent;
 }
 .thumbnail:hover {
 	border-color: #333;
@@ -155,6 +155,7 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 }
+
 #leftCalendarPanel {
 	width: 20%;
 	height: 100%;
