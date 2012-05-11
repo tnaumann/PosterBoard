@@ -2,7 +2,6 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 import logging, string, os
-#from django_websocket import accept_websocket, require_websocket
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
@@ -15,6 +14,7 @@ from PosterBoard.PosterBoardApp.models import Poster, AnnotationPath, Annotation
 from PosterBoard.PosterBoardApp.forms import PosterForm
 
 from django.middleware.csrf import get_token
+from django.views.decorators.csrf import csrf_exempt
 
 def upload_page( request ):
   ctx = RequestContext( request, {
@@ -143,7 +143,8 @@ def posterUpload(request):
         {'posters': posters, 'form': form},
         context_instance = RequestContext(request)
    )
-    
+
+@csrf_exempt  
 def saveAnno(request):
     path = json.loads(request.POST['path'])
     
