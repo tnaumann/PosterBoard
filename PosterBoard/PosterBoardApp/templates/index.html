@@ -208,7 +208,9 @@
 							<div style="background-image: url({{STATIC_URL}}images/thumbsdown.jpg);">
 								<span id="dislikes" style="margin-top: 1px;">0</span>
 							</div>
-							<img src="{{STATIC_URL}}images/calendar.jpg" />
+							<img id='saveToMyCalendar' src="{{STATIC_URL}}images/calendar.jpg" />
+							<div id='swipeCardMessage'>Please swipe your ID to have a reminder sent to your email</div>
+							<div id='emailSentMessage'>Thank you. You would receive your reminder by email shortly</div>
 							<div id="colorPickerContainer" style="background-image: url({{STATIC_URL}}images/colorpicker.jpg);">
 								<input class="color {pickerClosable:true}" id="colorPicker" value="#61E9E9" />
 							</div>							

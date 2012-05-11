@@ -123,14 +123,14 @@ body {
 	cursor: hand;
 }
 #focusedPosterInteraction #colorPickerContainer{
-	background-size: 15px 30px;
+	background-size: 20px 30px;
 	background-position: left center;
 }
 #colorPicker{
-	width: 14px;
+	width: 9px;
 	height: 100%;
 	font-size: 0px;
-	margin-left: 14px;
+	margin-left: 20px;
 	border: none;
 	border-left: none;
 }
