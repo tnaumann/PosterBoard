@@ -1,12 +1,20 @@
 /*Skeleton*/
 body {
 	margin: 0;
+	padding: 0;
 	background-color: #EEE;
 }
 #board {
+	float: left;
 	width: 100%;
-	height: 99%;
+	height: 100%;
 	margin: 0;
+}
+#addContainer {
+	float: right;
+	width:0%;
+	height: 100%;
+	z-index: 2;
 }
 #boardContent {
 	/*min-height: 80%;*/
@@ -27,10 +35,6 @@ body {
 	text-decoration: none;
 	font-family: verdana, helvetica, arial, sans-serif;
 	font-weight: 700;
-}
-#addContainer {
-	border: 1px solid blue;
-	overflow: scroll;
 }
 .ui-dialog {
 	//opacity: 0.85;
