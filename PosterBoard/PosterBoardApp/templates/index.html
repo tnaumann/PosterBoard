@@ -308,13 +308,25 @@
 								<span id="dislikes" style="margin-top: 1px;">0</span>
 							</div>
 							<img id='saveToMyCalendar' src="{{STATIC_URL}}images/calendar.jpg" />
-							<div id='swipeCardMessage'>Please swipe your ID to have a reminder sent to your email</div>
-							<div id='emailSentMessage'>Thank you. You would receive your reminder by email shortly</div>
+							<div id='swipeCardMessage'>
+								Please swipe your ID to have a reminder sent to your email
+							</div>
+							<div id='emailSentMessage'>
+								Thank you. You would receive your reminder by email shortly
+							</div>
 							<div id="colorPickerContainer" style="background-image: url({{STATIC_URL}}images/colorpicker.jpg);">
 								<input class="color {pickerClosable:true}" id="colorPicker" value="#61E9E9" />
-							</div>							
+							</div>
 							<img id="saveAnnoButton" style="display: none" src="{{STATIC_URL}}images/saveAnno-unsaved.jpg" />
 							<img id="resetAnnoButton" style="display: none" src="{{STATIC_URL}}images/resetAnno.jpg" />
+							<img id="deleteButton" src="{{STATIC_URL}}images/trash.jpg" />
+							<div id='deleteConfirmation'>
+								Please swipe your ID to confirm that you would like to remove this poster from the board
+							</div>
+							<div id='deleteResult'>
+								<img src="{{STATIC_URL}}images/deleting.gif" style="max-height: 30px; max-width: 30px; vertical-align:middle;" />
+								<span style="line-height: 100%; height: 30px; display: inline-block;">Deleting poster</span>
+							</div>
 						</div>
 						<div id="tS3" class="jThumbnailScroller" style="position: relative; top: 0; left: 0; height: 80%">
 							<div class="jTscrollerContainer">

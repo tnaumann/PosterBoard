@@ -12,7 +12,7 @@ var annoId = '';
 var drawingId;
 var focusedImageUid;
 var focusedImageSrc;
-var strokeWidth = 2;
+var strokeWidth = 3;
 var liked = false;
 var disliked = false;
 var dismissMessageTimeout = 3000;
@@ -33,6 +33,7 @@ $(function() {
 	setupLikesButton();
 	setupEmailToCalendar();
 	setupSimulateRfid();
+	setupDeletePoster();
 
 	$("#viewSwitcherContainer a").mousedown(function() {
 		$(this).addClass('buttonDown');
@@ -121,6 +122,55 @@ function setupEmailToCalendar(){
 			$('#swipeCardMessage').dialog('close');
 			$('#emailSentMessage').dialog('open');
 			setInterval("$('#emailSentMessage').dialog('close');", dismissMessageTimeout);
+		});
+	});
+}
+function setupDeletePoster(){
+	$('#deleteConfirmation').dialog({
+			modal: true,
+			autoOpen : false,
+			zIndex: 99999,
+			resizable: false,
+			buttons: {
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+		});
+	$('#deleteResult').dialog({
+			modal: true,
+			autoOpen : false,
+			zIndex: 99999,
+			resizable: false,
+			hide: 'fade',
+			buttons: {
+				Close: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+		});
+	$('#deleteButton').click(function(){
+		$('#rfidinput').val('');
+		$('#deleteConfirmation').dialog('open');
+		
+		$('#rfidinput').bind('change.delete', function(){
+			$('#rfidinput').unbind('change.delete');
+			console.log('received rfid input');
+			$('#deleteConfirmation').dialog('close');
+			$('#deleteResult img').show();
+			$('#deleteResult span').html('Deleting poster');
+			$('#deleteResult').dialog('open');
+			var rfidinput = $('#rfidinput').val();
+			$.get('deletePoster',{
+				poster: focusedImageUid,
+				email: rfidinput,
+			}, function(data){
+				$('#deleteResult img').hide();
+				$('#deleteResult span').html(data);
+				setInterval("$('#deleteResult').dialog('close');", dismissMessageTimeout);
+				$('[data-uid="' + focusedImageUid + '"]').remove();
+				$.colorbox.close()
+			})
 		});
 	});
 }

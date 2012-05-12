@@ -211,3 +211,13 @@ def updateLikes(request):
         poster.save()    
     
     return HttpResponse('success')
+
+def deletePoster(request):
+    poster = Poster.objects.get(pk=int(request.GET['poster']))
+    
+    if (poster.email == request.GET['email']):
+        poster.delete()
+        return HttpResponse('Poster deleted')
+    else:
+        logger.debug('email: ' + poster.email)
+        return HttpResponse('Poster not deleted. Your email does not match poster that of the poster creator')
