@@ -1,22 +1,26 @@
 /*Skeleton*/
 body {
 	margin: 0;
+	padding: 0;
 	background-color: #EEE;
 }
 #board {
+	float: left;
 	width: 100%;
-	height: 99%;
+	height: 100%;
 	margin: 0;
+}
+#addContainer {
+	float: right;
+	width:0%;
+	height: 100%;
+	z-index: 2;
 }
 #boardContent {
 	/*min-height: 80%;*/
 	/*height: auto !important;*/
 	height: 85%;
 	/*margin: 0 auto -4em;*/
-}
-#viewSwitcherContainer a {
-	margin-right: 5px;
-	margin-left: 5px;
 }
 #viewSwitcherContainer, .push {
 	height: 1em;
@@ -28,10 +32,6 @@ body {
 	font-family: verdana, helvetica, arial, sans-serif;
 	font-weight: 700;
 }
-#addContainer {
-	border: 1px solid blue;
-	overflow: scroll;
-}
 .ui-dialog {
 	//opacity: 0.85;
 	//filter: alpha(opacity=85);
@@ -42,27 +42,35 @@ body {
 .ui-dialog-titlebar {
 	display: none;
 }
-.thumbnail:hover {
+.thumbnail{
 	padding: 1px;
-	border: 2px solid #AAA;
+	border: 4px solid transparent;
+}
+.thumbnail:hover {
+	border-color: #333;
 	z-index: 5000;
 }
 .ui-widget-overlay {
 	background-color: #000;
 	opacity: 0.5;
 }
-#viewSwitcherContainer a {
+#viewSwitcherContainer a, #exitSingleClusterView{
 	padding: 5px;
 	background-color: #666;
 	border-radius: 5px;
 	text-decoration: none;
 	color: #FFF;
+	margin-right: 5px;
+	margin-left: 5px;
 }
-#viewSwitcherContainer a:hover {
+#viewSwitcherContainer a:hover, #exitSingleClusterView:hover{
 	background-color: #333;
 }
 #viewSwitcherContainer a.buttonDown {
 	background-color: #999;
+}
+#singleClusterButtons{
+	margin: 10px;
 }
 #calendarViewContainer #leftCalendarPanel img.arrowClick, #calendarViewContainer #rightCalendarPanel img.arrowClick {
 	opacity: 0.3;
@@ -115,13 +123,17 @@ body {
 	opacity: 0.8;
 	cursor: hand;
 }
+#focusedPosterInteraction #colorPickerContainer{
+	background-size: 20px 30px;
+	background-position: left center;
+}
 #colorPicker{
-	width: 28px;
-	height: 28px;
-	border-radius: 5px;
-	margin-top: 5px;
-	border-bottom: 2px solid #AAA;
+	width: 9px;
+	height: 100%;
 	font-size: 0px;
+	margin-left: 20px;
+	border: none;
+	border-left: none;
 }
 #focusedPoster{
 	background-color: #FFF;
@@ -152,6 +164,7 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 }
+
 #leftCalendarPanel {
 	width: 20%;
 	height: 100%;
@@ -198,6 +211,10 @@ body {
 	opacity: 0.5;
 	padding: 10px;
 	border-radius: 5px;
+}
+#similarViewContainer .clusterLabel:hover {
+	opacity: 0.8;
+	cursor: hand;
 }
 #similarViewContainer #originalImages {
 	display: none;

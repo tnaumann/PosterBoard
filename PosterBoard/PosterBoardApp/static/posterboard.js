@@ -12,9 +12,10 @@ var annoId = '';
 var drawingId;
 var focusedImageUid;
 var focusedImageSrc;
-var strokeWidth = 2;
+var strokeWidth = 3;
 var liked = false;
 var disliked = false;
+var dismissMessageTimeout = 3000;
 
 $(function() {
 	height = $(window).height();
@@ -30,6 +31,9 @@ $(function() {
 	setupSaveAnnoButton();
 	setupResetAnnoButton();
 	setupLikesButton();
+	setupEmailToCalendar();
+	setupSimulateRfid();
+	setupDeletePoster();
 
 	$("#viewSwitcherContainer a").mousedown(function() {
 		$(this).addClass('buttonDown');
@@ -63,12 +67,127 @@ $(function() {
 	}).mouseup(function() {
 		$(this).css('opacity', 1);
 	});
+
+	$(".clusterLabel").mousedown(function() {
+		$(this).css('opacity', 0.3);
+	}).mouseup(function() {
+		$(this).css('opacity', '');
+	});
+
+	$('#colorPickerContainer').click(function() {
+		console.log('Triggering change event on colorpicker');
+		$('#colorPicker').focus();
+		console.log('After triggering change event on colorpicker');
+	});
+	
+	$('#exitSingleClusterView').click(function(){
+		$('#singleClusterImages').empty();
+		$('#singleClusterView').hide('slide');
+		$('#clusteredImages').show('slide');
+	});
 	// $("#addPosterButton").click(function(){
 	// $("#addButton").click();
 	// alert("Poster added successfully");
 	// })
 
 });
+function setupSimulateRfid() {
+	$('body').keypress(function(event) {
+		console.log('keypressed: ' + event.which);
+		if(event.which == 114) {
+			$('#rfidinput').val('cezeozue@mit.edu').change();
+		}
+	})
+}
+
+function setupEmailToCalendar() {
+	$('#swipeCardMessage').dialog({
+		modal : true,
+		autoOpen : false,
+		zIndex : 99999,
+		resizable : false,
+		buttons : {
+			Cancel : function() {
+				$(this).dialog("close");
+			}
+		},
+	});
+	$('#emailSentMessage').dialog({
+		modal : true,
+		autoOpen : false,
+		zIndex : 99999,
+		resizable : false,
+		hide : 'fade',
+		buttons : {
+			Close : function() {
+				$(this).dialog("close");
+			}
+		},
+	});
+	$('#saveToMyCalendar').click(function() {
+		$('#rfidinput').val('');
+		$('#swipeCardMessage').dialog('open');
+
+		$('#rfidinput').bind('change.sendEmail', function() {
+			$('#rfidinput').unbind('change.sendEmail');
+			console.log('received rfid input');
+			$('#swipeCardMessage').dialog('close');
+			$('#emailSentMessage').dialog('open');
+			setInterval("$('#emailSentMessage').dialog('close');", dismissMessageTimeout);
+		});
+	});
+}
+
+function setupDeletePoster() {
+	$('#deleteConfirmation').dialog({
+		modal : true,
+		autoOpen : false,
+		zIndex : 99999,
+		resizable : false,
+		buttons : {
+			Cancel : function() {
+				$(this).dialog("close");
+			}
+		},
+	});
+	$('#deleteResult').dialog({
+		modal : true,
+		autoOpen : false,
+		zIndex : 99999,
+		resizable : false,
+		hide : 'fade',
+		buttons : {
+			Close : function() {
+				$(this).dialog("close");
+			}
+		},
+	});
+	$('#deleteButton').click(function() {
+		$('#rfidinput').val('');
+		$('#deleteConfirmation').dialog('open');
+
+		$('#rfidinput').bind('change.delete', function() {
+			$('#rfidinput').unbind('change.delete');
+			console.log('received rfid input');
+			$('#deleteConfirmation').dialog('close');
+			$('#deleteResult img').show();
+			$('#deleteResult span').html('Deleting poster');
+			$('#deleteResult').dialog('open');
+			var rfidinput = $('#rfidinput').val();
+			$.get('deletePoster', {
+				poster : focusedImageUid,
+				email : rfidinput,
+			}, function(data) {
+				$('#deleteResult img').hide();
+				$('#deleteResult span').html(data);
+				setInterval("$('#deleteResult').dialog('close');", dismissMessageTimeout);
+				$('[data-uid="' + focusedImageUid + '"]').remove();
+				$.colorbox.close()
+			})
+		});
+	});
+}
+
 function setupWebSocket() {
 	var ws = new WebSocket("ws://localhost:9876/");
 	ws.onopen = function(e) {
@@ -130,11 +249,11 @@ function updateLikesView() {
 function updateLikesModel() {
 	var likes = $('#likes').html();
 	var dislikes = $('#dislikes').html();
-	
+
 	$.get('updateLikes', {
-		likes: likes,
-		dislikes: dislikes,
-		poster: focusedImageUid,
+		likes : likes,
+		dislikes : dislikes,
+		poster : focusedImageUid,
 	});
 }
 
@@ -240,16 +359,14 @@ function setupCalendar(diff, set) {
 		$("#day" + i).html("&nbsp;" + curr_date);
 		$("#wday" + i).html(days[curr_day]);
 		$("#month" + i).html(months[curr_month]);
-                var today_date = new Date(today.getFullYear(), curr_month, curr_date);
-		for (var j = 0;  j < postersv2.length; j = j+1)
-            	{
-                    var temp = postersv2[j]["fields"]["event_date"].split(" ")[0].split("-");
-                    var d = new Date(temp[0], temp[1]-1, temp[2]);
-                    if (today_date.getTime() != d.getTime())
-		    {
-			$("#poster" + i +"-" + postersv2[j]["pk"]).css('display', 'none');
-		        //$("#posterCol" + i).append("<img class='thumbnail' src='/media/" + postersv2[j]["fields"]["posterFile1"] + "'/> <br /> <br />");
-		    }
+		var today_date = new Date(today.getFullYear(), curr_month, curr_date);
+		for(var j = 0; j < postersv2.length; j = j + 1) {
+			var temp = postersv2[j]["fields"]["event_date"].split(/T| /)[0].split("-");
+			var d = new Date(temp[0], temp[1] - 1, temp[2]);
+			if(today_date.getTime() != d.getTime()) {
+				$("#poster" + i + "-" + postersv2[j]["pk"]).css('display', 'none');
+				//$("#posterCol" + i).append("<img class='thumbnail' src='/media/" + postersv2[j]["fields"]["posterFile1"] + "'/> <br /> <br />");
+			}
 		}
 		today = new Date(today.getTime() + (24 * 60 * 60 * 1000));
 	}
@@ -257,19 +374,6 @@ function setupCalendar(diff, set) {
 }
 
 function setupAddDialog() {
-	var addContainerWidth = width * 0.4;
-	var addContainerHeight = height * 0.83;
-	var addContainerLPosition = (0.6 * width) - 20;
-
-	$("#addContainer").dialog({
-		autoOpen : false,
-		modal : false,
-		position : [addContainerLPosition, 10],
-		minHeight : addContainerHeight,
-		maxHeight : addContainerHeight,
-		minWidth : addContainerWidth
-	});
-
 	$(".chosen-select").chosen();
 	//$("#addDateStart, #addTimeStart, #addDateEnd, #addTimeEnd").calendricalDateTimeRange();
 	$("#addDateStart").calendricalDate();
@@ -278,13 +382,24 @@ function setupAddDialog() {
 
 function setupAddButton() {
 	$("#addButton").click(function() {
-		$(this).toggleClass("active");
-		if($(this).hasClass("active")) {
+		$(this).toggleClass("adding");
+		if($(this).hasClass("adding")) {
 			$(this).text("x");
-			$("#addContainer").dialog("open");
+			$("#board").animate({
+				width : "70%"
+			}, "slow");
+			$("#addContainer").animate({
+				width : "30%"
+			}, "slow");
 		} else {
 			$(this).text("+");
-			$("#addContainer").dialog("close");
+			$("#board").animate({
+				width : "100%"
+			}, "slow");
+			$("#addContainer").animate({
+				width : "0%"
+			}, "slow");
+
 		}
 	});
 }
@@ -293,6 +408,7 @@ function setupViewSwitcherButtons() {
 
 	$("#calendarViewButton").click(function() {
 		if(!$("#calendarViewButton").hasClass('activeView')) {
+			$('#exitSingleClusterView').click();
 			$("#viewSwitcherContainer a").removeClass('activeView');
 			$("#calendarViewButton").addClass('activeView');
 			$("#similarViewContainer").hide("slide");
@@ -320,7 +436,7 @@ function getLikes() {
 
 	});
 	liked = false;
-	disliked = false; 
+	disliked = false;
 	updateLikesView();
 }
 
@@ -333,12 +449,10 @@ function setupPosterClick() {
 
 		getLikes();
 
+		console.log('fullPoster max dimensions: ' + width + ', ' + height);
 		fullPoster.css('maxWidth', width * 0.8);
 		fullPoster.css('maxHeight', height * 0.8);
-		fullPoster.css('top', 0);
-		fullPoster.css('left', 0);
 		fullPoster.css('margin', 0);
-		fullPoster.css('z-index', 100);
 		fullPoster.removeClass('thumbnail');
 		fullPoster.css('position', '');
 		$("#focusedPosterImage").empty();
@@ -395,7 +509,6 @@ function setupPosterClick() {
 
 				$(".jTscroller").css('top', '0px');
 				$(".jTscroller").empty();
-				
 				scribbleStrokes = [];
 				drawing = false;
 				drawingId = '';
@@ -485,45 +598,6 @@ function ScribbleStroke(startX, startY, endX, endY, color) {
 	this.color = color;
 }
 
-//csrf protection
-jQuery(document).ajaxSend(function(event, xhr, settings) {
-	function getCookie(name) {
-		var cookieValue = null;
-		if(document.cookie && document.cookie != '') {
-			var cookies = document.cookie.split(';');
-			for(var i = 0; i < cookies.length; i++) {
-				var cookie = jQuery.trim(cookies[i]);
-				// Does this cookie string begin with the name we want?
-				if(cookie.substring(0, name.length + 1) == (name + '=')) {
-					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-					break;
-				}
-			}
-		}
-		return cookieValue;
-	}
-
-	function sameOrigin(url) {
-		// url could be relative or scheme relative or absolute
-		var host = document.location.host;
-		// host + port
-		var protocol = document.location.protocol;
-		var sr_origin = '//' + host;
-		var origin = protocol + sr_origin;
-		// Allow absolute or scheme relative URLs to same origin
-		return (url == origin || url.slice(0, origin.length + 1) == origin + '/') || (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-		// or any other URL that isn't scheme relative or absolute i.e relative.
-		!(/^(\/\/|http:|https:).*/.test(url));
-	}
-
-	function safeMethod(method) {
-		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-	}
-
-	if(!safeMethod(settings.type) && sameOrigin(settings.url)) {
-		xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-	}
-});
 /*Calendar view scripts*/
 function setupCalendarView() {
 	//Clustering
@@ -544,6 +618,8 @@ var clusters = new Array();
 
 function setupSimilarView() {
 	//Clustering
+	Math.seedrandom('PosterBoard');
+
 	var containerHeight = height * 0.8;
 	var containerWidth = width * 0.8;
 
@@ -598,14 +674,33 @@ function setupSimilarView() {
 	for( i = 0; i < tags.length; i++) {
 		var cluster = clusters[tags[i]];
 		clusterLabel = $("<div class='clusterLabel'>" + tags[i] + "</div>");
-		clusterLabel.css('top', cluster.minTop);
-		clusterLabel.css('left', cluster.xCenter - maxImageWidth / 2);
 		clusterLabel.appendTo("#clusteredImages");
+		console.log('ClusterLabel height: ' + clusterLabel.height());
+		clusterLabel.css('top', cluster.minTop - 30);
+		clusterLabel.css('left', cluster.xCenter - maxImageWidth / 2);
 	}
+
+	$('.clusterLabel').click(function() {
+		$('#clusteredImages').hide('slide');
+		$('#singleClusterView').show('slide');
+		var clickedCluster = $(this).html();
+		$('#currentCluster').html(clickedCluster);
+		$("#originalImages img").each(function(index, element) {
+			elementTags = $(element).attr('data-tags');
+			elementTags = elementTags.split(',');
+			
+			if (elementTags == clickedCluster || elementTags.contains(clickedCluster)){
+				elementCopy = $(element).clone(true);
+				elementCopy.appendTo('#singleClusterImages');
+			}
+		});
+	});
 }
 
 function getRandOffset(range) {
-	offset = Math.random() * range - range / 2;
+	var randomNumber = Math.random();
+	console.log('Random number: ' + randomNumber);
+	offset = randomNumber * range - range / 2;
 	return offset;
 }
 
