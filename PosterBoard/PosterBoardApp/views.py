@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from django.core.context_processors import csrf
 import simplejson as json
 import settings, math
-
+from django.core.files import File
 from PosterBoard.PosterBoardApp.models import Poster, AnnotationPath, Annotation
 from PosterBoard.PosterBoardApp.forms import PosterForm
 
@@ -17,10 +17,28 @@ from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
 
 def upload_page( request ):
-  ctx = RequestContext( request, {
-    'csrf_token': get_token( request ),
-  } )
-  return render_to_response( 'upload_page.html', ctx )
+    ctx = RequestContext( request, {
+      'csrf_token': get_token( request ),
+      } )
+    if request.method == 'POST':
+        form = PosterForm(request.POST)
+        if form.is_valid():
+ 	    newPoster = Poster(posterFile1 = File(open(settings.SITE_ROOT + "/media/"+form.cleaned_data['filename'])), event_date = form.cleaned_data['event_date'], start_time = form.cleaned_data['start_time'], end_time = form.cleaned_data['end_time'], tag1 = form.cleaned_data['tag1'], tag2 = form.cleaned_data['tag2'], tag3 = form.cleaned_data['tag3'], tag4 = form.cleaned_data['tag4'], tag5 = form.cleaned_data['tag5'], email = form.cleaned_data['email'], title = form.cleaned_data['title'])
+            newPoster.save()
+            print "Poster objects:", Poster.objects.count()
+            # Redirect to the document list after POST
+ 	    print '<div id = "temp ' + str(newPoster.id) + '" class="poster-div" event_date="' + str(newPoster.event_date.year) + ' ' + str(newPoster.event_date.month) + ' ' + str(newPoster.event_date.day) + '"><img class="thumbnail" data-tags="' + newPoster.tag1 + ',' + newPoster.tag2 + ',' + newPoster.tag3 + ',' + newPoster.tag4 + ',' + newPoster.tag5 + '" src="' + settings.MEDIA_URL + newPoster.posterFile1.name + '"/> <br /><br /></div>'
+	    return HttpResponse('<div id = "temp ' + str(newPoster.id) + '" class="poster-div" event_date="' + str(newPoster.event_date.year) + ' ' + str(newPoster.event_date.month) + ' ' + str(newPoster.event_date.day) + '"><img class="thumbnail" data-tags="' + newPoster.tag1 + ',' + newPoster.tag2 + ',' + newPoster.tag3 + ',' + newPoster.tag4 + ',' + newPoster.tag5 + '" src="' + settings.MEDIA_URL + newPoster.posterFile1.name + '"/> <br /><br /></div>')
+    else:
+        form = PosterForm() # A empty, unbound form
+
+    # Load documents for the list page
+    posters = Poster.objects.all()
+    # Render list page with the documents and the form
+    return render_to_response(
+        'upload_page.html',
+        {'posters': posters, 'form': form},
+        context_instance = ctx )
 
 def save_upload( uploaded, filename, raw_data ):
   ''' 
@@ -83,7 +101,7 @@ def ajax_upload( request ):
  
     # let Ajax Upload know whether we saved it or not
     import json
-    ret_json = { 'success': success, }
+    ret_json = { 'success': success, 'filename' : filename}
     return HttpResponse( json.dumps( ret_json ) )
 
 logger = logging.getLogger(__name__)
@@ -92,10 +110,12 @@ def home(request):
     posters = Poster.objects.all()
     json_serializer = serializers.get_serializer("json")()
     serial = json_serializer.serialize(posters, ensure_ascii=False)
+    form = PosterForm()
     return render_to_response(
         'index.html',
         {'posters': posters,
-        'postersserial' : serial}, 
+        'postersserial' : serial,
+	'form' : form}, 
         context_instance = RequestContext(request)
    )
 
@@ -123,14 +143,15 @@ def posterUpload(request):
     c = {}
     c.update(csrf(request))
     if request.method == 'POST':
-        
-        form = PosterForm(request.POST, request.FILES)
+        form = PosterForm(request.POST)
         if form.is_valid():
-            newPoster = Poster(posterFile1 = request.FILES['posterFile1'], event_date = form.cleaned_data['event_date'], start_time = form.cleaned_data['start_time'], end_time = form.cleaned_data['end_time'], tag1 = form.cleaned_data['tag1'], email = form.cleaned_data['email'], title = form.cleaned_data['title'])
+            newPoster = Poster(posterFile1 = File(open(settings.SITE_ROOT + "/media/"+form.cleaned_data['filename'])), event_date = form.cleaned_data['event_date'], start_time = form.cleaned_data['start_time'], end_time = form.cleaned_data['end_time'], tag1 = form.cleaned_data['tag1'], email = form.cleaned_data['email'], title = form.cleaned_data['title'])
             newPoster.save()
-            print "Poster objects:", Poster.objects.count()
-            # Redirect to the document list after POST
-            return HttpResponseRedirect(reverse('PosterBoard.PosterBoardApp.views.posterUpload'))
+            if request.is_ajax():
+		print "AJAX"
+		return HttpResponse('success')
+	    # Redirect to the document list after POST
+            # return HttpResponseRedirect(reverse('PosterBoard.PosterBoardApp.views.upload_page'))
     else:
         form = PosterForm() # A empty, unbound form
 
@@ -145,6 +166,18 @@ def posterUpload(request):
    )
 
 @csrf_exempt  
+    #poster = Poster.objects.get(pk=int(request.GET['poster']))
+
+    #likes = int(request.GET['likes'])
+    #dislikes = int(request.GET['dislikes'])
+   
+    #if (math.fabs(poster.likes - likes) <= 1 and math.fabs(poster.dislikes - dislikes) <= 1):
+    #    poster.likes = likes
+    #    poster.dislikes = dislikes
+    #    poster.save()
+
+    #return HttpResponse('success')
+    
 def saveAnno(request):
     path = json.loads(request.POST['path'])
     

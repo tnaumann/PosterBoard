@@ -7,6 +7,7 @@ var startY;
 var paper;
 var days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+var rev_months = {January : 0, February : 1, March : 2, April : 3, May : 4, June : 5, July : 6, August : 7, September : 8, October : 9, November : 10, December : 11}
 var scribbleStrokes = [];
 var annoId = '';
 var drawingId;
@@ -89,6 +90,49 @@ $(function() {
 	// $("#addButton").click();
 	// alert("Poster added successfully");
 	// })
+      
+    $("#addPosterButton").click(function (e) {
+   
+    $("#id_event_date").val($("#addDateStart").val() + " 00:00:00");
+    if ($("#addTimeStart").val().split(" ")[1] == "am")
+    {
+        $("#id_start_time").val($("#addTimeStart").val().split(" ")[0] + ":00");
+    }
+    else
+    {
+        $("#id_start_time").val(parseInt($("#addTimeStart").val().split(" ")[0].split(":")[0])+12 + ":" + $("#addTimeStart").val().split(" ")[0].split(":")[1] + ":00");
+    }
+    if ($("#addTimeEnd").val().split(" ")[1] == "am")
+    {
+        $("#id_end_time").val($("#addTimeEnd").val().split(" ")[0] + ":00");
+    }
+    else
+    {
+        $("#id_end_time").val(parseInt($("#addTimeEnd").val().split(" ")[0].split(":")[0])+12 + ":" + $("#addTimeEnd").val().split(" ")[0].split(":")[1] + ":00");
+    }
+    $("#id_email").val($("#posterEmail").val());
+    var str = "" + $("#select_mult").val();
+    for (var k = 0; k < str.split(",").length; k++)
+    {
+        $("#id_tag" +(k+1)).val(str.split(",")[k]);
+    }
+    var pform = $("#upload_form");
+    $("#posterdummy").load("/PosterBoardApp/upload/", pform.serializeArray(), function(e) 
+    {
+    alert(e);
+    for (var k = 1; k < 8; k++)
+    {
+        $(e).appendTo($("#posterCol" + k));
+        var poster_id = $('div[id*="temp "]').attr("id");
+        poster_id = poster_id.split(" ")[1];
+        $('div[id*="temp "]').attr("id", "poster" + k + "-" + poster_id);
+    }
+    $(e).appendTo($("#originalImages"));
+    setupCalendar(0, false);
+    setupCalendarView();
+    setupSimilarView();
+    });
+  });
 
 });
 function setupSimulateRfid() {
@@ -359,24 +403,26 @@ function setupCalendar(diff, set) {
 		$("#day" + i).html("&nbsp;" + curr_date);
 		$("#wday" + i).html(days[curr_day]);
 		$("#month" + i).html(months[curr_month]);
-		var today_date = new Date(today.getFullYear(), curr_month, curr_date);
-		for(var j = 0; j < postersv2.length; j = j + 1) {
-			var temp = postersv2[j]["fields"]["event_date"].split(/T| /)[0].split("-");
-			var d = new Date(temp[0], temp[1] - 1, temp[2]);
-			if(today_date.getTime() != d.getTime()) {
-				$("#poster" + i + "-" + postersv2[j]["pk"]).css('display', 'none');
-				//$("#posterCol" + i).append("<img class='thumbnail' src='/media/" + postersv2[j]["fields"]["posterFile1"] + "'/> <br /> <br />");
-			}
-		}
+        	var today_date = new Date(today.getFullYear(), curr_month, curr_date);
+		var col = "poster" + i
+        	$('div[id*="' + col + '-"]').each(function() {
+            		var temp = $(this).attr('event_date');
+            		var month = temp.split(" ")[1]
+            		var date = temp.split(" ")[2]
+            		var year = temp.split(" ")[0]
+            		if ((today.getFullYear() != parseInt(year)) || (parseInt(date) != curr_date) || (month-1 != curr_month))
+            		{
+               			$(this).css('display', 'none'); 
+            		}
+        	});
 		today = new Date(today.getTime() + (24 * 60 * 60 * 1000));
 	}
-	//$("#board").page();
 }
 
 function setupAddDialog() {
 	$(".chosen-select").chosen();
 	//$("#addDateStart, #addTimeStart, #addDateEnd, #addTimeEnd").calendricalDateTimeRange();
-	$("#addDateStart").calendricalDate();
+	$("#addDateStart").calendricalDate({usa: true});
 	$("#addTimeStart, #addTimeEnd").calendricalTimeRange();
 }
 
@@ -533,7 +579,7 @@ function setupPosterClick() {
 				$('#canvasContainer').css('max-height', $('#focusedPosterImage img').height());
 				// fullPoster.css('position', 'absolute');
 				paper = Raphael('canvasContainer');
-				$('#canvasContainer').mousedown(function(event) {
+				$('#canvasContainer').hover(function(event) {
 					startX = event.offsetX;
 					startY = event.offsetY;
 					drawing = true;
@@ -658,17 +704,20 @@ function setupSimilarView() {
 
 		for( i = 0; i < elementTags.length; i++) {
 			elementTag = elementTags[i];
-			elementTag = elementTag.trim();
-			cluster = clusters[elementTag];
-			elementCopy = $(element).clone(true);
-			elementCopy.appendTo('#clusteredImages');
-			elementCopy.css('position', 'absolute');
-			elementTop = cluster.yCenter + getRandOffset(offsetRange) - maxImageHeight / 2;
-			elementLeft = cluster.xCenter + getRandOffset(offsetRange) - maxImageWidth / 2;
-			elementCopy.css('top', elementTop);
-			elementCopy.css('left', elementLeft);
+            if (elementTag && elementTag.trim() != "")
+            {
+                elementTag = elementTag.trim();
+                cluster = clusters[elementTag];
+                elementCopy = $(element).clone(true);
+                elementCopy.appendTo('#clusteredImages');
+                elementCopy.css('position', 'absolute');
+                elementTop = cluster.yCenter + getRandOffset(offsetRange) - maxImageHeight / 2;
+                elementLeft = cluster.xCenter + getRandOffset(offsetRange) - maxImageWidth / 2;
+                elementCopy.css('top', elementTop);
+                elementCopy.css('left', elementLeft);
 
-			cluster.minTop = Math.min(cluster.minTop, elementTop);
+                cluster.minTop = Math.min(cluster.minTop, elementTop);
+            }
 		}
 	});
 	for( i = 0; i < tags.length; i++) {
@@ -718,12 +767,16 @@ function getUniqueTags() {
 		elementTags = elementTags.split(',');
 
 		for( i = 0; i < elementTags.length; i++) {
+            
 			elementTag = elementTags[i];
-			elementTag = elementTag.trim();
+            if (elementTag && elementTag.trim() != " ")
+            {
+                elementTag = elementTag.trim();
 
-			if(tags.indexOf(elementTag) == -1) {
-				tags.push(elementTag);
-			}
+                if(tags.indexOf(elementTag) == -1) {
+                    tags.push(elementTag);
+                }
+            }
 		}
 	});
 	return tags;

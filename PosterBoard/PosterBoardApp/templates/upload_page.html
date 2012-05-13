@@ -48,7 +48,7 @@ var uploader = new qq.FileUploader( {
     multiple: true,
     onComplete: function( id, fileName, responseJSON ) {
       if( responseJSON.success )
-        alert( "success!" ) ;
+        $("#id_filename").val(responseJSON.filename ) ;
       else
         alert( "upload failed!" ) ;
     },
@@ -62,16 +62,36 @@ var uploader = new qq.FileUploader( {
       'csrf_name': 'csrfmiddlewaretoken',
       'csrf_xname': 'X-CSRFToken',
     },
-  } );
+  }); 
+  var pform = $("#posterform");
+  $("#submit").click(function (e) {
+   $("#test").load("/PosterBoardApp/upload/", pform.serializeArray(), function() {$("#test").css('display', 'none');});
+  });
+  
 });
 </script>
 </head>
 <body>
-Hello!
 <div id="file-uploader">       
     <noscript>          
         <p>Please enable JavaScript to use file uploader.</p>
     </noscript>         
 </div>
+<form id ="posterform" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.filename.as_hidden}}
+    Date: {{ form.event_date }} {{ form.event_date.errors }}<br />
+    Email: {{ form.email }} {{ form.email.errors }}<br />
+    Start time: {{ form.start_time }} {{ form.start_time.errors }}<br />
+    End time: {{ form.end_time}}  {{ form.end_time.errors }} <br />
+    Tag1: {{ form.tag1 }} {{ form.tag1.errors }} <br />
+    Tag2: {{ form.tag2 }} {{ form.tag2.errors }} <br />
+    Tag3: {{ form.tag3 }} {{ form.tag3.errors }} <br />
+    Tag1: {{ form.tag4 }} {{ form.tag4.errors }} <br />
+    Tag1: {{ form.tag5 }} {{ form.tag5.errors }} <br />
+    Title: {{ form.title }} {{ form.title.errors }} <br />
+    <input id = "submit" type="button" value="Upload" />
+</form>
+<div id="test" style="display: none"></div>
 </body>
 </html>
