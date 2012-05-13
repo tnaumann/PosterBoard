@@ -23,7 +23,7 @@ def upload_page( request ):
     if request.method == 'POST':
         form = PosterForm(request.POST)
         if form.is_valid():
- 	    newPoster = Poster(posterFile1 = File(open(settings.SITE_ROOT + "/media/"+form.cleaned_data['filename'])), event_date = form.cleaned_data['event_date'], start_time = form.cleaned_data['start_time'], end_time = form.cleaned_data['end_time'], tag1 = form.cleaned_data['tag1'], tag2 = form.cleaned_data['tag2'], tag3 = form.cleaned_data['tag3'], tag4 = form.cleaned_data['tag4'], tag5 = form.cleaned_data['tag5'], email = form.cleaned_data['email'], title = form.cleaned_data['title'])
+ 	    newPoster = Poster(posterFile1 = File(open(settings.SITE_ROOT + "/media"+form.cleaned_data['filename'])), event_date = form.cleaned_data['event_date'], start_time = form.cleaned_data['start_time'], end_time = form.cleaned_data['end_time'], tag1 = form.cleaned_data['tag1'], tag2 = form.cleaned_data['tag2'], tag3 = form.cleaned_data['tag3'], tag4 = form.cleaned_data['tag4'], tag5 = form.cleaned_data['tag5'], email = form.cleaned_data['email'], title = form.cleaned_data['title'])
             newPoster.save()
             print "Poster objects:", Poster.objects.count()
             # Redirect to the document list after POST

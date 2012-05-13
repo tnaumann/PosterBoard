@@ -119,7 +119,6 @@ $(function() {
     var pform = $("#upload_form");
     $("#posterdummy").load("/PosterBoardApp/upload/", pform.serializeArray(), function(e) 
     {
-    alert(e);
     for (var k = 1; k < 8; k++)
     {
         $(e).appendTo($("#posterCol" + k));
