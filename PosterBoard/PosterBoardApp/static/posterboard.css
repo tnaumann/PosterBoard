@@ -22,10 +22,6 @@ body {
 	height: 85%;
 	/*margin: 0 auto -4em;*/
 }
-#viewSwitcherContainer a {
-	margin-right: 5px;
-	margin-left: 5px;
-}
 #viewSwitcherContainer, .push {
 	height: 1em;
 	margin: 20px;
@@ -58,18 +54,23 @@ body {
 	background-color: #000;
 	opacity: 0.5;
 }
-#viewSwitcherContainer a {
+#viewSwitcherContainer a, #exitSingleClusterView{
 	padding: 5px;
 	background-color: #666;
 	border-radius: 5px;
 	text-decoration: none;
 	color: #FFF;
+	margin-right: 5px;
+	margin-left: 5px;
 }
-#viewSwitcherContainer a:hover {
+#viewSwitcherContainer a:hover, #exitSingleClusterView:hover{
 	background-color: #333;
 }
 #viewSwitcherContainer a.buttonDown {
 	background-color: #999;
+}
+#singleClusterButtons{
+	margin: 10px;
 }
 #calendarViewContainer #leftCalendarPanel img.arrowClick, #calendarViewContainer #rightCalendarPanel img.arrowClick {
 	opacity: 0.3;
@@ -210,6 +211,10 @@ body {
 	opacity: 0.5;
 	padding: 10px;
 	border-radius: 5px;
+}
+#similarViewContainer .clusterLabel:hover {
+	opacity: 0.8;
+	cursor: hand;
 }
 #similarViewContainer #originalImages {
 	display: none;

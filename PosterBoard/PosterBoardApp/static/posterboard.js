@@ -21,8 +21,6 @@ $(function() {
 	height = $(window).height();
 	width = $(window).width();
 
-	Math.seedrandom('PosterBoard');
-
 	setupWebSocket();
 	setupAddDialog();
 	setupPosterClick();
@@ -70,10 +68,22 @@ $(function() {
 		$(this).css('opacity', 1);
 	});
 
+	$(".clusterLabel").mousedown(function() {
+		$(this).css('opacity', 0.3);
+	}).mouseup(function() {
+		$(this).css('opacity', '');
+	});
+
 	$('#colorPickerContainer').click(function() {
 		console.log('Triggering change event on colorpicker');
 		$('#colorPicker').focus();
 		console.log('After triggering change event on colorpicker');
+	});
+	
+	$('#exitSingleClusterView').click(function(){
+		$('#singleClusterImages').empty();
+		$('#singleClusterView').hide('slide');
+		$('#clusteredImages').show('slide');
 	});
 	// $("#addPosterButton").click(function(){
 	// $("#addButton").click();
@@ -398,6 +408,7 @@ function setupViewSwitcherButtons() {
 
 	$("#calendarViewButton").click(function() {
 		if(!$("#calendarViewButton").hasClass('activeView')) {
+			$('#exitSingleClusterView').click();
 			$("#viewSwitcherContainer a").removeClass('activeView');
 			$("#calendarViewButton").addClass('activeView');
 			$("#similarViewContainer").hide("slide");
@@ -607,6 +618,8 @@ var clusters = new Array();
 
 function setupSimilarView() {
 	//Clustering
+	Math.seedrandom('PosterBoard');
+
 	var containerHeight = height * 0.8;
 	var containerWidth = width * 0.8;
 
@@ -661,10 +674,27 @@ function setupSimilarView() {
 	for( i = 0; i < tags.length; i++) {
 		var cluster = clusters[tags[i]];
 		clusterLabel = $("<div class='clusterLabel'>" + tags[i] + "</div>");
-		clusterLabel.css('top', cluster.minTop);
-		clusterLabel.css('left', cluster.xCenter - maxImageWidth / 2);
 		clusterLabel.appendTo("#clusteredImages");
+		console.log('ClusterLabel height: ' + clusterLabel.height());
+		clusterLabel.css('top', cluster.minTop - 30);
+		clusterLabel.css('left', cluster.xCenter - maxImageWidth / 2);
 	}
+
+	$('.clusterLabel').click(function() {
+		$('#clusteredImages').hide('slide');
+		$('#singleClusterView').show('slide');
+		var clickedCluster = $(this).html();
+		$('#currentCluster').html(clickedCluster);
+		$("#originalImages img").each(function(index, element) {
+			elementTags = $(element).attr('data-tags');
+			elementTags = elementTags.split(',');
+			
+			if (elementTags == clickedCluster || elementTags.contains(clickedCluster)){
+				elementCopy = $(element).clone(true);
+				elementCopy.appendTo('#singleClusterImages');
+			}
+		});
+	});
 }
 
 function getRandOffset(range) {
