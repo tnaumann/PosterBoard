@@ -86,9 +86,8 @@
 					},
 				});
 			});
-
-		</script>
 
+		</script>
 	</head>
 	<body>
 		<div id="board" data-role="page">
@@ -147,8 +146,7 @@
 							</tr>
 							<tr>
 								{% load template_filters %}
-								{% for i in 7|get_range %}
-								<td>
+								{% for i in 7|get_range %} <td>
 								<div id = "posterCol{{i}}" class="datePosterCol">
 									{% if posters %}
 									{% for poster in posters %}
@@ -172,8 +170,7 @@
 				<div id="similarViewContainer">
 					<div id="originalImages">
 						{% if posters %}
-						{% for poster in posters %}
-						<img class ="thumbnail" data-tags="{{poster.tag1}}, {{poster.tag2}}, {{poster.tag3}}, {{poster.tag4}}, {{poster.tag5}}" data-uid="{{poster.id}}" src="{{MEDIA_URL}}posters/{{poster.posterFile1}}" />
+						{% for poster in posters %} <img class ="thumbnail" data-tags="{{poster.tag1}}, {{poster.tag2}}, {{poster.tag3}}, {{poster.tag4}}, {{poster.tag5}}" data-uid="{{poster.id}}" src="{{MEDIA_URL}}posters/{{poster.posterFile1}}" />
 						{% endfor %}
 						{% endif %}
 					</div>
@@ -197,42 +194,42 @@
 						<div id="focusedPosterInteraction">
 							<div style="background-image: url({{STATIC_URL}}images/thumbsup.jpg);">
 								<span id="likes" style="margin-top: 12px;">0</span>
-								<div style="background-image: url({{STATIC_URL}}images/thumbsdown.jpg);">
-									<span id="dislikes" style="margin-top: 1px;">0</span>
-								</div>
-								<img id='saveToMyCalendar' src="{{STATIC_URL}}images/calendar.jpg" />
-								<div id='swipeCardMessage'>
-									Please swipe your ID to have a reminder sent to your email
-								</div>
-								<div id='emailSentMessage'>
-									Thank you. You would receive your reminder by email shortly
-								</div>
-								<div id="colorPickerContainer" style="background-image: url({{STATIC_URL}}images/colorpicker.jpg);">
-									<input class="color {pickerClosable:true}" id="colorPicker" value="#61E9E9" />
-								</div>
-								<img id="saveAnnoButton" style="display: none" src="{{STATIC_URL}}images/saveAnno-unsaved.jpg" />
-								<img id="resetAnnoButton" style="display: none" src="{{STATIC_URL}}images/resetAnno.jpg" />
-								<img id="deleteButton" src="{{STATIC_URL}}images/trash.jpg" />
-								<div id='deleteConfirmation'>
-									Please swipe your ID to confirm that you would like to remove this poster from the board
-								</div>
-								<div id='deleteResult'>
-									<img src="{{STATIC_URL}}images/deleting.gif" style="max-height: 30px; max-width: 30px; vertical-align:middle;" />
-									<span style="line-height: 100%; height: 30px; display: inline-block;">Deleting poster</span>
-								</div>
 							</div>
-							<div id="tS3" class="jThumbnailScroller" style="position: relative; top: 0; left: 0; height: 80%">
-								<div class="jTscrollerContainer">
-									<div class="jTscroller"></div>
-									<a href="#" class="jTscrollerPrevButton" style="background:#000 url({{STATIC_URL}}prevArrow.png) center center;"></a>
-									<a href="#" class="jTscrollerNextButton" style="background:#000 url({{STATIC_URL}}nextArrow.png) center center;"></a>
-
-								</div>
+							<div style="background-image: url({{STATIC_URL}}images/thumbsdown.jpg);">
+								<span id="dislikes" style="margin-top: 1px;">0</span>
 							</div>
+							<img id='saveToMyCalendar' src="{{STATIC_URL}}images/calendar.jpg" />
+							<div id='swipeCardMessage'>
+								Please swipe your ID to have a reminder sent to your email
+							</div>
+							<div id='emailSentMessage'>
+								Thank you. You would receive your reminder by email shortly
+							</div>
+							<div id="colorPickerContainer" style="background-image: url({{STATIC_URL}}images/colorpicker.jpg);">
+								<input class="color {pickerClosable:true}" id="colorPicker" value="#61E9E9" />
+							</div>
+							<img id="saveAnnoButton" style="display: none" src="{{STATIC_URL}}images/saveAnno-unsaved.jpg" />
+							<img id="resetAnnoButton" style="display: none" src="{{STATIC_URL}}images/resetAnno.jpg" />
+							<img id="deleteButton" src="{{STATIC_URL}}images/trash.jpg" />
+							<div id='deleteConfirmation'>
+								Please swipe your ID to confirm that you would like to remove this poster from the board
+							</div>
+							<div id='deleteResult'>
+								<img src="{{STATIC_URL}}images/deleting.gif" style="max-height: 30px; max-width: 30px; vertical-align:middle;" />
+								<span style="line-height: 100%; height: 30px; display: inline-block;">Deleting poster</span>
+							</div>
+						</div>
+						<div id="tS3" class="jThumbnailScroller" style="position: relative; top: 0; left: 0; height: 80%">
+							<div class="jTscrollerContainer">
+								<div class="jTscroller"></div>
+							</div>
+							<a href="#" class="jTscrollerPrevButton" style="background:#000 url({{STATIC_URL}}prevArrow.png) center center;"></a>
+							<a href="#" class="jTscrollerNextButton" style="background:#000 url({{STATIC_URL}}nextArrow.png) center center;"></a>
 						</div>
 					</div>
 				</div>
 			</div>
+		</div>
 		</div>
 		<div id="addContainer">
 			<div class="upload_form_cont">
@@ -244,7 +241,6 @@
 						</p>
 					</noscript>
 				</div>
-
 				<form id="upload_form" enctype="multipart/form-data" method="post" action="upload.php">
 					<div id="fileinfo">
 						<div id="filename"></div>
@@ -258,7 +254,6 @@
 					<div id="error2">
 						An error occurred while uploading the file
 					</div>
-
 					{% csrf_token %}
 					{{form.filename.as_hidden}}
 					{{ form.event_date.as_hidden }} {{ form.event_date.errors }}

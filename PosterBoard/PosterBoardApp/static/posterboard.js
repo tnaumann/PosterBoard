@@ -7,7 +7,20 @@ var startY;
 var paper;
 var days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 var months = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
-var rev_months = {January : 0, February : 1, March : 2, April : 3, May : 4, June : 5, July : 6, August : 7, September : 8, October : 9, November : 10, December : 11}
+var rev_months = {
+	January : 0,
+	February : 1,
+	March : 2,
+	April : 3,
+	May : 4,
+	June : 5,
+	July : 6,
+	August : 7,
+	September : 8,
+	October : 9,
+	November : 10,
+	December : 11
+}
 var scribbleStrokes = [];
 var annoId = '';
 var drawingId;
@@ -80,8 +93,8 @@ $(function() {
 		$('#colorPicker').focus();
 		console.log('After triggering change event on colorpicker');
 	});
-	
-	$('#exitSingleClusterView').click(function(){
+
+	$('#exitSingleClusterView').click(function() {
 		$('#singleClusterImages').empty();
 		$('#singleClusterView').hide('slide');
 		$('#clusteredImages').show('slide');
@@ -163,8 +176,6 @@ $(function() {
     setupSimilarView();
     });
   });
-
-});
 function setupSimulateRfid() {
 	$('body').keypress(function(event) {
 		console.log('keypressed: ' + event.which);
@@ -384,6 +395,8 @@ function setupSaveAnnoButton() {
 			return;
 		}
 
+		$('#saveAnnoButton').attr('src', '/static/images/saveAnno-saved.jpg');
+
 		$.post('/PosterBoardApp/saveAnno', {
 			path : JSON.stringify(scribbleStrokes),
 			annoId : annoId,
@@ -395,7 +408,6 @@ function setupSaveAnnoButton() {
 				annoId = response.annoId;
 			}
 		});
-		$('#saveAnnoButton').attr('src', '/static/images/saveAnno-saved.jpg');
 		scribbleStrokes = [];
 	});
 }
@@ -433,18 +445,17 @@ function setupCalendar(diff, set) {
 		$("#day" + i).html("&nbsp;" + curr_date);
 		$("#wday" + i).html(days[curr_day]);
 		$("#month" + i).html(months[curr_month]);
-        	var today_date = new Date(today.getFullYear(), curr_month, curr_date);
+		var today_date = new Date(today.getFullYear(), curr_month, curr_date);
 		var col = "poster" + i
-        	$('div[id*="' + col + '-"]').each(function() {
-            		var temp = $(this).attr('event_date');
-            		var month = temp.split(" ")[1]
-            		var date = temp.split(" ")[2]
-            		var year = temp.split(" ")[0]
-            		if ((today.getFullYear() != parseInt(year)) || (parseInt(date) != curr_date) || (month-1 != curr_month))
-            		{
-               			$(this).css('display', 'none'); 
-            		}
-        	});
+		$('div[id*="' + col + '-"]').each(function() {
+			var temp = $(this).attr('event_date');
+			var month = temp.split(" ")[1]
+			var date = temp.split(" ")[2]
+			var year = temp.split(" ")[0]
+			if((today.getFullYear() != parseInt(year)) || (parseInt(date) != curr_date) || (month - 1 != curr_month)) {
+				$(this).css('display', 'none');
+			}
+		});
 		today = new Date(today.getTime() + (24 * 60 * 60 * 1000));
 	}
 }
@@ -452,7 +463,9 @@ function setupCalendar(diff, set) {
 function setupAddDialog() {
 	$(".chosen-select").chosen();
 	//$("#addDateStart, #addTimeStart, #addDateEnd, #addTimeEnd").calendricalDateTimeRange();
-	$("#addDateStart").calendricalDate({usa: true});
+	$("#addDateStart").calendricalDate({
+		usa : true
+	});
 	$("#addTimeStart, #addTimeEnd").calendricalTimeRange();
 }
 
@@ -609,7 +622,7 @@ function setupPosterClick() {
 				$('#canvasContainer').css('max-height', $('#focusedPosterImage img').height());
 				// fullPoster.css('position', 'absolute');
 				paper = Raphael('canvasContainer');
-				$('#canvasContainer').hover(function(event) {
+				$('#canvasContainer').mousedown(function(event) {
 					startX = event.offsetX;
 					startY = event.offsetY;
 					drawing = true;
@@ -734,20 +747,19 @@ function setupSimilarView() {
 
 		for( i = 0; i < elementTags.length; i++) {
 			elementTag = elementTags[i];
-            if (elementTag && elementTag.trim() != "")
-            {
-                elementTag = elementTag.trim();
-                cluster = clusters[elementTag];
-                elementCopy = $(element).clone(true);
-                elementCopy.appendTo('#clusteredImages');
-                elementCopy.css('position', 'absolute');
-                elementTop = cluster.yCenter + getRandOffset(offsetRange) - maxImageHeight / 2;
-                elementLeft = cluster.xCenter + getRandOffset(offsetRange) - maxImageWidth / 2;
-                elementCopy.css('top', elementTop);
-                elementCopy.css('left', elementLeft);
+			if(elementTag && elementTag.trim() != "") {
+				elementTag = elementTag.trim();
+				cluster = clusters[elementTag];
+				elementCopy = $(element).clone(true);
+				elementCopy.appendTo('#clusteredImages');
+				elementCopy.css('position', 'absolute');
+				elementTop = cluster.yCenter + getRandOffset(offsetRange) - maxImageHeight / 2;
+				elementLeft = cluster.xCenter + getRandOffset(offsetRange) - maxImageWidth / 2;
+				elementCopy.css('top', elementTop);
+				elementCopy.css('left', elementLeft);
 
-                cluster.minTop = Math.min(cluster.minTop, elementTop);
-            }
+				cluster.minTop = Math.min(cluster.minTop, elementTop);
+			}
 		}
 	});
 	for( i = 0; i < tags.length; i++) {
@@ -767,8 +779,8 @@ function setupSimilarView() {
 		$("#originalImages img").each(function(index, element) {
 			elementTags = $(element).attr('data-tags');
 			elementTags = elementTags.split(',');
-			
-			if (elementTags == clickedCluster || elementTags.contains(clickedCluster)){
+
+			if(elementTags == clickedCluster || elementTags.contains(clickedCluster)) {
 				elementCopy = $(element).clone(true);
 				elementCopy.appendTo('#singleClusterImages');
 			}
@@ -797,16 +809,14 @@ function getUniqueTags() {
 		elementTags = elementTags.split(',');
 
 		for( i = 0; i < elementTags.length; i++) {
-            
 			elementTag = elementTags[i];
-            if (elementTag && elementTag.trim() != " ")
-            {
-                elementTag = elementTag.trim();
+			if(elementTag && elementTag.trim() != " ") {
+				elementTag = elementTag.trim();
 
-                if(tags.indexOf(elementTag) == -1) {
-                    tags.push(elementTag);
-                }
-            }
+				if(tags.indexOf(elementTag) == -1) {
+					tags.push(elementTag);
+				}
+			}
 		}
 	});
 	return tags;
