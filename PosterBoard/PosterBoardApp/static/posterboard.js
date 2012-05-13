@@ -105,6 +105,30 @@ $(function() {
 	// })
 
 	$("#addPosterButton").click(function(e) {
+		if($("#addDateStart").val() == "") {
+			alert("Please select event date.");
+			return false;
+		}
+		if($("#addTimeStart").val() == "") {
+			alert("Please select event start time.");
+			return false;
+		}
+		if($("#addTimeEnd").val() == "") {
+			alert("Please select event end time.");
+			return false;
+		}
+		if($("#select_mult").val() == null) {
+			alert("Please select tags describing the event.");
+			return false;
+		}
+		if($("#posterEmail").val() == "") {
+			alert("Please swipe card to identify yourself.");
+			return false;
+		}
+		if($("#id_filename").val() == "") {
+			alert("Please select poster file.");
+			return false;
+		}
 
 		$("#id_event_date").val($("#addDateStart").val() + " 00:00:00");
 		if($("#addTimeStart").val().split(" ")[1] == "am") {
@@ -502,7 +526,7 @@ function setupPosterClick() {
 
 		console.log('fullPoster max dimensions: ' + width + ', ' + height);
 		fullPoster.css('maxWidth', width * 0.8);
-		fullPoster.css('maxHeight', height * 0.8);		
+		fullPoster.css('maxHeight', height * 0.8);
 		fullPoster.css('margin', 0);
 		fullPoster.removeClass('thumbnail');
 		fullPoster.css('position', '');

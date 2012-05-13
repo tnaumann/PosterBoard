@@ -2,6 +2,7 @@
 
 import base64
 import hashlib
+import itertools
 import mimetools
 import Queue
 import socket
@@ -44,38 +45,38 @@ def encode(buf):
 try:
     rfid = RFID()
 except RuntimeError as e:
-    print("Runtime Exception: %s" % e.details)
-    print("Exiting....")
+    print "Runtime Exception: %s" % e.details
+    print "Exiting...."
     exit(1)
     
 #Information Display Function
 def displayDeviceInfo():
-    print("|------------|----------------------------------|--------------|------------|")
-    print("|- Attached -|-              Type              -|- Serial No. -|-  Version -|")
-    print("|------------|----------------------------------|--------------|------------|")
-    print("|- %8s -|- %30s -|- %10d -|- %8d -|" % (rfid.isAttached(), rfid.getDeviceName(), rfid.getSerialNum(), rfid.getDeviceVersion()))
-    print("|------------|----------------------------------|--------------|------------|")
-    print("Number of outputs: %i -- Antenna Status: %s -- Onboard LED Status: %s" % (rfid.getOutputCount(), rfid.getAntennaOn(), rfid.getLEDOn()))
+    print "|------------|----------------------------------|--------------|------------|"
+    print "|- Attached -|-              Type              -|- Serial No. -|-  Version -|"
+    print "|------------|----------------------------------|--------------|------------|"
+    print "|- %8s -|- %30s -|- %10d -|- %8d -|" % (rfid.isAttached(), rfid.getDeviceName(), rfid.getSerialNum(), rfid.getDeviceVersion())
+    print "|------------|----------------------------------|--------------|------------|"
+    print "Number of outputs: %i -- Antenna Status: %s -- Onboard LED Status: %s" % (rfid.getOutputCount(), rfid.getAntennaOn(), rfid.getLEDOn())
     
 #Event Handler Callback Functions
 def rfidAttached(e):
     attached = e.device
-    print("RFID %i Attached!" % (attached.getSerialNum()))
+    print "RFID %i Attached!" % (attached.getSerialNum())
 
 def rfidDetached(e):
     detached = e.device
-    print("RFID %i Detached!" % (detached.getSerialNum()))
+    print "RFID %i Detached!" % (detached.getSerialNum())
 
 def rfidError(e):
     try:
         source = e.device
-        print("RFID %i: Phidget Error %i: %s" % (source.getSerialNum(), e.eCode, e.description))
+        print "RFID %i: Phidget Error %i: %s" % (source.getSerialNum(), e.eCode, e.description)
     except PhidgetException as e:
-        print("Phidget Exception %i: %s" % (e.code, e.details))
+        print "Phidget Exception %i: %s" % (e.code, e.details)
 
 def rfidOutputChanged(e):
     source = e.device
-    print("RFID %i: Output %i State: %s" % (source.getSerialNum(), e.index, e.state))
+    print "RFID %i: Output %i State: %s" % (source.getSerialNum(), e.index, e.state) 
     
 #Main program
 try:
@@ -84,12 +85,11 @@ try:
     rfid.setOnErrorhandler(rfidError)
     rfid.setOnOutputChangeHandler(rfidOutputChanged)
 except PhidgetException as e:
-    print("Phidget Exception %i: %s" % (e.code, e.details))
-    print("Exiting....")
+    print "Phidget Exception %i: %s" % (e.code, e.details)
+    print "Exiting...."
     exit(1)
     
-print("Opening phidget object....")
-
+print "Opening phidget object...."
 try:
     rfid.openPhidget()
 except PhidgetException as e:
@@ -97,39 +97,37 @@ except PhidgetException as e:
     print("Exiting....")
     exit(1)
 
-print("Waiting for attach....")
-
+print "Waiting for attach...."
 try:
     rfid.waitForAttach(10000)
 except PhidgetException as e:
-    print("Phidget Exception %i: %s" % (e.code, e.details))
+    print "Phidget Exception %i: %s" % (e.code, e.details)
     try:
         rfid.closePhidget()
     except PhidgetException as e:
-        print("Phidget Exception %i: %s" % (e.code, e.details))
-        print("Exiting....")
+        print "Phidget Exception %i: %s" % (e.code, e.details)
+        print "Exiting...."
         exit(1)
-    print("Exiting....")
+    print "Exiting...."
     exit(1)
 else:
     displayDeviceInfo()
 
-print("Turning on the RFID antenna....")
+print "Turning on the RFID antenna...."
 rfid.setAntennaOn(True)
     
-print "Initializing socket server...",
+print "Initializing socket server..."
 s = socket.socket()
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind(('',9876))
 s.listen(1)
-print "Done."
 
-while True:
-	print "Waiting for connection....",
+
+for i in itertools.count(0):
+	print "Waiting for connection %d...." % (i)
 	t,_ = s.accept()
-	print "Done."
 
-	print "Handshaking...",
+	print "Handshaking..."
 	#Websocket handshake
 	request_text = t.recv(4096)
 	request_line, headers_alone = request_text.split('\r\n', 1)
@@ -139,9 +137,8 @@ while True:
 	response = SERVER_HANDSHAKE_HYBI % (accept)
 	response = response.strip() + '\r\n\r\n'
 	t.send(response)
-	print "Done."
 
-	print "Updating handlers for tag reader...",
+	print "Updating handlers for tag reader..."
 	def rfidTagGained(e):
 		source = e.device
 		rfid.setLEDOn(1)
@@ -152,7 +149,6 @@ while True:
 		source = e.device
 		rfid.setLEDOn(0)
 		print("RFID %i: Tag Lost: %s" % (source.getSerialNum(), e.tag))
-		#t.send(encode("RFID %i: Tag Lost: %s" % (source.getSerialNum(), id[e.tag])))
 		
 	try:
 		rfid.setOnTagHandler(rfidTagGained)
@@ -161,26 +157,25 @@ while True:
 		print("Phidget Exception %i: %s" % (e.code, e.details))
 		print("Exiting....")
 		exit(1)
-	print "Done."
 
 	print("Press Enter to quit....")
 
 	chr = sys.stdin.read(1)
 	t.close()
 
-	try:
-		lastTag = rfid.getLastTag()
-		print("Last Tag: %s" % (lastTag))
-	except PhidgetException as e:
-		print("Phidget Exception %i: %s" % (e.code, e.details))
+try:
+	lastTag = rfid.getLastTag()
+	print("Last Tag: %s" % (lastTag))
+except PhidgetException as e:
+	print("Phidget Exception %i: %s" % (e.code, e.details))
 
-	print("Closing...")
+print("Closing...")
 
-	try:
-		rfid.closePhidget()
-	except PhidgetException as e:
-		print("Phidget Exception %i: %s" % (e.code, e.details))
-		print("Exiting....")
-		exit(1)
+try:
+	rfid.closePhidget()
+except PhidgetException as e:
+	print("Phidget Exception %i: %s" % (e.code, e.details))
+	print("Exiting....")
+	exit(1)
 
-	print("Done.")
+print("Done.")
