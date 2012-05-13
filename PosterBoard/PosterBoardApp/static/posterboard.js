@@ -21,6 +21,8 @@ $(function() {
 	height = $(window).height();
 	width = $(window).width();
 
+	Math.seedrandom('PosterBoard');
+
 	setupWebSocket();
 	setupAddDialog();
 	setupPosterClick();
@@ -67,56 +69,56 @@ $(function() {
 	}).mouseup(function() {
 		$(this).css('opacity', 1);
 	});
-	
-	$('#colorPickerContainer').click(function(){
+
+	$('#colorPickerContainer').click(function() {
 		console.log('Triggering change event on colorpicker');
 		$('#colorPicker').focus();
 		console.log('After triggering change event on colorpicker');
 	});
-	
 	// $("#addPosterButton").click(function(){
 	// $("#addButton").click();
 	// alert("Poster added successfully");
 	// })
 
 });
-function setupSimulateRfid(){
-	$('body').keypress(function(event){
+function setupSimulateRfid() {
+	$('body').keypress(function(event) {
 		console.log('keypressed: ' + event.which);
-		if (event.which == 114){
+		if(event.which == 114) {
 			$('#rfidinput').val('cezeozue@mit.edu').change();
 		}
 	})
 }
-function setupEmailToCalendar(){
+
+function setupEmailToCalendar() {
 	$('#swipeCardMessage').dialog({
-			modal: true,
-			autoOpen : false,
-			zIndex: 99999,
-			resizable: false,
-			buttons: {
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-		});
+		modal : true,
+		autoOpen : false,
+		zIndex : 99999,
+		resizable : false,
+		buttons : {
+			Cancel : function() {
+				$(this).dialog("close");
+			}
+		},
+	});
 	$('#emailSentMessage').dialog({
-			modal: true,
-			autoOpen : false,
-			zIndex: 99999,
-			resizable: false,
-			hide: 'fade',
-			buttons: {
-				Close: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-		});
-	$('#saveToMyCalendar').click(function(){
+		modal : true,
+		autoOpen : false,
+		zIndex : 99999,
+		resizable : false,
+		hide : 'fade',
+		buttons : {
+			Close : function() {
+				$(this).dialog("close");
+			}
+		},
+	});
+	$('#saveToMyCalendar').click(function() {
 		$('#rfidinput').val('');
 		$('#swipeCardMessage').dialog('open');
-		
-		$('#rfidinput').bind('change.sendEmail', function(){
+
+		$('#rfidinput').bind('change.sendEmail', function() {
 			$('#rfidinput').unbind('change.sendEmail');
 			console.log('received rfid input');
 			$('#swipeCardMessage').dialog('close');
@@ -125,35 +127,36 @@ function setupEmailToCalendar(){
 		});
 	});
 }
-function setupDeletePoster(){
+
+function setupDeletePoster() {
 	$('#deleteConfirmation').dialog({
-			modal: true,
-			autoOpen : false,
-			zIndex: 99999,
-			resizable: false,
-			buttons: {
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-		});
+		modal : true,
+		autoOpen : false,
+		zIndex : 99999,
+		resizable : false,
+		buttons : {
+			Cancel : function() {
+				$(this).dialog("close");
+			}
+		},
+	});
 	$('#deleteResult').dialog({
-			modal: true,
-			autoOpen : false,
-			zIndex: 99999,
-			resizable: false,
-			hide: 'fade',
-			buttons: {
-				Close: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-		});
-	$('#deleteButton').click(function(){
+		modal : true,
+		autoOpen : false,
+		zIndex : 99999,
+		resizable : false,
+		hide : 'fade',
+		buttons : {
+			Close : function() {
+				$(this).dialog("close");
+			}
+		},
+	});
+	$('#deleteButton').click(function() {
 		$('#rfidinput').val('');
 		$('#deleteConfirmation').dialog('open');
-		
-		$('#rfidinput').bind('change.delete', function(){
+
+		$('#rfidinput').bind('change.delete', function() {
 			$('#rfidinput').unbind('change.delete');
 			console.log('received rfid input');
 			$('#deleteConfirmation').dialog('close');
@@ -161,10 +164,10 @@ function setupDeletePoster(){
 			$('#deleteResult span').html('Deleting poster');
 			$('#deleteResult').dialog('open');
 			var rfidinput = $('#rfidinput').val();
-			$.get('deletePoster',{
-				poster: focusedImageUid,
-				email: rfidinput,
-			}, function(data){
+			$.get('deletePoster', {
+				poster : focusedImageUid,
+				email : rfidinput,
+			}, function(data) {
 				$('#deleteResult img').hide();
 				$('#deleteResult span').html(data);
 				setInterval("$('#deleteResult').dialog('close');", dismissMessageTimeout);
@@ -174,6 +177,7 @@ function setupDeletePoster(){
 		});
 	});
 }
+
 function setupWebSocket() {
 	var ws = new WebSocket("ws://localhost:9876/");
 	ws.onopen = function(e) {
@@ -235,11 +239,11 @@ function updateLikesView() {
 function updateLikesModel() {
 	var likes = $('#likes').html();
 	var dislikes = $('#dislikes').html();
-	
+
 	$.get('updateLikes', {
-		likes: likes,
-		dislikes: dislikes,
-		poster: focusedImageUid,
+		likes : likes,
+		dislikes : dislikes,
+		poster : focusedImageUid,
 	});
 }
 
@@ -345,16 +349,14 @@ function setupCalendar(diff, set) {
 		$("#day" + i).html("&nbsp;" + curr_date);
 		$("#wday" + i).html(days[curr_day]);
 		$("#month" + i).html(months[curr_month]);
-                var today_date = new Date(today.getFullYear(), curr_month, curr_date);
-		for (var j = 0;  j < postersv2.length; j = j+1)
-            	{
-                    var temp = postersv2[j]["fields"]["event_date"].split(/T| /)[0].split("-");
-                    var d = new Date(temp[0], temp[1]-1, temp[2]);
-                    if (today_date.getTime() != d.getTime())
-		    {
-			$("#poster" + i +"-" + postersv2[j]["pk"]).css('display', 'none');
-		        //$("#posterCol" + i).append("<img class='thumbnail' src='/media/" + postersv2[j]["fields"]["posterFile1"] + "'/> <br /> <br />");
-		    }
+		var today_date = new Date(today.getFullYear(), curr_month, curr_date);
+		for(var j = 0; j < postersv2.length; j = j + 1) {
+			var temp = postersv2[j]["fields"]["event_date"].split(/T| /)[0].split("-");
+			var d = new Date(temp[0], temp[1] - 1, temp[2]);
+			if(today_date.getTime() != d.getTime()) {
+				$("#poster" + i + "-" + postersv2[j]["pk"]).css('display', 'none');
+				//$("#posterCol" + i).append("<img class='thumbnail' src='/media/" + postersv2[j]["fields"]["posterFile1"] + "'/> <br /> <br />");
+			}
 		}
 		today = new Date(today.getTime() + (24 * 60 * 60 * 1000));
 	}
@@ -373,13 +375,21 @@ function setupAddButton() {
 		$(this).toggleClass("adding");
 		if($(this).hasClass("adding")) {
 			$(this).text("x");
-			$("#board").animate({width : "70%"}, "slow");
-			$("#addContainer").animate({width : "30%"}, "slow");
+			$("#board").animate({
+				width : "70%"
+			}, "slow");
+			$("#addContainer").animate({
+				width : "30%"
+			}, "slow");
 		} else {
 			$(this).text("+");
-			$("#board").animate({width : "100%"}, "slow");
-			$("#addContainer").animate({width : "0%"}, "slow");
-			
+			$("#board").animate({
+				width : "100%"
+			}, "slow");
+			$("#addContainer").animate({
+				width : "0%"
+			}, "slow");
+
 		}
 	});
 }
@@ -415,7 +425,7 @@ function getLikes() {
 
 	});
 	liked = false;
-	disliked = false; 
+	disliked = false;
 	updateLikesView();
 }
 
@@ -488,7 +498,6 @@ function setupPosterClick() {
 
 				$(".jTscroller").css('top', '0px');
 				$(".jTscroller").empty();
-				
 				scribbleStrokes = [];
 				drawing = false;
 				drawingId = '';
@@ -659,7 +668,9 @@ function setupSimilarView() {
 }
 
 function getRandOffset(range) {
-	offset = Math.random() * range - range / 2;
+	var randomNumber = Math.random();
+	console.log('Random number: ' + randomNumber);
+	offset = randomNumber * range - range / 2;
 	return offset;
 }
 
