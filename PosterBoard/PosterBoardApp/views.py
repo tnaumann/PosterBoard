@@ -23,12 +23,15 @@ def upload_page( request ):
     if request.method == 'POST':
         form = PosterForm(request.POST)
         if form.is_valid():
- 	    newPoster = Poster(posterFile1 = File(open(settings.SITE_ROOT + "/media"+form.cleaned_data['filename'])), event_date = form.cleaned_data['event_date'], start_time = form.cleaned_data['start_time'], end_time = form.cleaned_data['end_time'], tag1 = form.cleaned_data['tag1'], tag2 = form.cleaned_data['tag2'], tag3 = form.cleaned_data['tag3'], tag4 = form.cleaned_data['tag4'], tag5 = form.cleaned_data['tag5'], email = form.cleaned_data['email'], title = form.cleaned_data['title'])
+	    fname = form.cleaned_data['filename'].split("/")
+	    print fname
+            fname = fname[len(fname)-1]
+            print fname
+ 	    newPoster = Poster(posterFile1 = fname, event_date = form.cleaned_data['event_date'], start_time = form.cleaned_data['start_time'], end_time = form.cleaned_data['end_time'], tag1 = form.cleaned_data['tag1'], tag2 = form.cleaned_data['tag2'], tag3 = form.cleaned_data['tag3'], tag4 = form.cleaned_data['tag4'], tag5 = form.cleaned_data['tag5'], email = form.cleaned_data['email'], title = form.cleaned_data['title'])
             newPoster.save()
             print "Poster objects:", Poster.objects.count()
             # Redirect to the document list after POST
- 	    print '<div id = "temp ' + str(newPoster.id) + '" class="poster-div" event_date="' + str(newPoster.event_date.year) + ' ' + str(newPoster.event_date.month) + ' ' + str(newPoster.event_date.day) + '"><img class="thumbnail" data-tags="' + newPoster.tag1 + ',' + newPoster.tag2 + ',' + newPoster.tag3 + ',' + newPoster.tag4 + ',' + newPoster.tag5 + '" src="' + settings.MEDIA_URL + newPoster.posterFile1.name + '"/> <br /><br /></div>'
-	    return HttpResponse('<div id = "temp ' + str(newPoster.id) + '" class="poster-div" event_date="' + str(newPoster.event_date.year) + ' ' + str(newPoster.event_date.month) + ' ' + str(newPoster.event_date.day) + '"><img class="thumbnail" data-tags="' + newPoster.tag1 + ',' + newPoster.tag2 + ',' + newPoster.tag3 + ',' + newPoster.tag4 + ',' + newPoster.tag5 + '" src="' + settings.MEDIA_URL + newPoster.posterFile1.name + '"/> <br /><br /></div>')
+	    return HttpResponse('<div id = "temp ' + str(newPoster.id) + '" class="poster-div" event_date="' + str(newPoster.event_date.year) + ' ' + str(newPoster.event_date.month) + ' ' + str(newPoster.event_date.day) + '"><img class="thumbnail" data-tags="' + newPoster.tag1 + ',' + newPoster.tag2 + ',' + newPoster.tag3 + ',' + newPoster.tag4 + ',' + newPoster.tag5 + '" src="' + settings.MEDIA_URL +'posters/' + newPoster.posterFile1 + '"/> <br /><br /></div>')
     else:
         form = PosterForm() # A empty, unbound form
 
@@ -47,7 +50,7 @@ def save_upload( uploaded, filename, raw_data ):
             if False, uploaded has been submitted via the basic form
             submission and is a regular Django UploadedFile in request.FILES
   '''
-  filename = settings.SITE_ROOT + '/media/' + filename
+  filename = settings.SITE_ROOT + '/media/posters/' + filename
   try:
     from io import FileIO, BufferedWriter
     with BufferedWriter( FileIO( filename, "wb" ) ) as dest:
@@ -145,7 +148,7 @@ def posterUpload(request):
     if request.method == 'POST':
         form = PosterForm(request.POST)
         if form.is_valid():
-            newPoster = Poster(posterFile1 = File(open(settings.SITE_ROOT + "/media/"+form.cleaned_data['filename'])), event_date = form.cleaned_data['event_date'], start_time = form.cleaned_data['start_time'], end_time = form.cleaned_data['end_time'], tag1 = form.cleaned_data['tag1'], email = form.cleaned_data['email'], title = form.cleaned_data['title'])
+            newPoster = Poster(posterFile1 = File(open(settings.SITE_ROOT + "/media/posters/"+form.cleaned_data['filename'])), event_date = form.cleaned_data['event_date'], start_time = form.cleaned_data['start_time'], end_time = form.cleaned_data['end_time'], tag1 = form.cleaned_data['tag1'], email = form.cleaned_data['email'], title = form.cleaned_data['title'])
             newPoster.save()
             if request.is_ajax():
 		print "AJAX"
