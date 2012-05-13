@@ -68,7 +68,7 @@
 					onComplete : function(id, fileName, responseJSON) {
 						if(responseJSON.success) {
 							$("#id_filename").val(responseJSON.filename);
-							$("#preview").attr("src", "{{MEDIA_ROOT}}/media/" + responseJSON.filename);
+							$("#preview").attr("src", "{{MEDIA_ROOT}}/media/posters/" + responseJSON.filename);
 						} else
 							alert("upload failed!");
 					},
@@ -151,7 +151,7 @@
 									{% if posters %}
 									{% for poster in posters %}
 									<div id = "poster{{i}}-{{poster.id}}" class="poster-div" event_date="{{poster.event_date.year}} {{poster.event_date.month}} {{poster.event_date.day}}">
-										<img class ="thumbnail" data-tags="{{poster.tag1}}, {{poster.tag2}}, {{poster.tag3}}, {{poster.tag4}}, {{poster.tag5}}" data-uid="{{poster.id}}" src="{{MEDIA_URL}}{{poster.posterFile1.name}}" />
+										<img class ="thumbnail" data-tags="{{poster.tag1}}, {{poster.tag2}}, {{poster.tag3}}, {{poster.tag4}}, {{poster.tag5}}" data-uid="{{poster.id}}" src="{{MEDIA_URL}}posters/{{poster.posterFile1}}" />
 										<br />
 										<br />
 									</div>
@@ -171,7 +171,7 @@
 					<div id="originalImages">
 						{% if posters %}
 						{% for poster in posters %}
-						<img class ="thumbnail" data-tags="{{poster.tag1}}, {{poster.tag2}}, {{poster.tag3}}, {{poster.tag4}}, {{poster.tag5}}" data-uid="{{poster.id}}" src="{{MEDIA_URL}}{{poster.posterFile1.name}}" />
+						<img class ="thumbnail" data-tags="{{poster.tag1}}, {{poster.tag2}}, {{poster.tag3}}, {{poster.tag4}}, {{poster.tag5}}" data-uid="{{poster.id}}" src="{{MEDIA_URL}}posters/{{poster.posterFile1}}" />
 						{% endfor %}
 						{% endif %}
 					</div>
