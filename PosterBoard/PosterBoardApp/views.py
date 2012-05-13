@@ -31,7 +31,7 @@ def upload_page( request ):
             newPoster.save()
             print "Poster objects:", Poster.objects.count()
             # Redirect to the document list after POST
-	    return HttpResponse('<div id = "temp ' + str(newPoster.id) + '" class="poster-div" event_date="' + str(newPoster.event_date.year) + ' ' + str(newPoster.event_date.month) + ' ' + str(newPoster.event_date.day) + '"><img class="thumbnail" data-tags="' + newPoster.tag1 + ',' + newPoster.tag2 + ',' + newPoster.tag3 + ',' + newPoster.tag4 + ',' + newPoster.tag5 + '" src="' + settings.MEDIA_URL +'posters/' + newPoster.posterFile1 + '"/> <br /><br /></div>')
+	    return HttpResponse('<div id = "temp ' + str(newPoster.id) + '" class="poster-div" event_date="' + str(newPoster.event_date.year) + ' ' + str(newPoster.event_date.month) + ' ' + str(newPoster.event_date.day) + '"><img class="thumbnail" data-tags="' + newPoster.tag1 + ',' + newPoster.tag2 + ',' + newPoster.tag3 + ',' + newPoster.tag4 + ',' + newPoster.tag5 + '" src="' + settings.MEDIA_URL +'posters/' + newPoster.posterFile1 + '" data-uid="' + str(newPoster.id) + '"/> <br /><br /></div>')
     else:
         form = PosterForm() # A empty, unbound form
 

@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="{{STATIC_URL}}chosen/chosen.jquery.js"></script>
 		<script src="{{STATIC_URL}}jquery.thumbnailScroller.js"></script>
 		<script type="text/javascript" src="{{STATIC_URL}}jscolor/jscolor.js"></script>
+        <script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
 		<link href="{{STATIC_URL}}jquery.thumbnailScroller.css" rel="stylesheet" />
 		<script type="text/javascript">
 			jQuery(document).ajaxSend(function(event, xhr, settings) {
@@ -60,6 +61,7 @@
 				}
 			});
 			$(document).ready(function() {
+                $("#upload_form").validate();
 				var uploader = new qq.FileUploader({
 					action : "{% url ajax_upload %}",
 					element : $('#file-uploader')[0],
@@ -269,32 +271,40 @@
 					{{ form.tag4.as_hidden }} {{ form.tag4.errors }}
 					{{ form.tag5.as_hidden }} {{ form.tag5.errors }}
 					{{ form.title.as_hidden }} {{ form.title.errors }}
-
-					<div style="border-bottom: 2px solid #999; margin-bottom: 20px; padding-bottom: 20px">
-						<input style= "color: gray; width: 30%" type="text" id="addDateStart" value="<Date>" />
-						<div>
-							<input style= "color: gray; width: 30%" type="text" id="addTimeStart" value="<Start time>" />
-							<input style= "color: gray; width: 30%" type="text" id="addTimeEnd" value="<End time>" />
-						</div>
-
-					</div>
-
-					<div style="border-bottom: 2px solid #999; margin-bottom: 20px; padding-bottom: 20px">
-						<select multiple="multiple" data-placeholder="Tags" class="chosen-select" id="select_mult">
+                    <br /><br /><hr>
+					<div >
+                    <table>
+                    <tr>
+                    <td>
+						Event Date: </td>
+                        <td>
+                        <input class="required" style= "color: gray; width: 100%" type="text" id="addDateStart" />
+                        </td>
+                        </tr>
+                        <tr>
+                        <td>
+							Start Time: </td><td><input class="required" style= "color: gray; width: 100%" type="text" id="addTimeStart" /></td></tr>
+							<tr><td>End Time: </td><td><input class="required" style= "color: gray; width: 100%" type="text" id="addTimeEnd" /></td></tr>
+                        <tr>
+                        <td>
+						Tags: </td><td><select multiple="multiple" class="chosen-select" id="select_mult">
 							<option>csail</option>
 							<option>cultural</option>
 							<option>social</option>
 							<option>talk</option>
 						</select>
-					</div>
+                        </td>
+					</tr>
 
-					<div style="border-bottom: 2px solid #999; margin-bottom: 20px; padding-bottom: 20px">
-						Email
-						<input type="text" class="addAuth" id="posterEmail"/>
-					</div>
-					<div>
+					<tr><td>	Email: </td><td>
+						<input type="text" class="addAuth" id="posterEmail" class="required email" />
+					</td></tr>
+					<tr><td colspan="2">
 						<input type="button" value="Add Poster" id="addPosterButton"/>
-					</div>
+					</td>
+                    </tr>
+                    </table>
+                    </div>
 				</form>
 			</div>
 			<div id="posterdummy" style="display:none"></div>
