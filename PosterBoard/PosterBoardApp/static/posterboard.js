@@ -134,6 +134,7 @@ $(function() {
 			setupCalendar(0, false);
 			setupCalendarView();
 			setupSimilarView();
+			setupPosterClick();
 		});
 	});
 });
@@ -501,12 +502,13 @@ function setupPosterClick() {
 
 		console.log('fullPoster max dimensions: ' + width + ', ' + height);
 		fullPoster.css('maxWidth', width * 0.8);
-		fullPoster.css('maxHeight', height * 0.8);
+		fullPoster.css('maxHeight', height * 0.8);		
 		fullPoster.css('margin', 0);
 		fullPoster.removeClass('thumbnail');
 		fullPoster.css('position', '');
 		$("#focusedPosterImage").empty();
 		fullPoster.appendTo("#focusedPosterImage");
+		console.log('Width: ' + $('#focusedPosterImage img').width() + ' From jQuery obj: ' + fullPoster.width());
 		var clickedImageWidth = $(this).width();
 		var clickedImageHeight = $(this).height();
 		focusedImageSrc = $(this).attr('src');
@@ -546,6 +548,7 @@ function setupPosterClick() {
 
 		});
 		drawingId = Math.random();
+		console.log('Image object: ' + $('#focusedPosterImage img'));
 
 		$.colorbox({
 			inline : true,
@@ -570,7 +573,7 @@ function setupPosterClick() {
 
 				var offset = $('#focusedPosterImage img').offset();
 				console.log('Offset x: ' + offset.left + ' Offset y: ' + offset.top);
-				console.log('Width: ' + $('#focusedPosterImage img').width() + ' Height: ' + $('#focusedPosterImage img').height());
+				console.log('Width: ' + $('#focusedPosterImage img').width() + ' From jQuery obj: ' + fullPoster.width());
 
 				// var newWidth = $('#focusedPoster').width() + 10;
 				// $.colorbox({
