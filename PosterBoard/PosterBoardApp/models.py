@@ -4,10 +4,7 @@ import logging, string, os
 logger = logging.getLogger(__name__)
 
 class Poster(models.Model):
-    posterFile1 = models.FileField(upload_to = 'posters') #location where stored
-    posterFile2 = models.FileField(upload_to = 'posters', null=True, blank=True) #location where to store scribbles
-    posterFile3 = models.FileField(upload_to = 'posters', null=True, blank=True) #location of scribbles
-    posterFile4 = models.FileField(upload_to = 'posters', null=True, blank=True) #location of scribbles
+    posterFile1 = models.CharField(max_length=200) #location where stored
     event_date = models.DateTimeField('date of event')
     start_time = models.TimeField('start time for event')
     end_time = models.TimeField('end time for event')

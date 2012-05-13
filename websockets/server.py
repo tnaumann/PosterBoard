@@ -124,63 +124,63 @@ s.bind(('',9876))
 s.listen(1)
 print "Done."
 
-print "Waiting for connection....",
-t,_ = s.accept()
-print "Done."
+while True:
+	print "Waiting for connection....",
+	t,_ = s.accept()
+	print "Done."
 
-print "Handshaking...",
-#Websocket handshake
-request_text = t.recv(4096)
-request_line, headers_alone = request_text.split('\r\n', 1)
-headers = mimetools.Message(StringIO.StringIO(headers_alone))
-accept = base64.b64encode(
-	hashlib.sha1(headers['Sec-WebSocket-Key'] + GUID).digest()) 
-response = SERVER_HANDSHAKE_HYBI % (accept)
-response = response.strip() + '\r\n\r\n'
-t.send(response)
-print "Done."
+	print "Handshaking...",
+	#Websocket handshake
+	request_text = t.recv(4096)
+	request_line, headers_alone = request_text.split('\r\n', 1)
+	headers = mimetools.Message(StringIO.StringIO(headers_alone))
+	accept = base64.b64encode(
+		hashlib.sha1(headers['Sec-WebSocket-Key'] + GUID).digest()) 
+	response = SERVER_HANDSHAKE_HYBI % (accept)
+	response = response.strip() + '\r\n\r\n'
+	t.send(response)
+	print "Done."
 
-print "Updating handlers for tag reader...",
-def rfidTagGained(e):
-    source = e.device
-    rfid.setLEDOn(1)
-    print("RFID %i: Tag Read: %s" % (source.getSerialNum(), e.tag))
-    t.send(encode(id[e.tag]))
-    
-def rfidTagLost(e):
-    source = e.device
-    rfid.setLEDOn(0)
-    print("RFID %i: Tag Lost: %s" % (source.getSerialNum(), e.tag))
-    #t.send(encode("RFID %i: Tag Lost: %s" % (source.getSerialNum(), id[e.tag])))
-    
-try:
-    rfid.setOnTagHandler(rfidTagGained)
-    rfid.setOnTagLostHandler(rfidTagLost)
-except PhidgetException as e:
-    print("Phidget Exception %i: %s" % (e.code, e.details))
-    print("Exiting....")
-    exit(1)
-print "Done."
+	print "Updating handlers for tag reader...",
+	def rfidTagGained(e):
+		source = e.device
+		rfid.setLEDOn(1)
+		print("RFID %i: Tag Read: %s" % (source.getSerialNum(), e.tag))
+		t.send(encode(id[e.tag]))
+		
+	def rfidTagLost(e):
+		source = e.device
+		rfid.setLEDOn(0)
+		print("RFID %i: Tag Lost: %s" % (source.getSerialNum(), e.tag))
+		#t.send(encode("RFID %i: Tag Lost: %s" % (source.getSerialNum(), id[e.tag])))
+		
+	try:
+		rfid.setOnTagHandler(rfidTagGained)
+		rfid.setOnTagLostHandler(rfidTagLost)
+	except PhidgetException as e:
+		print("Phidget Exception %i: %s" % (e.code, e.details))
+		print("Exiting....")
+		exit(1)
+	print "Done."
 
-print("Press Enter to quit....")
+	print("Press Enter to quit....")
 
-chr = sys.stdin.read(1)
-t.close()
+	chr = sys.stdin.read(1)
+	t.close()
 
-try:
-    lastTag = rfid.getLastTag()
-    print("Last Tag: %s" % (lastTag))
-except PhidgetException as e:
-    print("Phidget Exception %i: %s" % (e.code, e.details))
+	try:
+		lastTag = rfid.getLastTag()
+		print("Last Tag: %s" % (lastTag))
+	except PhidgetException as e:
+		print("Phidget Exception %i: %s" % (e.code, e.details))
 
-print("Closing...")
+	print("Closing...")
 
-try:
-    rfid.closePhidget()
-except PhidgetException as e:
-    print("Phidget Exception %i: %s" % (e.code, e.details))
-    print("Exiting....")
-    exit(1)
+	try:
+		rfid.closePhidget()
+	except PhidgetException as e:
+		print("Phidget Exception %i: %s" % (e.code, e.details))
+		print("Exiting....")
+		exit(1)
 
-print("Done.")
-exit(0)
+	print("Done.")

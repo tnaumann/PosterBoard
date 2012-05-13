@@ -7,10 +7,7 @@
 		<link rel="stylesheet" href="{{STATIC_URL}}colorbox.css" type="text/css" media="all" />
 		<link rel="stylesheet" href="{{STATIC_URL}}calendrical.css" type="text/css" media="all" />
 		<link rel="stylesheet" href="{{STATIC_URL}}chosen/chosen.css" type="text/css" media="all" />
-        	<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}fileuploader.css" />
-		<script type="text/javascript">
-            		postersv2 = JSON.parse("{{postersserial|escapejs}}");
-        	</script>
+		<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}fileuploader.css" />
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
 		<script type="text/javascript" src="{{STATIC_URL}}posterboard.js"></script>
@@ -23,73 +20,73 @@
 		<script src="{{STATIC_URL}}jquery.thumbnailScroller.js"></script>
 		<script type="text/javascript" src="{{STATIC_URL}}jscolor/jscolor.js"></script>
 		<link href="{{STATIC_URL}}jquery.thumbnailScroller.css" rel="stylesheet" />
-        <script type="text/javascript">
-        jQuery(document).ajaxSend(function(event, xhr, settings) {
-            function getCookie(name) {
-            var cookieValue = null;
-            if (document.cookie && document.cookie != '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = jQuery.trim(cookies[i]);
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-    function sameOrigin(url) {
-        // url could be relative or scheme relative or absolute
-        var host = document.location.host; // host + port
-        var protocol = document.location.protocol;
-        var sr_origin = '//' + host;
-        var origin = protocol + sr_origin;
-        // Allow absolute or scheme relative URLs to same origin
-        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-            // or any other URL that isn't scheme relative or absolute i.e relative.
-            !(/^(\/\/|http:|https:).*/.test(url));
-    }
-    function safeMethod(method) {
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-    }
+		<script type="text/javascript">
+			jQuery(document).ajaxSend(function(event, xhr, settings) {
+				function getCookie(name) {
+					var cookieValue = null;
+					if(document.cookie && document.cookie != '') {
+						var cookies = document.cookie.split(';');
+						for(var i = 0; i < cookies.length; i++) {
+							var cookie = jQuery.trim(cookies[i]);
+							// Does this cookie string begin with the name we want?
+							if(cookie.substring(0, name.length + 1) == (name + '=')) {
+								cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+								break;
+							}
+						}
+					}
+					return cookieValue;
+				}
 
-    if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
-        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-    }
-});
-$(document).ready(function(){
-var uploader = new qq.FileUploader( {
-    action: "{% url ajax_upload %}",
-    element: $('#file-uploader')[0],
-    debug: true,
-    multiple: true,
-    onComplete: function( id, fileName, responseJSON ) {
-      if( responseJSON.success )
-      {
-        $("#id_filename").val(responseJSON.filename ) ;
-        $("#preview").attr("src", "{{MEDIA_ROOT}}/media/"+responseJSON.filename);  
-      }
-      else
-        alert( "upload failed!" ) ;
-    },
-    onAllComplete: function( uploads ) {
-      // uploads is an array of maps
-      // the maps look like this: { file: FileObject, response: JSONServerResponse }
-      alert( "All complete!" ) ;
-    },
-    params: {
-      'csrf_token': '{{ csrf_token }}',
-      'csrf_name': 'csrfmiddlewaretoken',
-      'csrf_xname': 'X-CSRFToken',
-    },
-  });
-  });
+				function sameOrigin(url) {
+					// url could be relative or scheme relative or absolute
+					var host = document.location.host;
+					// host + port
+					var protocol = document.location.protocol;
+					var sr_origin = '//' + host;
+					var origin = protocol + sr_origin;
+					// Allow absolute or scheme relative URLs to same origin
+					return (url == origin || url.slice(0, origin.length + 1) == origin + '/') || (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+					// or any other URL that isn't scheme relative or absolute i.e relative.
+					!(/^(\/\/|http:|https:).*/.test(url));
+				}
 
-</script>
-        
+				function safeMethod(method) {
+					return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+				}
+
+				if(!safeMethod(settings.type) && sameOrigin(settings.url)) {
+					xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+				}
+			});
+			$(document).ready(function() {
+				var uploader = new qq.FileUploader({
+					action : "{% url ajax_upload %}",
+					element : $('#file-uploader')[0],
+					debug : true,
+					multiple : true,
+					onComplete : function(id, fileName, responseJSON) {
+						if(responseJSON.success) {
+							$("#id_filename").val(responseJSON.filename);
+							$("#preview").attr("src", "{{MEDIA_ROOT}}/media/posters/" + responseJSON.filename);
+						} else
+							alert("upload failed!");
+					},
+					onAllComplete : function(uploads) {
+						// uploads is an array of maps
+						// the maps look like this: { file: FileObject, response: JSONServerResponse }
+						alert("All complete!");
+					},
+					params : {
+						'csrf_token' : '{{ csrf_token }}',
+						'csrf_name' : 'csrfmiddlewaretoken',
+						'csrf_xname' : 'X-CSRFToken',
+					},
+				});
+			});
+
+		</script>
+
 	</head>
 	<body>
 		<div id="board" data-role="page">
@@ -147,23 +144,22 @@ var uploader = new qq.FileUploader( {
 								</div></td>
 							</tr>
 							<tr>
-                            {% load template_filters %}
-                            {% for i in 7|get_range %}
-                                <td>
-                                    <div id = "posterCol{{i}}" class="datePosterCol">
-                                        {% if posters %}
-                                            {% for poster in posters %}
-                                                <div id = "poster{{i}}-{{poster.id}}" class="poster-div" event_date="{{poster.event_date.year}} {{poster.event_date.month}} {{poster.event_date.day}}">
-                                                    <img class ="thumbnail" data-tags="{{poster.tag1}}, {{poster.tag2}}, {{poster.tag3}}, {{poster.tag4}}, {{poster.tag5}}" data-uid="{{poster.id}}" src="{{MEDIA_URL}}{{poster.posterFile1.name}}" />
-                                                    <br />
-                                                    <br />
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            {% endfor %}
-                            </tr>
+								{% load template_filters %}
+								{% for i in 7|get_range %}
+								<td>
+								<div id = "posterCol{{i}}" class="datePosterCol">
+									{% if posters %}
+									{% for poster in posters %}
+									<div id = "poster{{i}}-{{poster.id}}" class="poster-div" event_date="{{poster.event_date.year}} {{poster.event_date.month}} {{poster.event_date.day}}">
+										<img class ="thumbnail" data-tags="{{poster.tag1}}, {{poster.tag2}}, {{poster.tag3}}, {{poster.tag4}}, {{poster.tag5}}" data-uid="{{poster.id}}" src="{{MEDIA_URL}}posters/{{poster.posterFile1}}" />
+										<br />
+										<br />
+									</div>
+									{% endfor %}
+									{% endif %}
+								</div></td>
+								{% endfor %}
+							</tr>
 						</table>
 					</div>
 					<div id="rightCalendarPanel">
@@ -173,17 +169,16 @@ var uploader = new qq.FileUploader( {
 				</div>
 				<div id="similarViewContainer">
 					<div id="originalImages">
-                    {% if posters %}
-                        {% for poster in posters %}
-                            <img class ="thumbnail" data-tags="{{poster.tag1}}, {{poster.tag2}}, {{poster.tag3}}, {{poster.tag4}}, {{poster.tag5}}" data-uid="{{poster.id}}" src="{{MEDIA_URL}}{{poster.posterFile1.name}}" />
-                        {% endfor %}
-                    {% endif %}
+						{% if posters %}
+						{% for poster in posters %}
+						<img class ="thumbnail" data-tags="{{poster.tag1}}, {{poster.tag2}}, {{poster.tag3}}, {{poster.tag4}}, {{poster.tag5}}" data-uid="{{poster.id}}" src="{{MEDIA_URL}}posters/{{poster.posterFile1}}" />
+						{% endfor %}
+						{% endif %}
 					</div>
 					<div id="clusteredImages"></div>
 					<div id="singleClusterView" style="display: none;">
 						<div id="singleClusterButtons">
-							<span id="currentCluster"></span> |
-							<a id="exitSingleClusterView" href="#">Return</a>
+							<span id="currentCluster"></span> | <a id="exitSingleClusterView" href="#">Return</a>
 						</div>
 						<div id="singleClusterImages"></div>
 					</div>
@@ -200,144 +195,55 @@ var uploader = new qq.FileUploader( {
 						<div id="focusedPosterInteraction">
 							<div style="background-image: url({{STATIC_URL}}images/thumbsup.jpg);">
 								<span id="likes" style="margin-top: 12px;">0</span>
-				<div id="addContainer">
-					
-					<div class="upload_form_cont">
-						<img id="preview" />
-						<div id="file-uploader">
-    							<noscript>
-        							<p>Please enable JavaScript to use file uploader.</p>
-    							</noscript>
-						</div>
-						
-						<form id="upload_form" enctype="multipart/form-data" method="post" action="upload.php">
-														<div id="fileinfo">
-								<div id="filename"></div>
-								<div id="filesize"></div>
-								<div id="filetype"></div>
-								<div id="filedim"></div>
+								<div style="background-image: url({{STATIC_URL}}images/thumbsdown.jpg);">
+									<span id="dislikes" style="margin-top: 1px;">0</span>
+								</div>
+								<img id='saveToMyCalendar' src="{{STATIC_URL}}images/calendar.jpg" />
+								<div id='swipeCardMessage'>
+									Please swipe your ID to have a reminder sent to your email
+								</div>
+								<div id='emailSentMessage'>
+									Thank you. You would receive your reminder by email shortly
+								</div>
+								<div id="colorPickerContainer" style="background-image: url({{STATIC_URL}}images/colorpicker.jpg);">
+									<input class="color {pickerClosable:true}" id="colorPicker" value="#61E9E9" />
+								</div>
+								<img id="saveAnnoButton" style="display: none" src="{{STATIC_URL}}images/saveAnno-unsaved.jpg" />
+								<img id="resetAnnoButton" style="display: none" src="{{STATIC_URL}}images/resetAnno.jpg" />
+								<img id="deleteButton" src="{{STATIC_URL}}images/trash.jpg" />
+								<div id='deleteConfirmation'>
+									Please swipe your ID to confirm that you would like to remove this poster from the board
+								</div>
+								<div id='deleteResult'>
+									<img src="{{STATIC_URL}}images/deleting.gif" style="max-height: 30px; max-width: 30px; vertical-align:middle;" />
+									<span style="line-height: 100%; height: 30px; display: inline-block;">Deleting poster</span>
+								</div>
 							</div>
-							<div id="error">
-								You should select valid image files only!
-							</div>
-							<div id="error2">
-								An error occurred while uploading the file
-							</div>
-							<div style="background-image: url({{STATIC_URL}}images/thumbsdown.jpg);">
-								<span id="dislikes" style="margin-top: 1px;">0</span>
-							</div>
-							<img id='saveToMyCalendar' src="{{STATIC_URL}}images/calendar.jpg" />
-							<div id='swipeCardMessage'>
-								Please swipe your ID to have a reminder sent to your email
-							</div>
-							<div id='emailSentMessage'>
-								Thank you. You would receive your reminder by email shortly
-							</div>
-							<div id="colorPickerContainer" style="background-image: url({{STATIC_URL}}images/colorpicker.jpg);">
-								<input class="color {pickerClosable:true}" id="colorPicker" value="#61E9E9" />
-							</div>
-							<img id="saveAnnoButton" style="display: none" src="{{STATIC_URL}}images/saveAnno-unsaved.jpg" />
-							<img id="resetAnnoButton" style="display: none" src="{{STATIC_URL}}images/resetAnno.jpg" />
-							<img id="deleteButton" src="{{STATIC_URL}}images/trash.jpg" />
-							<div id='deleteConfirmation'>
-								Please swipe your ID to confirm that you would like to remove this poster from the board
-							</div>
-							<div id='deleteResult'>
-								<img src="{{STATIC_URL}}images/deleting.gif" style="max-height: 30px; max-width: 30px; vertical-align:middle;" />
-								<span style="line-height: 100%; height: 30px; display: inline-block;">Deleting poster</span>
+							<div id="tS3" class="jThumbnailScroller" style="position: relative; top: 0; left: 0; height: 80%">
+								<div class="jTscrollerContainer">
+									<div class="jTscroller"></div>
+									<a href="#" class="jTscrollerPrevButton" style="background:#000 url({{STATIC_URL}}prevArrow.png) center center;"></a>
+									<a href="#" class="jTscrollerNextButton" style="background:#000 url({{STATIC_URL}}nextArrow.png) center center;"></a>
+
+								</div>
 							</div>
 						</div>
-						<div id="tS3" class="jThumbnailScroller" style="position: relative; top: 0; left: 0; height: 80%">
-							<div class="jTscrollerContainer">
-								<div class="jTscroller"></div>
-                            <br /><br />
-                            <hr />
-							{% csrf_token %}
-                            {{form.filename.as_hidden}}
-                            {{ form.event_date.as_hidden }} {{ form.event_date.errors }}
-                            {{ form.email.as_hidden }} {{ form.email.errors }}
-                            {{ form.start_time.as_hidden }} {{ form.start_time.errors }}
-                            {{ form.end_time.as_hidden}}  {{ form.end_time.errors }} 
-                            {{ form.tag1.as_hidden }} {{ form.tag1.errors }}
-                            {{ form.tag2.as_hidden }} {{ form.tag2.errors }}
-                            {{ form.tag3.as_hidden }} {{ form.tag3.errors }}
-                            {{ form.tag4.as_hidden }} {{ form.tag4.errors }}
-                            {{ form.tag5.as_hidden }} {{ form.tag5.errors }}
-                            {{ form.title.as_hidden }} {{ form.title.errors }}
-                            
-							<div style="border-bottom: 2px solid #999; margin-bottom: 20px; padding-bottom: 20px">
-								<input style= "color: gray; width: 30%" type="text" id="addDateStart" value="<Date>" />
-								<div>
-									<input style= "color: gray; width: 30%" type="text" id="addTimeStart" value="<Start time>" />
-									<input style= "color: gray; width: 30%" type="text" id="addTimeEnd" value="<End time>" />
-								</div>
-								
-							</div>
-                            
-                            
-							<div style="border-bottom: 2px solid #999; margin-bottom: 20px; padding-bottom: 20px">
-								<select multiple="multiple" style="width: 100%;" data-placeholder="Tags" class="chosen-select" id="select_mult">
-									<option>csail</option>
-									<option>cultural</option>
-									<option>social</option>
-									<option>talk</option>
-								</select>
-							</div>
-                            
-                            <div style="border-bottom: 2px solid #999; margin-bottom: 20px; padding-bottom: 20px">
-								Email
-								<input type="text" class="addAuth" id="posterEmail"/>
-							</div>
-							
-							<div id="progress_info">
-								<div id="progress"></div>
-								<div id="progress_percent">
-									&nbsp;
-								</div>
-								<div class="clear_both"></div>
-								<div>
-									<div id="speed">
-										&nbsp;
-									</div>
-									<div id="remaining">
-										&nbsp;
-									</div>
-									<div id="b_transfered">
-										&nbsp;
-									</div>
-									<div class="clear_both"></div>
-								</div>
-								<div id="upload_response">
-							</div>
-							<a href="#" class="jTscrollerPrevButton" style="background:#000 url({{STATIC_URL}}prevArrow.png) center center;"></a>
-							<a href="#" class="jTscrollerNextButton" style="background:#000 url({{STATIC_URL}}nextArrow.png) center center;"></a>
-						</div>
-						<div style="clear: both;"></div>
 					</div>
-					
-					<div>
-						<input type="button" value="Add Poster" id="addPosterButton"/>
-					</div>
-                    <div id="posterdummy" style="display:none">
-                    </div>
-					</form>
 				</div>
 			</div>
 		</div>
 		<div id="addContainer">
-			<!--Tristan-->
-			<input type="hidden" name="user" class="addAuth" value="" />
 			<div class="upload_form_cont">
 				<img id="preview" />
+				<div id="file-uploader">
+					<noscript>
+						<p>
+							Please enable JavaScript to use file uploader.
+						</p>
+					</noscript>
+				</div>
+
 				<form id="upload_form" enctype="multipart/form-data" method="post" action="upload.php">
-					<div style="border-bottom: 2px solid #999; margin-bottom: 20px; padding-bottom: 20px">
-						<div>
-							<label for="image_file">Please select image file</label>
-						</div>
-						<div>
-							<input type="file" name="image_file" id="image_file" onchange="fileSelected();" />
-						</div>
-					</div>
 					<div id="fileinfo">
 						<div id="filename"></div>
 						<div id="filesize"></div>
@@ -350,78 +256,49 @@ var uploader = new qq.FileUploader( {
 					<div id="error2">
 						An error occurred while uploading the file
 					</div>
-					<div id="abort">
-						The upload has been canceled by the user or the browser dropped the connection
-					</div>
-					<div id="warnsize">
-						Your file is very big. We can't accept it. Please select more small file
-					</div>
-					<!--
-					<div>
-					Where
-					<select style="width: 200px;" class="chosen-select">
-					<option>32-G449</option>
-					<option>32-D463</option>
-					</select>
-					</div>
-					-->
+
+					{% csrf_token %}
+					{{form.filename.as_hidden}}
+					{{ form.event_date.as_hidden }} {{ form.event_date.errors }}
+					{{ form.email.as_hidden }} {{ form.email.errors }}
+					{{ form.start_time.as_hidden }} {{ form.start_time.errors }}
+					{{ form.end_time.as_hidden}}  {{ form.end_time.errors }}
+					{{ form.tag1.as_hidden }} {{ form.tag1.errors }}
+					{{ form.tag2.as_hidden }} {{ form.tag2.errors }}
+					{{ form.tag3.as_hidden }} {{ form.tag3.errors }}
+					{{ form.tag4.as_hidden }} {{ form.tag4.errors }}
+					{{ form.tag5.as_hidden }} {{ form.tag5.errors }}
+					{{ form.title.as_hidden }} {{ form.title.errors }}
+
 					<div style="border-bottom: 2px solid #999; margin-bottom: 20px; padding-bottom: 20px">
 						<input style= "color: gray; width: 30%" type="text" id="addDateStart" value="<Date>" />
 						<div>
 							<input style= "color: gray; width: 30%" type="text" id="addTimeStart" value="<Start time>" />
 							<input style= "color: gray; width: 30%" type="text" id="addTimeEnd" value="<End time>" />
 						</div>
-						<!--
-						<p>
-						From:
-						<input type="text" id="addDateStart" />
-						<input type="text" id="addTimeStart" />
-						</p>
-						<p>
-						To:
-						<input type="text" id="addDateEnd" />
-						<input type="text" id="addTimeEnd" />
-						</p>
-						-->
+
 					</div>
+
 					<div style="border-bottom: 2px solid #999; margin-bottom: 20px; padding-bottom: 20px">
-						<select multiple="multiple" style="width: 100%;" data-placeholder="Tags" class="chosen-select">
+						<select multiple="multiple" data-placeholder="Tags" class="chosen-select" id="select_mult">
 							<option>csail</option>
 							<option>cultural</option>
 							<option>social</option>
 							<option>talk</option>
 						</select>
 					</div>
+
 					<div style="border-bottom: 2px solid #999; margin-bottom: 20px; padding-bottom: 20px">
 						Email
-						<input type="text" class="addAuth" />
-					</div>
-					<div id="progress_info">
-						<div id="progress"></div>
-						<div id="progress_percent">
-							&nbsp;
-						</div>
-						<div class="clear_both"></div>
-						<div>
-							<div id="speed">
-								&nbsp;
-							</div>
-							<div id="remaining">
-								&nbsp;
-							</div>
-							<div id="b_transfered">
-								&nbsp;
-							</div>
-							<div class="clear_both"></div>
-						</div>
-						<div id="upload_response"></div>
+						<input type="text" class="addAuth" id="posterEmail"/>
 					</div>
 					<div>
-						<input type="button" value="Add Poster" id="addPosterButton" onclick="startUploading()"/>
+						<input type="button" value="Add Poster" id="addPosterButton"/>
 					</div>
 				</form>
 			</div>
-			<!--/Tristan-->
+			<div id="posterdummy" style="display:none"></div>
+			<div style="clear: both;"></div>
 		</div>
 	</body>
 </html>
