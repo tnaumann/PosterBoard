@@ -434,7 +434,7 @@ function setupCalendar(diff, set) {
 		var curr_date = today.getDate();
 		var curr_day = today.getDay();
 		var curr_month = today.getMonth();
-		$("#day" + i).html("&nbsp;" + curr_date);
+		$("#day" + i).html(curr_date);
 		$("#wday" + i).html(days[curr_day]);
 		$("#month" + i).html(months[curr_month]);
 		var today_date = new Date(today.getFullYear(), curr_month, curr_date);

@@ -22,8 +22,8 @@ from Phidgets.Devices.RFID import RFID
 #RFID card mapping
 id = {
     # 'CARD ID': 'USER',
-    '2E00E4427C': 'cezeozue',
-    '2E00E40EF8': 'mvartak',
+    '2E00E4427C': 'cezeozue@mit.edu',
+    '2E00E40EF8': 'mvartak@mit.edu',
 }
 
 #Websocket protocol
