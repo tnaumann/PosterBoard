@@ -359,3 +359,9 @@ body {
 #addPosterButton:hover{
 	color: #999;
 }
+#preview {
+	margin: 10px;
+}
+#file-uploader{
+	margin: 10px;
+}
