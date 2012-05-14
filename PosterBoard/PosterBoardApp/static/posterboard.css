@@ -357,3 +357,9 @@ body {
 #addPosterButton:hover, #cancelAddPoster:hover {
 	color: #999;
 }
+#preview {
+	margin: 10px;
+}
+#file-uploader{
+	margin: 10px;
+}
