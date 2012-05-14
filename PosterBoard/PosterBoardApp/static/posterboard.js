@@ -159,6 +159,7 @@ $(function() {
 			setupCalendarView();
 			setupSimilarView();
 			setupPosterClick();
+			$("#addContainer").dialog("close");	
 		});
 	});
 });
@@ -472,11 +473,6 @@ function setupAddDialog() {
 		usa : true
 	});
 	$("#addTimeStart, #addTimeEnd").calendricalTimeRange();
-	
-	// 2. Hide dialog after add
-	$("#addPosterButton").click(function() {
-		$("#addContainer").dialog("close");		
-	});
 }
 
 function setupAddButton() {
