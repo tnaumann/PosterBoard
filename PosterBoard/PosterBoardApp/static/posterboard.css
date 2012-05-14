@@ -11,10 +11,8 @@ body {
 	margin: 0;
 }
 #addContainer {
-	float: right;
-	width:0%;
+	width:30%;
 	height: 100%;
-	z-index: 2;
 }
 #boardContent {
 	/*min-height: 80%;*/
@@ -356,6 +354,6 @@ body {
 .calendricalDatePopup, .calendricalTimePopup{
 	z-index: 5000;
 }
-#addPosterButton:hover{
+#addPosterButton:hover, #cancelAddPoster:hover {
 	color: #999;
 }

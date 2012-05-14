@@ -447,6 +447,20 @@ function setupCalendar(diff, set) {
 }
 
 function setupAddDialog() {
+	var w = $(window).width() * 0.4;
+	var h = $(window).height() - 10;
+	
+	$("#addContainer").dialog({
+		autoOpen : false,
+		modal : true,
+		resizable : false,
+		minWidth : w,
+		minHeight : h,
+		position : ["right", "top"],
+		show : {effect : "slide", direction : "right"},
+		hide : {effect : "slide", direction : "right"}
+	});
+	
 	$(".chosen-select").chosen();
 	//$("#addDateStart, #addTimeStart, #addDateEnd, #addTimeEnd").calendricalDateTimeRange();
 	$("#addDateStart").calendricalDate({
@@ -457,25 +471,10 @@ function setupAddDialog() {
 
 function setupAddButton() {
 	$("#addButton").click(function() {
-		$(this).toggleClass("adding");
-		if($(this).hasClass("adding")) {
-			$(this).text("x");
-			$("#board").animate({
-				width : "70%"
-			}, "slow");
-			$("#addContainer").animate({
-				width : "30%"
-			}, "slow");
-		} else {
-			$(this).text("+");
-			$("#board").animate({
-				width : "100%"
-			}, "slow");
-			$("#addContainer").animate({
-				width : "0%"
-			}, "slow");
-
-		}
+		$("#addContainer").dialog("open");
+	});
+	$("#cancelAddPoster").click(function() {
+		$("#addContainer").dialog("close");
 	});
 }
 
