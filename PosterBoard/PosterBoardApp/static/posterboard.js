@@ -467,12 +467,18 @@ function setupAddDialog() {
 		usa : true
 	});
 	$("#addTimeStart, #addTimeEnd").calendricalTimeRange();
+	
+	// 2. Hide dialog after add
+	$("#addPosterButton").click(function() {
+		$("#addContainer").dialog("close");		
+	});
 }
 
 function setupAddButton() {
 	$("#addButton").click(function() {
 		$("#addContainer").dialog("open");
-		// Reset dialog fields
+		
+		// 1. Reset forms
 		$("#upload_form").find("input:text, input:password, input:file, select").val("");
 		$("#upload_form").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
 		$("#select_mult").trigger("liszt:updated");
