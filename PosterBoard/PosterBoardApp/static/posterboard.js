@@ -777,7 +777,8 @@ function setupSimilarView() {
 			elementTags = $(element).attr('data-tags');
 			elementTags = elementTags.split(',');
 
-			if(elementTags == clickedCluster || elementTags.contains(clickedCluster)) {
+			console.log('elementTags: ' + elementTags + ", " + elementTags.length);
+			if(elementTags != '' && (elementTags == clickedCluster || elementTags.indexOf(clickedCluster) != -1)) {
 				elementCopy = $(element).clone(true);
 				elementCopy.appendTo('#singleClusterImages');
 			}
