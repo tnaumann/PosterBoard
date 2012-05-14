@@ -275,7 +275,7 @@ function setupWebSocket() {
 	};
 	ws.onmessage = function(e) {
 		console.log("got: " + e.data);
-		$("input.addAuth").val(e.data);
+		$("input.addAuth").val(e.data).change();
 	};
 }
 
