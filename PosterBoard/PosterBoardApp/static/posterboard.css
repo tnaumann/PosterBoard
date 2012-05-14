@@ -75,7 +75,9 @@ body {
 }
 #board #viewSwitcherContainer a.activeView {
 	background-color: #95BFFF;
-	color: #333;
+	color: #426666;
+	border: 2px dotted #333;
+	font-size: 20px;
 }
 #focusedPosterInteraction {
 	padding: 10px;
