@@ -472,6 +472,10 @@ function setupAddDialog() {
 function setupAddButton() {
 	$("#addButton").click(function() {
 		$("#addContainer").dialog("open");
+		// Reset dialog fields
+		$("#upload_form").find("input:text, input:password, input:file, select").val("");
+		$("#upload_form").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
+		$("#select_mult").trigger("liszt:updated");
 	});
 	$("#cancelAddPoster").click(function() {
 		$("#addContainer").dialog("close");
