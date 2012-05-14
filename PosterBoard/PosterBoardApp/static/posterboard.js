@@ -537,13 +537,16 @@ function setupPosterClick() {
 		getLikes();
 
 		console.log('fullPoster max dimensions: ' + width + ', ' + height);
+		
+		$("#focusedPosterImage").empty();
+		fullPoster.appendTo("#focusedPosterImage");
+		
 		fullPoster.css('maxWidth', width * 0.8);
 		fullPoster.css('maxHeight', height * 0.8);
 		fullPoster.css('margin', 0);
 		fullPoster.removeClass('thumbnail');
 		fullPoster.css('position', '');
-		$("#focusedPosterImage").empty();
-		fullPoster.appendTo("#focusedPosterImage");
+		
 		console.log('Width: ' + $('#focusedPosterImage img').width() + ' From jQuery obj: ' + fullPoster.width());
 		var clickedImageWidth = $(this).width();
 		var clickedImageHeight = $(this).height();
