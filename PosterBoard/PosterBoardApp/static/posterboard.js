@@ -480,13 +480,15 @@ function setupAddDialog() {
 }
 
 function setupAddButton() {
-	$("#addButton").click(function() {
-		$("#addContainer").dialog("open");
-		
+	$("#addButton").click(function() {		
 		// 1. Reset forms
 		$("#upload_form").find("input:text, input:password, input:file, select").val("");
 		$("#upload_form").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
 		$("#select_mult").trigger("liszt:updated");
+		$(".qq-upload-success").remove();
+		$("#preview").removeAttr("src");
+		
+		$("#addContainer").dialog("open");
 	});
 	$("#cancelAddPoster").click(function() {
 		$("#addContainer").dialog("close");

@@ -588,6 +588,7 @@ qq.extend(qq.FileUploader.prototype, {
         });                
     },
     _onSubmit: function(id, fileName){
+    	$(".qq-upload-success").remove();
         qq.FileUploaderBasic.prototype._onSubmit.apply(this, arguments);
         this._addToList(id, fileName);  
     },
