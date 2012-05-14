@@ -12,6 +12,7 @@ import settings, math
 from django.core.files import File
 from PosterBoard.PosterBoardApp.models import Poster, AnnotationPath, Annotation
 from PosterBoard.PosterBoardApp.forms import PosterForm
+from django.core.mail import EmailMessage
 
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
@@ -234,6 +235,10 @@ def getLikes(request):
     poster = Poster.objects.get(pk=int(request.GET['poster']))
     returnVal = {'likes': poster.likes, 'dislikes': poster.dislikes}
     return HttpResponse(json.dumps(returnVal))
+
+def sendEmail(request):
+    email = EmailMessage('Subject', 'Body', to=['user@gmail.com'])
+    email.send() 
 
 def updateLikes(request):
     poster = Poster.objects.get(pk=int(request.GET['poster']))
