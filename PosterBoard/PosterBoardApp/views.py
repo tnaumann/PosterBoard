@@ -236,9 +236,13 @@ def getLikes(request):
     returnVal = {'likes': poster.likes, 'dislikes': poster.dislikes}
     return HttpResponse(json.dumps(returnVal))
 
-def sendEmail(request):
-    email = EmailMessage('Subject', 'Body', to=['user@gmail.com'])
-    email.send() 
+def sendReminderEmail(request):
+    poster = Poster.objects.get(pk=int(request.GET['poster']))
+    emailAddress = request.GET['email']
+    
+    email = EmailMessage('Subject', 'Body', to=[emailAddress])
+    email.send()
+    return HttpResponse('success')
 
 def updateLikes(request):
     poster = Poster.objects.get(pk=int(request.GET['poster']))

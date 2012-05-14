@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^getLikes', 'PosterBoard.PosterBoardApp.views.getLikes'),
     url(r'^updateLikes', 'PosterBoard.PosterBoardApp.views.updateLikes'),
     url(r'^deletePoster', 'PosterBoard.PosterBoardApp.views.deletePoster'),
+    url(r'^sendReminderEmail', 'PosterBoard.PosterBoardApp.views.sendReminderEmail'),
     url( r'^ajax_upload/$', 'PosterBoard.PosterBoardApp.views.ajax_upload', name="ajax_upload" ),
     url( r'^upload/$', 'PosterBoard.PosterBoardApp.views.upload_page', name="upload_page" ),
 )

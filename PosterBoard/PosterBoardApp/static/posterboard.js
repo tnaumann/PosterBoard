@@ -201,10 +201,15 @@ function setupEmailToCalendar() {
 
 		$('#rfidinput').bind('change.sendEmail', function() {
 			$('#rfidinput').unbind('change.sendEmail');
+			var rfidinput = $('#rfidinput').val();
 			console.log('received rfid input');
 			$('#swipeCardMessage').dialog('close');
 			$('#emailSentMessage').dialog('open');
 			setInterval("$('#emailSentMessage').dialog('close');", dismissMessageTimeout);
+			$.get('sendReminderEmail', {
+				email: rfidinput,
+				poster: focusedImageUid,
+			});
 		});
 	});
 }
