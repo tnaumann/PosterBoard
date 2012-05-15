@@ -47,7 +47,7 @@
 .calendricalTimePopup {
   background: white;
   border: solid 1px #999999;
-  width: 110px;
+  width: 200px;
   height: 130px;
   overflow: auto; }
   .calendricalTimePopup ul {
@@ -66,4 +66,4 @@
         background: #ccccff; }
 
 .calendricalEndTimePopup {
-  width: 160px; }
+  width: 200px; }

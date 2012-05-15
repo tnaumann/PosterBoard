@@ -167,7 +167,7 @@ function setupSimulateRfid() {
 	$('body').keypress(function(event) {
 		console.log('keypressed: ' + event.which);
 		if(event.which == 114) {
-			$('#rfidinput').val('cezeozue@mit.edu').change();
+			$('.addAuth').val('cezeozue@mit.edu').change();
 		}
 	})
 }
